@@ -12,7 +12,8 @@ import Foundation
 class HomeScreenController: UIViewController {
     // Temporary Data Holders from JSON
     public var popularMovieTitles: [String] = []
-    public var popularMovieFilmRatings: [Double] = []
+    public var popularMovieFilmRatings: [Float] = []
+    public var popularMovieImagesURLs: [String] = []
     // References
     private var slideOutMenu: UIViewController!
     private var categoryView = Categories()
@@ -28,16 +29,28 @@ class HomeScreenController: UIViewController {
         return collection
     }()
     let headerId = "headerId"
-    // Network Managers Coming Soon
+    // Image Variables
+    var secureImageURL: String = ""
+    var originalImage: String = ""
+    var convertingImageVariableURLs: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        popularMovieRequestTitles { (titles, error) in
+        popularMovieRequestTitles { (_, _, _, error) in
             if let error = error {
                 print(error)
             }
-            print([titles])
+        }
+        processImageUrls { (_) in
+        }
+        reloadingMainCollectionView()
+    }
+    
+    
+    public func reloadingMainCollectionView() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
     }
     
@@ -52,7 +65,8 @@ class HomeScreenController: UIViewController {
         categoryButton.addTarget(self, action: #selector(categoryView(sender:)), for: .touchUpInside)
         navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: categoryButton)
         navigationController?.navigationBar.addSubview(categoryButton)
-        createGradient(first: UIColor(red: 114/255, green: 104/255, blue: 104/255, alpha: 1.0), second: UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0))
+//        createGradient(first: UIColor(red: 114/255, green: 104/255, blue: 104/255, alpha: 1.0), second: UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0))
+        view.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 0)
      // Collection View
         collectionView.allowsSelection = true
         collectionView.delegate = self
@@ -63,40 +77,133 @@ class HomeScreenController: UIViewController {
         view.addSubview(collectionView)
     }
     
-    // Movie Title Request
-    public func popularMovieRequestTitles(completionHandler: @escaping (_ title: [String]?, Error?) -> Void) -> Void {
+    // Movie Request
+    public func popularMovieRequestTitles(completionHandler: @escaping (_ title: [String]?, _ filmRating: [Float]?,_ movieImage: [String]?, Error?) -> Void) -> Void {
         // Api Key Location
-        let secretApiKey: String = apiKey
-        let group = DispatchGroup()
+        let constant: String = apiKey
+        // Title
+        let group1 = DispatchGroup()
+        // Rating
+        let group2 = DispatchGroup()
+        // Image URL
+        let group3 = DispatchGroup()
+    //MARK: - Insert API Key Here
         // Insert YOUR API KEY here, Remove Underscore and enter a title.
         let _: String = ""
         // Data Request
-        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(secretApiKey)&language=en-US&page=1")!
-        // Session for getting Data
+        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1&region=US")!
+    // Session for getting Title
         let session = URLSession.shared
         let dataTask = session.dataTask(with: popularMovieDataURL) {
-            data, response, error in
+            (data, response, error) in
             guard let data = data else {
                 print("Error recieving URL!")
                 return
             }
             do {
-                let popularMovies = try JSONDecoder().decode(MovieDetail.self, from: data)
+                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
                 self.popularMovieTitles.removeAll()
-                group.enter()
+                group1.enter()
                 for titles in popularMovies.results {
                     self.popularMovieTitles.append(titles.title)
                 }
-                group.leave()
-                group.notify(queue: DispatchQueue.main, execute: {
-                    print("Notifying")
-                    completionHandler(self.popularMovieTitles, nil)
+                group1.leave()
+                group1.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.popularMovieTitles, nil, nil, nil)
                 })
             } catch let JSONError {
-                completionHandler(nil, JSONError)
+                completionHandler(nil, nil, nil, JSONError)
             }
         }
         dataTask.resume()
+    // Session for getting Film Rating
+        let sessionFilmRating = URLSession.shared
+        let dataTaskFilmRating = sessionFilmRating.dataTask(with: popularMovieDataURL) {
+            (data, response, error) in
+            guard let data = data else {
+                print("Error recieving Film Rating URL!")
+                return
+            }
+            do {
+                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
+                self.popularMovieFilmRatings.removeAll()
+                group2.enter()
+                for filmRating in popularMovies.results {
+                    self.popularMovieFilmRatings.append(Float(filmRating.vote_average))
+                }
+                group2.leave()
+                group2.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(nil, self.popularMovieFilmRatings, nil, nil)
+                })
+            } catch let JSONError {
+                completionHandler(nil, nil, nil, JSONError)
+            }
+        }
+        dataTaskFilmRating.resume()
+    // Movie Image Request
+        let sessionMovieImage = URLSession.shared
+        let dataTaskMovieImage = sessionMovieImage.dataTask(with: popularMovieDataURL) {
+            (data, response, error) in
+            guard let data = data else {
+                print("Error recieving Movie Image URL")
+                return
+            }
+            do {
+                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
+                self.popularMovieImagesURLs.removeAll()
+                group3.enter()
+                for movieImages in popularMovies.results {
+                    self.popularMovieImagesURLs.append(movieImages.poster_path ?? " ")
+                }
+                group3.leave()
+                group3.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(nil, nil, self.popularMovieImagesURLs, nil)
+                })
+            } catch let JSONError {
+                completionHandler(nil, nil, nil, JSONError)
+            }
+        }
+        dataTaskMovieImage.resume()
+    }
+    
+    // Image Processing API Request
+    public func processImageUrls(completionHandler: @escaping (_ conversionURL: [String]?) -> Void) -> Void {
+        let constants = apiKey
+        let securedBaseUrl: URL = URL(string: "https://api.themoviedb.org/3/configuration?api_key=\(constants)")!
+        let imageSession = URLSession.shared
+        let imageDataTask = imageSession.dataTask(with: securedBaseUrl) {
+            (data, response, error) in
+            guard let data = data else { return }
+            do {
+                let imageProcessor = try JSONDecoder().decode(MovieImageModel.self, from: data)
+                self.secureImageURL = imageProcessor.images.secure_base_url
+                let widthFive00 = imageProcessor.images.poster_sizes[4]
+                self.originalImage = widthFive00
+                for fullImageURL in self.popularMovieImagesURLs {
+                    self.convertingImageVariableURLs.append("\(self.secureImageURL)\(self.originalImage)\(fullImageURL)")
+                }
+                completionHandler(self.convertingImageVariableURLs)
+            } catch let JSONError {
+                print("Error, recieving Session, \(JSONError)")
+            }
+        }
+        imageDataTask.resume()
+    }
+    
+    // Converting Image Urls to a UIImage
+    func convertingFullURLsToImage(completionHandler: @escaping (_ movieImage: [UIImage]) -> Void) -> Void {
+        var temporaryHolder: [UIImage] = []
+        for imageURL in convertingImageVariableURLs {
+            let singleUrl = URL(string: imageURL)!
+            do {
+                let data = try Data(contentsOf: singleUrl)
+                let image: UIImage = UIImage(data: data)!
+                temporaryHolder.append(image)
+                completionHandler(temporaryHolder)
+            } catch let ImageError {
+                print("Error, converting URL's to UIImage, \(ImageError)")
+            }
+        }
     }
     
     // Gradient Background
@@ -208,13 +315,24 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        // Default, Popular
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
+        let headerTitle: UILabel = {
+            let headerTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 40))
+            headerTitleLabel.text = "Popular"
+            headerTitleLabel.textColor = UIColor.white
+            headerTitleLabel.textAlignment = NSTextAlignment.left
+            headerTitleLabel.font = UIFont(name: "Avenir Next", size: 30)
+            return headerTitleLabel
+        }()
+        header.backgroundColor = UIColor.clear
+        header.addSubview(headerTitle)
         return header
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 55)
+        return CGSize(width: view.frame.width, height: 40)
     }
     
 }

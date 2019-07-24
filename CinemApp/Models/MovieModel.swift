@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 // Movie
-struct MovieDetail: Decodable {
+struct MovieModel: Decodable {
     var page: Int
     var results: [Results]
     
@@ -21,36 +21,36 @@ struct MovieDetail: Decodable {
 }
 
 struct Results: Decodable {
-    var voteCount: Int?
-    var id: Int?
-    var video: Bool?
-    var voteAverage: Double?
-    var title: String
-    var popularity: Double?
-    var posterPath: String?
-    var originalLanguage: String?
-    var genreIds: [Int]?
-    var backdropPath: String?
-    var adult: Bool?
-    var overview: String?
-    var releaseDate: String?
-    var originalTitle: String?
+    let vote_count: Int?
+    let id: Int?
+    let video: Bool?
+    let vote_average: Float
+    let title: String
+    let popularity: Double?
+    let poster_path: String?
+    let original_language: String?
+    let genre_ids: [Int]?
+    let backdrop_path: String?
+    let adult: Bool?
+    let overview: String?
+    let release_date: String?
+    let original_title: String?
     
     init(json: [String: Any]) {
-        voteCount = json["vote_count"] as? Int ?? 0
+        vote_count = json["vote_count"] as? Int ?? 0
         id = json["id"] as? Int ?? 0
         video = json["video"] as? Bool ?? false
-        voteAverage = json["vote_average"] as? Double ?? 0
+        vote_average = json["vote_average"] as? Float ?? 0.0
         title = json["title"] as? String ?? ""
         popularity = json["popularity"] as? Double ?? 0
-        posterPath = json["poster_path"] as? String ?? ""
-        originalLanguage = json["original_language"] as? String ?? ""
-        genreIds = json["genre_ids"] as? [Int] ?? [0]
-        backdropPath = json["backdrop_path"] as? String ?? ""
+        poster_path = json["poster_path"] as? String ?? ""
+        original_language = json["original_language"] as? String ?? ""
+        genre_ids = json["genre_ids"] as? [Int] ?? [0]
+        backdrop_path = json["backdrop_path"] as? String ?? ""
         adult = json["adult"] as? Bool ?? false
         overview = json["overview"] as? String ?? ""
-        releaseDate = json["release_date"] as? String ?? ""
-        originalTitle = json["original_title"] as? String ?? ""
+        release_date = json["release_date"] as? String ?? ""
+        original_title = json["original_title"] as? String ?? ""
     }
     
 //    enum CodingKeys: String, CodingKey {

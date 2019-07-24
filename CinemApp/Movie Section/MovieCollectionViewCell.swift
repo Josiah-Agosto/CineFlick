@@ -11,8 +11,13 @@ import UIKit
 class MovieCollectionViewCell: UICollectionViewCell {
     // HomeController of Collection View
     let homeController = HomeScreenController()
+    // Movie Title
     var movieTitleAccomplice: [String] = []
-    var movieFilmRatingAccomplice: [String] = []
+    var movieFilmRatingAccomplice: [Float] = []
+    // Image Variables
+    var movieImageURLAccomplice: [String] = []
+    // Movie Image
+    var movieImages: [UIImage] = []
     // Inner Cell
     let innerCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -37,24 +42,53 @@ class MovieCollectionViewCell: UICollectionViewCell {
         innerCollectionView.dataSource = self
         innerCollectionView.showsHorizontalScrollIndicator = false
         addSubview(innerCollectionView)
-        // Film Title
         // Worked On July 21, Sunday 12:06
-        homeController.popularMovieRequestTitles { (titles, error) in
+        initialSetup()
+    }
+    
+    
+    private func initialSetup() {
+        let group = DispatchGroup()
+        group.enter()
+        homeController.popularMovieRequestTitles { (titles, filmRatings, nil, error) in
             if let error = error {
                 print(error)
             }
             titles?.forEach({ (title) in
                 self.movieTitleAccomplice.append(title)
             })
-            DispatchQueue.main.async {
-                self.reloadInnerCollectionViewData()
-            }
+            filmRatings?.forEach({ (filmRating) in
+                self.movieFilmRatingAccomplice.append(filmRating)
+            })
+        }
+        group.leave()
+        group.enter()
+        self.finishTask {
+            group.leave()
         }
     }
     
     
-    func reloadInnerCollectionViewData() {
-        self.innerCollectionView.reloadData()
+    private func finishTask(completionHandler: @escaping () -> Void) -> Void {
+        let group = DispatchGroup()
+        group.enter()
+        self.homeController.processImageUrls { (_) in
+            self.homeController.convertingFullURLsToImage(completionHandler: { (images) in
+                self.movieImages = images
+            })
+            group.leave()
+        }
+        group.notify(queue: DispatchQueue.main) {
+            self.reloadEverything()
+        }
+    }
+    
+    
+    private func reloadEverything() {
+        DispatchQueue.main.async {
+            self.innerCollectionView.reloadData()
+            self.homeController.reloadingMainCollectionView()
+        }
     }
     
     
@@ -83,32 +117,37 @@ extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDat
             label.text = "Loading"
             label.numberOfLines = 0
             label.textAlignment = NSTextAlignment.left
+            label.textColor = UIColor.white
+            label.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
             return label
         }()
         // Rating Image
         let movieRatingImage: UIImageView = {
             let ratingImage = UIImageView(frame: CGRect(x: 0, y: 250, width: 25, height: 25))
+            ratingImage.layer.cornerRadius = 5
             // Setting the ImageViews Image
             ratingImage.backgroundColor = UIColor.white
             return ratingImage
         }()
+        // Poster Image
+        var moviePosterImage: UIImageView = {
+            let posterImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 185))
+            posterImage.layer.cornerRadius = 5
+            posterImage.contentMode = .scaleAspectFill
+            return posterImage
+        }()
         // Movie Rating
         let movieRating: UILabel = {
-            let rating = UILabel(frame: CGRect(x: 28, y: 250, width: 55, height: 25))
+            let rating = UILabel(frame: CGRect(x: 28, y: 250, width: 100, height: 25))
             // Rating Text
-            rating.text = "8.7/10"
+            rating.text = "/10"
             rating.numberOfLines = 1
             rating.textAlignment = NSTextAlignment.left
+            rating.textColor = UIColor.white
+            rating.font = UIFont(name: "Avenir-Light", size: 18)
             return rating
         }()
-        // Movie Film Rating
-        let movieFilmRating: UILabel = {
-            let filmRating = UILabel(frame: CGRect(x: 80, y: 250, width: 70, height: 25))
-            // Film Rating Text
-            filmRating.text = "TV-MA"
-            filmRating.textAlignment = NSTextAlignment.center
-            return filmRating
-        }()
+        
         override init(frame: CGRect) {
             super.init(frame: frame)
             scrollingViewSetup()
@@ -116,11 +155,11 @@ extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDat
         
         
         private func scrollingViewSetup() {
-            backgroundColor = UIColor.orange
-            addSubview(movieFilmRating)
+            backgroundColor = UIColor.clear
             addSubview(movieRatingImage)
             addSubview(movieRating)
             addSubview(movieTitle)
+            addSubview(moviePosterImage)
         }
         
         
@@ -143,7 +182,8 @@ extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDat
         if indexPath.section == 0 {
             // Details here
             cell.movieTitle.text = movieTitleAccomplice[indexPath.row]
-//            cell.movieFilmRating.text = movieFilmRatingAccomplice[indexPath.row]
+            cell.movieRating.text = "\(movieFilmRatingAccomplice[indexPath.row]) / 10"
+            cell.moviePosterImage.image = movieImages[indexPath.row]
             return cell
         }
         return cell

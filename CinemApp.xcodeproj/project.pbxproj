@@ -11,7 +11,7 @@
 		BD10873C22AF3B6600EBA1B9 /* HomeScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10873B22AF3B6600EBA1B9 /* HomeScreenController.swift */; };
 		BD10874122AF3B6800EBA1B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD10874022AF3B6800EBA1B9 /* Assets.xcassets */; };
 		BD10874422AF3B6800EBA1B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD10874222AF3B6800EBA1B9 /* LaunchScreen.storyboard */; };
-		BD10874C22AF3CDA00EBA1B9 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10874B22AF3CDA00EBA1B9 /* MovieDetail.swift */; };
+		BD10874C22AF3CDA00EBA1B9 /* MovieModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10874B22AF3CDA00EBA1B9 /* MovieModel.swift */; };
 		BD10874F22AF3FF100EBA1B9 /* Cast.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10874E22AF3FF100EBA1B9 /* Cast.swift */; };
 		BD10875222AF41BC00EBA1B9 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10875122AF41BC00EBA1B9 /* NetworkManager.swift */; };
 		BD10875422B01A1400EBA1B9 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10875322B01A1400EBA1B9 /* Categories.swift */; };
@@ -20,6 +20,7 @@
 		BD10875E22B45AF800EBA1B9 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10875D22B45AF800EBA1B9 /* MovieCollectionViewCell.swift */; };
 		BD10876022B460AB00EBA1B9 /* MovieCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10875F22B460AB00EBA1B9 /* MovieCollectionViewFlowLayout.swift */; };
 		BD10876322E45F3000EBA1B9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10876222E45F3000EBA1B9 /* Constants.swift */; };
+		BD10876522E7B84A00EBA1B9 /* MovieImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10876422E7B84A00EBA1B9 /* MovieImageModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +30,7 @@
 		BD10874022AF3B6800EBA1B9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BD10874322AF3B6800EBA1B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BD10874522AF3B6800EBA1B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BD10874B22AF3CDA00EBA1B9 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
+		BD10874B22AF3CDA00EBA1B9 /* MovieModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieModel.swift; sourceTree = "<group>"; };
 		BD10874E22AF3FF100EBA1B9 /* Cast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cast.swift; sourceTree = "<group>"; };
 		BD10875122AF41BC00EBA1B9 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		BD10875322B01A1400EBA1B9 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
@@ -38,6 +39,7 @@
 		BD10875D22B45AF800EBA1B9 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		BD10875F22B460AB00EBA1B9 /* MovieCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		BD10876222E45F3000EBA1B9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		BD10876422E7B84A00EBA1B9 /* MovieImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieImageModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +78,6 @@
 				BD10875022AF409C00EBA1B9 /* Data */,
 				BD10875522B0756100EBA1B9 /* Slide Menu */,
 				BD10875C22B33A0900EBA1B9 /* Movie Section */,
-				BD10875322B01A1400EBA1B9 /* Categories.swift */,
 				BD10874022AF3B6800EBA1B9 /* Assets.xcassets */,
 				BD10874222AF3B6800EBA1B9 /* LaunchScreen.storyboard */,
 				BD10874522AF3B6800EBA1B9 /* Info.plist */,
@@ -87,8 +88,9 @@
 		BD10874D22AF3FC400EBA1B9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BD10874B22AF3CDA00EBA1B9 /* MovieDetail.swift */,
+				BD10874B22AF3CDA00EBA1B9 /* MovieModel.swift */,
 				BD10874E22AF3FF100EBA1B9 /* Cast.swift */,
+				BD10876422E7B84A00EBA1B9 /* MovieImageModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -104,6 +106,7 @@
 		BD10875522B0756100EBA1B9 /* Slide Menu */ = {
 			isa = PBXGroup;
 			children = (
+				BD10875322B01A1400EBA1B9 /* Categories.swift */,
 				BD10875622B0758000EBA1B9 /* SlideMenuEffect.swift */,
 				BD10875822B2B9EF00EBA1B9 /* SlideControllerDelegate.swift */,
 			);
@@ -198,13 +201,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD10876522E7B84A00EBA1B9 /* MovieImageModel.swift in Sources */,
 				BD10875722B0758000EBA1B9 /* SlideMenuEffect.swift in Sources */,
 				BD10874F22AF3FF100EBA1B9 /* Cast.swift in Sources */,
 				BD10875222AF41BC00EBA1B9 /* NetworkManager.swift in Sources */,
 				BD10873C22AF3B6600EBA1B9 /* HomeScreenController.swift in Sources */,
 				BD10873A22AF3B6600EBA1B9 /* AppDelegate.swift in Sources */,
 				BD10876322E45F3000EBA1B9 /* Constants.swift in Sources */,
-				BD10874C22AF3CDA00EBA1B9 /* MovieDetail.swift in Sources */,
+				BD10874C22AF3CDA00EBA1B9 /* MovieModel.swift in Sources */,
 				BD10875E22B45AF800EBA1B9 /* MovieCollectionViewCell.swift in Sources */,
 				BD10875422B01A1400EBA1B9 /* Categories.swift in Sources */,
 				BD10876022B460AB00EBA1B9 /* MovieCollectionViewFlowLayout.swift in Sources */,
