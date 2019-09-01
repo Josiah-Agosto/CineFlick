@@ -5,14 +5,19 @@
 //  Created by Josiah Agosto on 6/14/19.
 //  Copyright © 2019 Josiah Agosto. All rights reserved.
 //
+// TODO: - Add Id Array to search for particular Movies by the Id, and for Genre Id's as well.
 
+import Foundation
 import UIKit
 
 class MovieCollectionViewCell: UICollectionViewCell {
-    // HomeController of Collection View
-    let homeController = HomeScreenController()
-    var movieTitleAccomplice: [String] = []
-    var movieFilmRatingAccomplice: [String] = []
+    // References
+    private let homeController = HomeScreenController()
+    private let popularRequest = PopularProcess()
+    private let nowPlayingRequest = NowPlayingProcess()
+    private let upcomingRequest = UpcomingProcess()
+    private let topRatedRequest = TopRatedProcess()
+    private let movieNetworkManager = NetworkManager()
     // Inner Cell
     let innerCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -23,38 +28,26 @@ class MovieCollectionViewCell: UICollectionViewCell {
         initializingCollectionView.backgroundColor = UIColor.clear
         return initializingCollectionView
     }()
+    // Date Formatter
+    private let dateFormatter = DateFormatter()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
-    
+
     
     func setup() {
     // Inner Cell
-        innerCollectionView.register(MovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
+//        innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
+//        innerCollectionView.register(NowPlayingCellsCell.self, forCellWithReuseIdentifier: "nowPlayingCellsCell")
+//        innerCollectionView.register(UpcomingCellsCell.self, forCellWithReuseIdentifier: "upcomingCellsCell")
+//        innerCollectionView.register(TopRatedCellsCell.self, forCellWithReuseIdentifier: "topRatedCellsCell")
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self
         innerCollectionView.showsHorizontalScrollIndicator = false
         addSubview(innerCollectionView)
-        // Film Title
         // Worked On July 21, Sunday 12:06
-        homeController.popularMovieRequestTitles { (titles, error) in
-            if let error = error {
-                print(error)
-            }
-            titles?.forEach({ (title) in
-                self.movieTitleAccomplice.append(title)
-            })
-            DispatchQueue.main.async {
-                self.reloadInnerCollectionViewData()
-            }
-        }
-    }
-    
-    
-    func reloadInnerCollectionViewData() {
-        self.innerCollectionView.reloadData()
     }
     
     
@@ -65,6 +58,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         self.frame.size.height = 300
     }
     
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -74,79 +68,59 @@ class MovieCollectionViewCell: UICollectionViewCell {
 
 
 extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    // Inner Cell
-    class MovieCellsCell: UICollectionViewCell {
-        // Movie Title
-        let movieTitle: UILabel = {
-            let label = UILabel(frame: CGRect(x: 0, y: 200, width: 150, height: 50))
-            // Label Text
-            label.text = "Loading"
-            label.numberOfLines = 0
-            label.textAlignment = NSTextAlignment.left
-            return label
-        }()
-        // Rating Image
-        let movieRatingImage: UIImageView = {
-            let ratingImage = UIImageView(frame: CGRect(x: 0, y: 250, width: 25, height: 25))
-            // Setting the ImageViews Image
-            ratingImage.backgroundColor = UIColor.white
-            return ratingImage
-        }()
-        // Movie Rating
-        let movieRating: UILabel = {
-            let rating = UILabel(frame: CGRect(x: 28, y: 250, width: 55, height: 25))
-            // Rating Text
-            rating.text = "8.7/10"
-            rating.numberOfLines = 1
-            rating.textAlignment = NSTextAlignment.left
-            return rating
-        }()
-        // Movie Film Rating
-        let movieFilmRating: UILabel = {
-            let filmRating = UILabel(frame: CGRect(x: 80, y: 250, width: 70, height: 25))
-            // Film Rating Text
-            filmRating.text = "TV-MA"
-            filmRating.textAlignment = NSTextAlignment.center
-            return filmRating
-        }()
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            scrollingViewSetup()
-        }
-        
-        
-        private func scrollingViewSetup() {
-            backgroundColor = UIColor.orange
-            addSubview(movieFilmRating)
-            addSubview(movieRatingImage)
-            addSubview(movieRating)
-            addSubview(movieTitle)
-        }
-        
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-    } // Inner Class End
-    
     // Data inside each Cell is shown here
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return movieTitleAccomplice.count
+        if section == 1 {
+            // Now Playing
+            return movieNetworkManager.nowPlayingTitles.count
+        } else if section == 2 {
+            // Upcoming
+            return movieNetworkManager.upcomingTitles.count
+        } else if section == 3 {
+            // Top Rated
+            return movieNetworkManager.topRatedTitles.count
+        } else {
+            // Popular
+//            print("#\(movieTitleAccomplice.count)")
+            return movieNetworkManager.movieTitleAccomplice.count
         }
-        return 1
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "movieCellsCell", for: indexPath) as! MovieCellsCell
-        if indexPath.section == 0 {
-            // Details here
-            cell.movieTitle.text = movieTitleAccomplice[indexPath.row]
-//            cell.movieFilmRating.text = movieFilmRatingAccomplice[indexPath.row]
-            return cell
+        if indexPath.section == 1 {
+            print("Inside cellForItem")
+            // Now Playing
+            let nowPlaying = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "nowPlayingCellsCell", for: indexPath) as! NowPlayingCellsCell
+            nowPlaying.movieTitle.text = movieNetworkManager.nowPlayingTitles[indexPath.row]
+            nowPlaying.movieReleaseTitle.text = "\(movieNetworkManager.nowPlayingReleaseDates[indexPath.row])"
+            nowPlaying.movieImage.image = movieNetworkManager.nowPlayingImages[indexPath.row]
+            return nowPlaying
+        } else if indexPath.section == 2 {
+            print("Inside cellForItem")
+            // Upcoming
+            let upcoming = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "upcomingCellsCell", for: indexPath) as! UpcomingCellsCell
+            upcoming.movieTitle.text = movieNetworkManager.upcomingTitles[indexPath.row]
+            upcoming.movieReleaseTitle.text = "\(movieNetworkManager.upcomingReleaseDates[indexPath.row])"
+            upcoming.movieImage.image = movieNetworkManager.upcomingImages[indexPath.row]
+            return upcoming
+        } else if indexPath.section == 3 {
+            print("Inside cellForItem")
+            // Top Rated
+            let topRated = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "topRatedCellsCell", for: indexPath) as! TopRatedCellsCell
+            topRated.movieTitle.text = movieNetworkManager.topRatedTitles[indexPath.row]
+            topRated.movieRating.text = "\(movieNetworkManager.topRatedFilmRatings[indexPath.row]) / 10"
+            topRated.movieImage.image = movieNetworkManager.topRatedImages[indexPath.row]
+            return topRated
+        } else {
+            print("Inside cellForItem")
+            // Popular
+            let popular = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "movieCellsCell", for: indexPath) as! PopularMovieCellsCell
+            popular.movieTitle.text = movieNetworkManager.movieTitleAccomplice[indexPath.row]
+            popular.movieRating.text = "\(movieNetworkManager.movieFilmRatingAccomplice[indexPath.row]) / 10"
+            popular.moviePosterImage.image = movieNetworkManager.movieImages[indexPath.row]
+            return popular
         }
-        return cell
     }
     
     
