@@ -116,13 +116,12 @@
 			isa = PBXGroup;
 			children = (
 				BD10874B22AF3CDA00EBA1B9 /* MovieModel.swift */,
-				BD10874E22AF3FF100EBA1B9 /* Cast.swift */,
-				BD10876422E7B84A00EBA1B9 /* MovieImageModel.swift */,
-				BD9E4107231B775A00106FB3 /* ApiRequestRequirments.swift */,
-				BD9E4109231B779000106FB3 /* ApiRequestWithDatesRequirements.swift */,
 				BD9E410B231B77DF00106FB3 /* BaseImageModel.swift */,
-				BD9E410D231B78B500106FB3 /* ImageProcessorRequirements.swift */,
 				BD9E410F231B79E800106FB3 /* MovieModelWithDates.swift */,
+				BD10876422E7B84A00EBA1B9 /* MovieImageModel.swift */,
+				BD9E410D231B78B500106FB3 /* ImageProcessorRequirements.swift */,
+				BD10874E22AF3FF100EBA1B9 /* Cast.swift */,
+				BD9E4128231B840E00106FB3 /* Api Request Models */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -208,6 +207,15 @@
 				BD9E4120231B7C7900106FB3 /* UpcomingProcess.swift */,
 			);
 			path = Upcoming;
+			sourceTree = "<group>";
+		};
+		BD9E4128231B840E00106FB3 /* Api Request Models */ = {
+			isa = PBXGroup;
+			children = (
+				BD9E4109231B779000106FB3 /* ApiRequestWithDatesRequirements.swift */,
+				BD9E4107231B775A00106FB3 /* ApiRequestRequirments.swift */,
+			);
+			path = "Api Request Models";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
