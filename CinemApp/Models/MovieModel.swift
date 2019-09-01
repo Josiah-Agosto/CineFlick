@@ -9,15 +9,24 @@
 import UIKit
 import Foundation
 
-// Movie
 struct MovieModel: Decodable {
-    var page: Int
-    var results: [Results]
+    let page: Int?
+    let total_results: Int?
+    let total_pages: Int?
+    let results: [Results]?
     
-    private enum MainCodingKeys: String, CodingKey {
-        case page
-        case results = "results"
-    }
+    //    private enum MainCodingKeys: String, CodingKey {
+    //        case page
+    //        case total_results
+    //        case total_pages
+    //        case results = "results"
+    //    }
+    //    init(json: [String: Any]) {
+    //        page = json["page"] as? Int ?? 0
+    //        total_results = json["total_results"] as? Int ?? 0
+    //        total_pages = json["total_pages"] as? Int ?? 0
+    //        results = json["results"] as! [Results]
+    //    }
 }
 
 struct Results: Decodable {
@@ -53,20 +62,20 @@ struct Results: Decodable {
         original_title = json["original_title"] as? String ?? ""
     }
     
-//    enum CodingKeys: String, CodingKey {
-//        case adult
-//        case backdropPath = "backdrop_path"
-//        case genreIds = "genre_ids"
-//        case id
-//        case originalLanguage = "original_language"
-//        case originalTitle = "original_title"
-//        case overview
-//        case popularity
-//        case posterPath = "poster_path"
-//        case releaseDate = "release_date"
-//        case title
-//        case video
-//        case voteAverage = "vote_average"
-//        case voteCount = "vote_count"
-//    }
+    //    enum CodingKeys: String, CodingKey {
+    //        case adult
+    //        case backdropPath = "backdrop_path"
+    //        case genreIds = "genre_ids"
+    //        case id
+    //        case originalLanguage = "original_language"
+    //        case originalTitle = "original_title"
+    //        case overview
+    //        case popularity
+    //        case posterPath = "poster_path"
+    //        case releaseDate = "release_date"
+    //        case title
+    //        case video
+    //        case voteAverage = "vote_average"
+    //        case voteCount = "vote_count"
+    //    }
 }

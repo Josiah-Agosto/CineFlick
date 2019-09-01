@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MovieCollectionViewFlowLayout: UICollectionViewFlowLayout {
+class MainCollectionViewFlowLayout: UICollectionViewFlowLayout {
     override init() {
         super.init()
         self.minimumLineSpacing = 5

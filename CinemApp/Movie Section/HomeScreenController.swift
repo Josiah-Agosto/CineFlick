@@ -10,13 +10,14 @@ import UIKit
 import Foundation
 // TIP: - When programmatically making Navigation Bars you need to NOT subclass it as a UINavigationController
 class HomeScreenController: UIViewController {
-    // Temporary Data Holders from JSON
-    public var popularMovieTitles: [String] = []
-    public var popularMovieFilmRatings: [Float] = []
-    public var popularMovieImagesURLs: [String] = []
     // References
-    private var slideOutMenu: UIViewController!
-    private var categoryView = Categories()
+    private let categoryView = Categories()
+    private let movieCell = MovieCollectionViewCell()
+    let popularRequest = PopularProcess()
+    let nowPlayingRequest = NowPlayingProcess()
+    let upcomingRequest = UpcomingProcess()
+    let topRatedRequest = TopRatedProcess()
+    let movieNetworkManager = NetworkManager()
     private var isOpen: Bool = false
     // Buttons, Labels, etc.
     private let categoryButton = UIButton(frame: CGRect(x: 20, y: 10, width: 25, height: 25))
@@ -28,194 +29,49 @@ class HomeScreenController: UIViewController {
         collection.backgroundColor = UIColor.clear
         return collection
     }()
+    public let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+    public let loader = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.whiteLarge)
     let headerId = "headerId"
-    // Image Variables
-    var secureImageURL: String = ""
-    var originalImage: String = ""
-    var convertingImageVariableURLs: [String] = []
+    let secondHeaderId = "secondId"
+    let thirdHeaderId = "thirdId"
+    let fourthHeaderId = "fourthHeaderId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        popularMovieRequestTitles { (_, _, _, error) in
-            if let error = error {
-                print(error)
-            }
-        }
-        processImageUrls { (_) in
-        }
-        reloadingMainCollectionView()
+        movieNetworkManager.makeApiCalls()
     }
     
     
-    public func reloadingMainCollectionView() {
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
-    }
-    
-    
-    private func initialSetup() {
-    // View Appearance
+    func initialSetup() {
+        // View Appearance
         navigationController?.navigationBar.topItem?.title = "Movies"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 45)!, NSAttributedString.Key.foregroundColor: UIColor(red: 145/255, green: 36/255, blue: 36/255, alpha: 1.0)]
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
         categoryButton.setImage(UIImage(named: "CategoryButton"), for: .normal)
         categoryButton.addTarget(self, action: #selector(categoryView(sender:)), for: .touchUpInside)
         navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: categoryButton)
         navigationController?.navigationBar.addSubview(categoryButton)
-//        createGradient(first: UIColor(red: 114/255, green: 104/255, blue: 104/255, alpha: 1.0), second: UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0))
-        view.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 0)
-     // Collection View
-        collectionView.allowsSelection = true
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-    // Header
-        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
-        view.addSubview(collectionView)
+        view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1.0)
+        // Collection View
+        self.collectionView.allowsSelection = true
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        // Header
+        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
+        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: secondHeaderId)
+        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: thirdHeaderId)
+        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: fourthHeaderId)
+        // Inner Collection View Registered Cells
+        movieCell.innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
+        movieCell.innerCollectionView.register(NowPlayingCellsCell.self, forCellWithReuseIdentifier: "nowPlayingCellsCell")
+        movieCell.innerCollectionView.register(UpcomingCellsCell.self, forCellWithReuseIdentifier: "upcomingCellsCell")
+        movieCell.innerCollectionView.register(TopRatedCellsCell.self, forCellWithReuseIdentifier: "topRatedCellsCell")
+        view.addSubview(self.collectionView)
     }
     
-    // Movie Request
-    public func popularMovieRequestTitles(completionHandler: @escaping (_ title: [String]?, _ filmRating: [Float]?,_ movieImage: [String]?, Error?) -> Void) -> Void {
-        // Api Key Location
-        let constant: String = apiKey
-        // Title
-        let group1 = DispatchGroup()
-        // Rating
-        let group2 = DispatchGroup()
-        // Image URL
-        let group3 = DispatchGroup()
-    //MARK: - Insert API Key Here
-        // Insert YOUR API KEY here, Remove Underscore and enter a title.
-        let _: String = ""
-        // Data Request
-        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1&region=US")!
-    // Session for getting Title
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: popularMovieDataURL) {
-            (data, response, error) in
-            guard let data = data else {
-                print("Error recieving URL!")
-                return
-            }
-            do {
-                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                self.popularMovieTitles.removeAll()
-                group1.enter()
-                for titles in popularMovies.results {
-                    self.popularMovieTitles.append(titles.title)
-                }
-                group1.leave()
-                group1.notify(queue: DispatchQueue.main, execute: {
-                    completionHandler(self.popularMovieTitles, nil, nil, nil)
-                })
-            } catch let JSONError {
-                completionHandler(nil, nil, nil, JSONError)
-            }
-        }
-        dataTask.resume()
-    // Session for getting Film Rating
-        let sessionFilmRating = URLSession.shared
-        let dataTaskFilmRating = sessionFilmRating.dataTask(with: popularMovieDataURL) {
-            (data, response, error) in
-            guard let data = data else {
-                print("Error recieving Film Rating URL!")
-                return
-            }
-            do {
-                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                self.popularMovieFilmRatings.removeAll()
-                group2.enter()
-                for filmRating in popularMovies.results {
-                    self.popularMovieFilmRatings.append(Float(filmRating.vote_average))
-                }
-                group2.leave()
-                group2.notify(queue: DispatchQueue.main, execute: {
-                    completionHandler(nil, self.popularMovieFilmRatings, nil, nil)
-                })
-            } catch let JSONError {
-                completionHandler(nil, nil, nil, JSONError)
-            }
-        }
-        dataTaskFilmRating.resume()
-    // Movie Image Request
-        let sessionMovieImage = URLSession.shared
-        let dataTaskMovieImage = sessionMovieImage.dataTask(with: popularMovieDataURL) {
-            (data, response, error) in
-            guard let data = data else {
-                print("Error recieving Movie Image URL")
-                return
-            }
-            do {
-                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                self.popularMovieImagesURLs.removeAll()
-                group3.enter()
-                for movieImages in popularMovies.results {
-                    self.popularMovieImagesURLs.append(movieImages.poster_path ?? " ")
-                }
-                group3.leave()
-                group3.notify(queue: DispatchQueue.main, execute: {
-                    completionHandler(nil, nil, self.popularMovieImagesURLs, nil)
-                })
-            } catch let JSONError {
-                completionHandler(nil, nil, nil, JSONError)
-            }
-        }
-        dataTaskMovieImage.resume()
-    }
-    
-    // Image Processing API Request
-    public func processImageUrls(completionHandler: @escaping (_ conversionURL: [String]?) -> Void) -> Void {
-        let constants = apiKey
-        let securedBaseUrl: URL = URL(string: "https://api.themoviedb.org/3/configuration?api_key=\(constants)")!
-        let imageSession = URLSession.shared
-        let imageDataTask = imageSession.dataTask(with: securedBaseUrl) {
-            (data, response, error) in
-            guard let data = data else { return }
-            do {
-                let imageProcessor = try JSONDecoder().decode(MovieImageModel.self, from: data)
-                self.secureImageURL = imageProcessor.images.secure_base_url
-                let widthFive00 = imageProcessor.images.poster_sizes[4]
-                self.originalImage = widthFive00
-                for fullImageURL in self.popularMovieImagesURLs {
-                    self.convertingImageVariableURLs.append("\(self.secureImageURL)\(self.originalImage)\(fullImageURL)")
-                }
-                completionHandler(self.convertingImageVariableURLs)
-            } catch let JSONError {
-                print("Error, recieving Session, \(JSONError)")
-            }
-        }
-        imageDataTask.resume()
-    }
-    
-    // Converting Image Urls to a UIImage
-    func convertingFullURLsToImage(completionHandler: @escaping (_ movieImage: [UIImage]) -> Void) -> Void {
-        var temporaryHolder: [UIImage] = []
-        for imageURL in convertingImageVariableURLs {
-            let singleUrl = URL(string: imageURL)!
-            do {
-                let data = try Data(contentsOf: singleUrl)
-                let image: UIImage = UIImage(data: data)!
-                temporaryHolder.append(image)
-                completionHandler(temporaryHolder)
-            } catch let ImageError {
-                print("Error, converting URL's to UIImage, \(ImageError)")
-            }
-        }
-    }
-    
-    // Gradient Background
-    private func createGradient(first colorOne: UIColor, second colorTwo: UIColor) {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
-        gradientLayer.locations = [0.62, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 0.0, y: 0.0)
-        view.layer.insertSublayer(gradientLayer, at: 0)
-    }
     
     // Animation for Pressing Image Button
     @objc private func categoryView(sender: UIBarButtonItem) {
@@ -226,13 +82,10 @@ class HomeScreenController: UIViewController {
     // Slide Menu Effects
     private func slideOutCategoriesView(shouldExpand: Bool) {
         // Adding Blur Effect in background
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        guard let window = UIApplication.shared.keyWindow else {
-            return
-        }
+        guard let window = UIApplication.shared.keyWindow else { return }
         window.addSubview(categoryView.view)
         blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
         // Starting point
@@ -270,7 +123,7 @@ class HomeScreenController: UIViewController {
         }
     }
     
-
+    
     @objc private func blurEffectTap() {
         slideOutCategoriesView(shouldExpand: !isOpen)
     }
@@ -282,7 +135,6 @@ class HomeScreenController: UIViewController {
     }
 } // Class end
 
-
 // Collection View Stuff
 extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // This shouldn't be modified. In order to modify this it has to be in the Movie Collection View File
@@ -292,7 +144,7 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
     
     // Number of Sections in the View is shown here, not the amount in each row
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return 4
     }
     
     
@@ -315,24 +167,69 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        // Default, Popular
+        // Initial Setup
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
-        let headerTitle: UILabel = {
-            let headerTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 40))
-            headerTitleLabel.text = "Popular"
-            headerTitleLabel.textColor = UIColor.white
-            headerTitleLabel.textAlignment = NSTextAlignment.left
-            headerTitleLabel.font = UIFont(name: "Avenir Next", size: 30)
-            return headerTitleLabel
-        }()
-        header.backgroundColor = UIColor.clear
-        header.addSubview(headerTitle)
-        return header
+        let secondHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: secondHeaderId, for: indexPath)
+        let thirdHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: thirdHeaderId, for: indexPath)
+        let fourthHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: fourthHeaderId, for: indexPath)
+        header.backgroundColor = UIColor(red: 58/255, green: 15/255, blue: 15/255, alpha: 1.0)
+        secondHeader.backgroundColor = UIColor(red: 58/255, green: 15/255, blue: 15/255, alpha: 1.0)
+        thirdHeader.backgroundColor = UIColor(red: 58/255, green: 15/255, blue: 15/255, alpha: 1.0)
+        fourthHeader.backgroundColor = UIColor(red: 58/255, green: 15/255, blue: 15/255, alpha: 1.0)
+        // Rows
+        if indexPath.section == 1 {
+            let secondHeaderTitle: UILabel = {
+                let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
+                headerTitleLabel.text = "Now Playing"
+                headerTitleLabel.textColor = UIColor.white
+                headerTitleLabel.textAlignment = NSTextAlignment.left
+                headerTitleLabel.backgroundColor = UIColor.clear
+                headerTitleLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 28)
+                return headerTitleLabel
+            }()
+            secondHeader.addSubview(secondHeaderTitle)
+            return secondHeader
+        } else if indexPath.section == 2 {
+            let thirdHeaderTitle: UILabel = {
+                let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
+                headerTitleLabel.text = "Upcoming"
+                headerTitleLabel.textColor = UIColor.white
+                headerTitleLabel.textAlignment = NSTextAlignment.left
+                headerTitleLabel.backgroundColor = UIColor.clear
+                headerTitleLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 28)
+                return headerTitleLabel
+            }()
+            thirdHeader.addSubview(thirdHeaderTitle)
+            return thirdHeader
+        } else if indexPath.section == 3 {
+            let fourthHeaderTitle: UILabel = {
+                let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
+                headerTitleLabel.text = "Top Rated"
+                headerTitleLabel.textColor = UIColor.white
+                headerTitleLabel.textAlignment = NSTextAlignment.left
+                headerTitleLabel.backgroundColor = UIColor.clear
+                headerTitleLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 28)
+                return headerTitleLabel
+            }()
+            fourthHeader.addSubview(fourthHeaderTitle)
+            return fourthHeader
+        } else {
+            let headerTitle: UILabel = {
+                let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
+                headerTitleLabel.text = "Popular"
+                headerTitleLabel.textColor = UIColor.white
+                headerTitleLabel.textAlignment = NSTextAlignment.left
+                headerTitleLabel.backgroundColor = UIColor.clear
+                headerTitleLabel.font = UIFont(name: "HelveticaNeue-Thin", size: 28)
+                return headerTitleLabel
+            }()
+            header.addSubview(headerTitle)
+            return header
+        }
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: 40)
     }
-    
-}
+} // Extension End

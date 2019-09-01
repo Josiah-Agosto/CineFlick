@@ -7,20 +7,22 @@
 //
 
 import UIKit
-import Foundation
 
 class Categories: UIViewController {
     // Buttons, Labels, etc.
-    let categoryTitle = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: 160))
     let movieButton = UIButton(frame: CGRect(x: 0, y: 100, width: 200, height: 125))
+    let categoryTitle = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: 160))
     let tvShowButton = UIButton(frame: CGRect(x: 0, y: 250, width: 200, height: 125))
     let popularActorsButton = UIButton(frame: CGRect(x: 0, y: 400, width: 200, height: 125))
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Parent Controller
-        
-    // View Appearance
+        setup()
+    }
+    
+    
+    func setup() {
+        // View Appearance
         view.backgroundColor = UIColor(red: 65/255, green: 0, blue: 0, alpha: 1.0)
         // Category
         categoryTitle.text = "Categories"
@@ -42,12 +44,12 @@ class Categories: UIViewController {
         popularActorsButton.setTitleColor(UIColor.white, for: .normal)
         popularActorsButton.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 18)
         popularActorsButton.titleLabel?.textAlignment = NSTextAlignment.left
-    // Adding to View
+        // Adding to View
         view.addSubview(categoryTitle)
         view.addSubview(movieButton)
         view.addSubview(tvShowButton)
         view.addSubview(popularActorsButton)
-    // Configuring the Constraints
+        // Configuring the Constraints
         configureConstraints()
     }
     
