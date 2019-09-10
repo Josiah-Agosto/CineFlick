@@ -10,14 +10,6 @@ import UIKit
 import Foundation
 // TIP: - When programmatically making Navigation Bars you need to NOT subclass it as a UINavigationController
 class HomeScreenController: UIViewController {
-    // References
-    private let categoryView = Categories()
-    private let movieCell = MovieCollectionViewCell()
-    let popularRequest = PopularProcess()
-    let nowPlayingRequest = NowPlayingProcess()
-    let upcomingRequest = UpcomingProcess()
-    let topRatedRequest = TopRatedProcess()
-    let movieNetworkManager = NetworkManager()
     private var isOpen: Bool = false
     // Buttons, Labels, etc.
     private let categoryButton = UIButton(frame: CGRect(x: 20, y: 10, width: 25, height: 25))
@@ -30,21 +22,28 @@ class HomeScreenController: UIViewController {
         return collection
     }()
     public let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
-    public let loader = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.whiteLarge)
     let headerId = "headerId"
     let secondHeaderId = "secondId"
     let thirdHeaderId = "thirdId"
     let fourthHeaderId = "fourthHeaderId"
+    // References
+    var categoryView: UIViewController!
+    let movieNetworkManager = NetworkManager()
+    var movieCell: MovieCollectionViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
         movieNetworkManager.makeApiCalls()
+        movieCell = MovieCollectionViewCell()
+        movieCell.reloadViews()
+        print("Reloaded")
     }
     
     
     func initialSetup() {
         // View Appearance
+        view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1.0)
         navigationController?.navigationBar.topItem?.title = "Movies"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.hidesBarsOnSwipe = false
@@ -53,25 +52,24 @@ class HomeScreenController: UIViewController {
         categoryButton.addTarget(self, action: #selector(categoryView(sender:)), for: .touchUpInside)
         navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: categoryButton)
         navigationController?.navigationBar.addSubview(categoryButton)
-        view.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1.0)
         // Collection View
-        self.collectionView.allowsSelection = true
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
+        collectionView.allowsSelection = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
         self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         // Header
-        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
-        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: secondHeaderId)
-        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: thirdHeaderId)
-        self.collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: fourthHeaderId)
+        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
+        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: secondHeaderId)
+        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: thirdHeaderId)
+        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: fourthHeaderId)
+        view.addSubview(collectionView)
+        movieCell = MovieCollectionViewCell()
         // Inner Collection View Registered Cells
         movieCell.innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
         movieCell.innerCollectionView.register(NowPlayingCellsCell.self, forCellWithReuseIdentifier: "nowPlayingCellsCell")
         movieCell.innerCollectionView.register(UpcomingCellsCell.self, forCellWithReuseIdentifier: "upcomingCellsCell")
         movieCell.innerCollectionView.register(TopRatedCellsCell.self, forCellWithReuseIdentifier: "topRatedCellsCell")
-        view.addSubview(self.collectionView)
     }
-    
     
     // Animation for Pressing Image Button
     @objc private func categoryView(sender: UIBarButtonItem) {
@@ -85,6 +83,7 @@ class HomeScreenController: UIViewController {
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        categoryView = Categories()
         guard let window = UIApplication.shared.keyWindow else { return }
         window.addSubview(categoryView.view)
         blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
@@ -103,7 +102,7 @@ class HomeScreenController: UIViewController {
                 self.view.addSubview(blurEffectView)
             }, completion: nil)
         } else {
-            isOpen = false
+            self.isOpen = false
             // Hides the Category View
             UIView.animate(withDuration: 0.5, animations: {
                 self.categoryView.view.frame = CGRect(x: -window.frame.width - 90, y: 0, width: window.frame.width - 90.0, height: window.frame.height)

@@ -10,13 +10,6 @@ import Foundation
 import UIKit
 
 class MovieCollectionViewCell: UICollectionViewCell {
-    // References
-    private let homeController = HomeScreenController()
-    private let popularRequest = PopularProcess()
-    private let nowPlayingRequest = NowPlayingProcess()
-    private let upcomingRequest = UpcomingProcess()
-    private let topRatedRequest = TopRatedProcess()
-    private let movieNetworkManager = NetworkManager()
     // Inner Cell
     let innerCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,6 +22,12 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }()
     // Date Formatter
     private let dateFormatter = DateFormatter()
+    // References
+    private var popularRequest: PopularProcess!
+    private var nowPlayingRequest: NowPlayingProcess!
+    private var upcomingRequest: UpcomingProcess!
+    private var topRatedRequest: TopRatedProcess!
+    private var movieNetworkManager: NetworkManager!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,15 +35,18 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     
+    public func reloadViews() {
+        DispatchQueue.main.async {
+            self.innerCollectionView.reloadData()
+        }
+    }
+    
+    
     func setup() {
-        // Inner Cell
-        //        innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
-        //        innerCollectionView.register(NowPlayingCellsCell.self, forCellWithReuseIdentifier: "nowPlayingCellsCell")
-        //        innerCollectionView.register(UpcomingCellsCell.self, forCellWithReuseIdentifier: "upcomingCellsCell")
-        //        innerCollectionView.register(TopRatedCellsCell.self, forCellWithReuseIdentifier: "topRatedCellsCell")
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self
         innerCollectionView.showsHorizontalScrollIndicator = false
+        innerCollectionView.allowsSelection = true
         addSubview(innerCollectionView)
         // Worked On July 21, Sunday 12:06
     }
@@ -68,6 +70,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
 extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // Data inside each Cell is shown here
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        movieNetworkManager = NetworkManager()
         if section == 1 {
             // Now Playing
             return movieNetworkManager.nowPlayingTitles.count
@@ -79,13 +82,15 @@ extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDat
             return movieNetworkManager.topRatedTitles.count
         } else {
             // Popular
-            //            print("#\(movieTitleAccomplice.count)")
             return movieNetworkManager.movieTitleAccomplice.count
         }
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        popularRequest = PopularProcess()
+        nowPlayingRequest = NowPlayingProcess()
+        topRatedRequest = TopRatedProcess()
         if indexPath.section == 1 {
             print("Inside cellForItem")
             // Now Playing

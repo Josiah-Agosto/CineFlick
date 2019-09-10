@@ -25,9 +25,7 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
     
     // Movie Request
     func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, [String]?, Error?) -> Void) {
-        let group1 = DispatchGroup()
-        let group2 = DispatchGroup()
-        let group3 = DispatchGroup()
+        let group = DispatchGroup()
         //MARK: - Insert API Key Here
         // Insert YOUR API KEY here, Remove Underscore and enter a title.
         let _: String = ""
@@ -40,72 +38,72 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
             guard let data = data else { print("Error recieving URL!"); return }
             do {
                 let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                guard let results = popularMovies.results else { return }
-                group1.enter()
+                guard let results = popularMovies.results else { print("Error 20, \(error.debugDescription)"); return }
+                group.enter()
                 self.titles.removeAll()
                 for titles in results {
                     self.titles.append(titles.title)
                 }
-                group1.leave()
-                completionHandler(self.titles, nil, nil, nil)
+                group.leave()
+                // Movie Image Request
+                let sessionMovieImage = URLSession.shared
+                let dataTaskMovieImage = sessionMovieImage.dataTask(with: popularMovieDataURL) {
+                    (data, response, error) in
+                    guard let data = data else { print("Error 21, \(error.debugDescription)"); return }
+                    do {
+                        let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
+                        guard let results = popularMovies.results else { print("Error 22, \(error.debugDescription)"); return }
+                        group.enter()
+                        self.imageFilePaths.removeAll()
+                        for movieImages in results {
+                            self.imageFilePaths.append(movieImages.poster_path ?? "Error")
+                        }
+                        group.leave()
+                        // Session for getting Film Rating
+                        let sessionFilmRating = URLSession.shared
+                        let dataTaskFilmRating = sessionFilmRating.dataTask(with: popularMovieDataURL) {
+                            (data, response, error) in
+                            guard let data = data else { print("Error 23, \(error.debugDescription)"); return }
+                            do {
+                                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
+                                guard let results = popularMovies.results else { print("Error 24, \(error.debugDescription)"); return }
+                                group.enter()
+                                self.filmRatings.removeAll()
+                                for filmRating in results {
+                                    self.filmRatings.append(String(filmRating.vote_average))
+                                }
+                                group.leave()
+                                group.wait()
+                                completionHandler(self.titles, self.filmRatings, self.imageFilePaths, nil)
+                            } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
+                        }
+                        dataTaskFilmRating.resume()
+                    } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
+                }
+                dataTaskMovieImage.resume()
             } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
         }
         dataTask.resume()
-        // Session for getting Film Rating
-        let sessionFilmRating = URLSession.shared
-        let dataTaskFilmRating = sessionFilmRating.dataTask(with: popularMovieDataURL) {
-            (data, response, error) in
-            guard let data = data else { print("Error recieving Film Rating URL!"); return }
-            do {
-                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                guard let results = popularMovies.results else { return }
-                group2.enter()
-                self.filmRatings.removeAll()
-                for filmRating in results {
-                    self.filmRatings.append(String(filmRating.vote_average))
-                }
-                group2.leave()
-                completionHandler(nil, self.filmRatings, nil, nil)
-            } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
-        }
-        dataTaskFilmRating.resume()
-        // Movie Image Request
-        let sessionMovieImage = URLSession.shared
-        let dataTaskMovieImage = sessionMovieImage.dataTask(with: popularMovieDataURL) {
-            (data, response, error) in
-            guard let data = data else { print("Error recieving Movie Image URL"); return }
-            do {
-                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                guard let results = popularMovies.results else { return }
-                group3.enter()
-                self.imageFilePaths.removeAll()
-                for movieImages in results {
-                    self.imageFilePaths.append(movieImages.poster_path ?? "Error")
-                }
-                group3.leave()
-                completionHandler(nil, nil, self.imageFilePaths, nil)
-            } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
-        }
-        dataTaskMovieImage.resume()
     }
     
-    
+    // MARK: - Fix number 26
     func filePathRequest(completionHandler: @escaping ([String]?, Error?) -> Void) {
         let group = DispatchGroup()
-        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/configuration?api_key=\(constant)")!
+        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1")!
         let session = URLSession.shared
         let imageDataTask = session.dataTask(with: nowPlayingUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error 25, \(error.debugDescription)"); return }
             do {
                 let nowPlayingModel = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlayingModel.results else { return }
+                guard let results = nowPlayingModel.results else { print("Error 26, \(error.debugDescription)"); return }
                 group.enter()
                 self.filePath.removeAll()
                 for filePaths in results {
                     self.filePath.append(filePaths.poster_path ?? "Error")
                 }
                 group.leave()
+                group.wait()
                 completionHandler(self.filePath, nil)
             } catch let JSONError { completionHandler(nil, JSONError); print(JSONError) }
         }
@@ -119,7 +117,7 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
         let session = URLSession.shared
         let imageDataTask = session.dataTask(with: securedBaseUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error 27, \(error.debugDescription)"); return }
             do {
                 let imageProcessor = try JSONDecoder().decode(BaseImageModel.self, from: data)
                 group.enter()
@@ -129,6 +127,7 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
                 group.leave()
+                group.wait()
                 completionHandler(self.fullImageUrl, nil)
             } catch let JSONError { completionHandler(nil, JSONError); print(JSONError) }
         }
@@ -146,6 +145,7 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                 let image: UIImage = UIImage(data: data)!
                 self.movieImages.append(image)
                 group.leave()
+                group.wait()
                 completionHandler(self.movieImages, nil)
             } catch let ImageError { completionHandler(nil, ImageError); print(ImageError) }
         }

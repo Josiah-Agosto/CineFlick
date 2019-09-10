@@ -26,7 +26,6 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
     func mainDataRequest(completionHandler: @escaping ([String]?, [String]?, Error?) -> Void) {
         // Dispatch Groups
         let group = DispatchGroup()
-        let group2 = DispatchGroup()
         // Title
         let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(constant)&language=en-US&page=1")!
         let session = URLSession.shared
@@ -35,54 +34,55 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
             guard let data = data else { return }
             do {
                 let nowPlaying = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlaying.results else { return }
+                guard let results = nowPlaying.results else { print("Error 28, \(error.debugDescription)"); return }
                 self.allTitles.removeAll()
                 group.enter()
                 for titles in results {
                     self.allTitles.append(titles.title)
                 }
                 group.leave()
-                completionHandler(self.allTitles, nil, nil)
+                // Release Date
+                let releaseDateSession = URLSession.shared
+                let dataTaskReleaseDate = releaseDateSession.dataTask(with: nowPlayingUrl) {
+                    (data, response, error) in
+                    guard let data = data else { print("Error 29, \(error.debugDescription)"); return }
+                    do {
+                        let nowPlaying = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
+                        guard let results = nowPlaying.results else { print("Error 30, \(error.debugDescription)"); return }
+                        self.allDates.removeAll()
+                        group.enter()
+                        for dates in results {
+                            self.allDates.append(dates.release_date)
+                        }
+                        group.leave()
+                        group.wait()
+                        completionHandler(self.allTitles, self.allDates, nil)
+                    } catch let JSONError { completionHandler(nil, nil, JSONError) }
+                }
+                dataTaskReleaseDate.resume()
             } catch let JSONError { completionHandler(nil, nil, JSONError) }
         }
         dataTaskTitle.resume()
-        // Release Date
-        let releaseDateSession = URLSession.shared
-        let dataTaskReleaseDate = releaseDateSession.dataTask(with: nowPlayingUrl) {
-            (data, response, error) in
-            guard let data = data else { return }
-            do {
-                let nowPlaying = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlaying.results else { return }
-                self.allDates.removeAll()
-                group2.enter()
-                for dates in results {
-                    self.allDates.append(dates.release_date)
-                }
-                group2.leave()
-                completionHandler(nil, self.allDates, nil)
-            } catch let JSONError { completionHandler(nil, nil, JSONError) }
-        }
-        dataTaskReleaseDate.resume()
     }
     
-    
+    // MARK: - Fix number 32, doesn't show error.
     func filePathRequest(completionHandler: @escaping ([String]?, Error?) -> Void) {
         let group = DispatchGroup()
         let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(constant)&language=en-US&page=1")!
         let session = URLSession.shared
         let imageDataTask = session.dataTask(with: nowPlayingUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error 31, \(error.debugDescription)"); return }
             do {
                 let nowPlayingModel = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlayingModel.results else { return }
+                guard let results = nowPlayingModel.results else { print("Error 32, \(error.debugDescription)"); return }
                 self.filePath.removeAll()
                 group.enter()
                 for filePaths in results {
                     self.filePath.append(filePaths.poster_path ?? " ")
                 }
                 group.leave()
+                group.wait()
                 completionHandler(self.filePath, nil)
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
@@ -96,7 +96,7 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
         let session = URLSession.shared
         let imageDataTask = session.dataTask(with: securedBaseUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error 33, \(error.debugDescription)"); return }
             do {
                 let imageProcessor = try JSONDecoder().decode(BaseImageModel.self, from: data)
                 group.enter()
@@ -106,6 +106,7 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
                 group.leave()
+                group.wait()
                 completionHandler(self.fullImageUrl, nil)
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
@@ -123,6 +124,7 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
                 let image: UIImage = UIImage(data: data)!
                 self.movieImages.append(image)
                 group.leave()
+                group.wait()
                 completionHandler(self.movieImages, nil)
             } catch let ImageError { completionHandler(nil, ImageError) }
         }

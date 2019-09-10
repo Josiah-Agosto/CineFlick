@@ -25,63 +25,63 @@ class UpcomingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequiremen
     func mainDataRequest(completionHandler: @escaping ([String]?, [String]?, Error?) -> Void) -> Void {
         // Dispatch Groups
         let group = DispatchGroup()
-        let group2 = DispatchGroup()
         // Title
         let upcomingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/upcoming?api_key=\(constant)&language=en-US&page=1")!
         let session = URLSession.shared
         let dataTaskTitle = session.dataTask(with: upcomingUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error with Data, \(error.debugDescription)"); return }
             do {
                 let nowPlaying = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlaying.results else { return }
+                guard let results = nowPlaying.results else { print("Error 1, \(error.debugDescription)"); return }
                 self.allTitles.removeAll()
                 group.enter()
                 for titles in results {
                     self.allTitles.append(titles.title)
                 }
                 group.leave()
-                completionHandler(self.allTitles, nil, nil)
+                // Release Date
+                let releaseDateSession = URLSession.shared
+                let dataTaskReleaseDate = releaseDateSession.dataTask(with: upcomingUrl) {
+                    (data, response, error) in
+                    guard let data = data else { print("Error with Data, \(error.debugDescription)"); return }
+                    do {
+                        let nowPlaying = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
+                        guard let results = nowPlaying.results else { print("Error 2, \(error.debugDescription)"); return }
+                        self.allDates.removeAll()
+                        group.enter()
+                        for dates in results {
+                            self.allDates.append(dates.release_date)
+                        }
+                        group.leave()
+                        group.wait()
+                        completionHandler(self.allTitles, self.allDates, nil)
+                    } catch let JSONError { completionHandler(nil, nil, JSONError) }
+                }
+                dataTaskReleaseDate.resume()
             } catch let JSONError { completionHandler(nil, nil, JSONError) }
         }
         dataTaskTitle.resume()
-        // Release Date
-        let releaseDateSession = URLSession.shared
-        let dataTaskReleaseDate = releaseDateSession.dataTask(with: upcomingUrl) {
-            (data, response, error) in
-            guard let data = data else { return }
-            do {
-                let nowPlaying = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlaying.results else { return }
-                self.allDates.removeAll()
-                group2.enter()
-                for dates in results {
-                    self.allDates.append(dates.release_date)
-                }
-                group2.leave()
-                completionHandler(nil, self.allDates, nil)
-            } catch let JSONError { completionHandler(nil, nil, JSONError) }
-        }
-        dataTaskReleaseDate.resume()
     }
     
-    
+    // MARK: - Fix Error 4
     func filePathRequest(completionHandler: @escaping ([String]?, Error?) -> Void) -> Void {
         let group = DispatchGroup()
-        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/configuration?api_key=\(constant)")!
+        let upcomingProcessUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/upcoming?api_key=\(constant)&language=en-US&page=1")!
         let session = URLSession.shared
-        let imageDataTask = session.dataTask(with: nowPlayingUrl) {
+        let imageDataTask = session.dataTask(with: upcomingProcessUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error 3, \(error.debugDescription)"); return }
             do {
                 let nowPlayingModel = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
-                guard let results = nowPlayingModel.results else { return }
+                guard let results = nowPlayingModel.results else { print("Error 4, \(error.debugDescription)"); return }
                 self.filePath.removeAll()
                 group.enter()
                 for filePaths in results {
                     self.filePath.append(filePaths.poster_path ?? " ")
                 }
                 group.leave()
+                group.wait()
                 completionHandler(self.filePath, nil)
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
@@ -95,7 +95,7 @@ class UpcomingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequiremen
         let session = URLSession.shared
         let imageDataTask = session.dataTask(with: securedBaseUrl) {
             (data, response, error) in
-            guard let data = data else { return }
+            guard let data = data else { print("Error 5, \(error.debugDescription)"); return }
             do {
                 let imageProcessor = try JSONDecoder().decode(BaseImageModel.self, from: data)
                 group.enter()
@@ -105,6 +105,7 @@ class UpcomingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequiremen
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
                 group.leave()
+                group.wait()
                 completionHandler(self.fullImageUrl, nil)
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
@@ -117,11 +118,12 @@ class UpcomingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequiremen
         for imageURL in self.fullImageUrl {
             let url = URL(string: imageURL)!
             do {
-                let data = try Data(contentsOf: url)
                 group.enter()
+                let data = try Data(contentsOf: url)
                 let image: UIImage = UIImage(data: data)!
                 self.movieImages.append(image)
                 group.leave()
+                group.wait()
                 completionHandler(self.movieImages, nil)
             } catch let ImageError { completionHandler(nil, ImageError) }
         }
