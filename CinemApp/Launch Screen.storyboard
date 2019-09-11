@@ -18,12 +18,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Closed Clapboard" translatesAutoresizingMaskIntoConstraints="NO" id="P7e-lU-7zZ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Closed Clapboard" translatesAutoresizingMaskIntoConstraints="NO" id="P7e-lU-7zZ">
                                 <rect key="frame" x="100" y="274" width="174" height="119"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.25490196078431371" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="P7e-lU-7zZ" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="100" id="CsR-6R-4kL"/>
+                            <constraint firstAttribute="trailing" secondItem="P7e-lU-7zZ" secondAttribute="trailing" constant="101" id="U4P-fe-OaB"/>
+                            <constraint firstAttribute="bottom" secondItem="P7e-lU-7zZ" secondAttribute="bottom" constant="274" id="eEw-hG-HQ9"/>
+                            <constraint firstItem="P7e-lU-7zZ" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" constant="274" id="tBH-FJ-KUD"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                     </view>
                 </viewController>
@@ -33,6 +38,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Closed Clapboard" width="436.5" height="342"/>
+        <image name="Closed Clapboard" width="584" height="455.5"/>
     </resources>
 </document>

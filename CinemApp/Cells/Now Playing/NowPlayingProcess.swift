@@ -20,7 +20,7 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
     var secureImageUrl: String = ""
     var imageSize: String = ""
     var fullImageUrl: [String] = []
-    var movieImages: [UIImage] = []
+//    var movieImages: [UIImage] = []
     
     // Data Request
     func mainDataRequest(completionHandler: @escaping ([String]?, [String]?, Error?) -> Void) {
@@ -115,17 +115,14 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
     
     
     func makeUrlAnImage(completionHandler: @escaping ([UIImage]?, Error?) -> Void) {
-        let group = DispatchGroup()
+        var movieImages: [UIImage] = []
         for imageURL in self.fullImageUrl {
             let url = URL(string: imageURL)!
             do {
-                group.enter()
                 let data = try Data(contentsOf: url)
                 let image: UIImage = UIImage(data: data)!
-                self.movieImages.append(image)
-                group.leave()
-                group.wait()
-                completionHandler(self.movieImages, nil)
+                movieImages.append(image)
+                completionHandler(movieImages, nil)
             } catch let ImageError { completionHandler(nil, ImageError) }
         }
     }

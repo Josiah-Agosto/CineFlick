@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class NetworkManager {
-    let dateReference = Date()
     // Popular Movie Variables
     var movieTitleAccomplice: [String] = []
     var movieFilmRatingAccomplice: [String] = []
@@ -33,16 +32,15 @@ class NetworkManager {
     private var nowPlayingRequest: NowPlayingProcess!
     private var upcomingRequest: UpcomingProcess!
     private var topRatedRequest: TopRatedProcess!
-    private var movieCollectionView: MovieCollectionViewCell!
-    private var homeScreen: HomeScreenController!
+    private var movieCell: MovieCollectionViewCell!
+    private var home: HomeScreenController!
+    let dateReference = Date()
     
     
-    public func makeApiCalls() {
-        movieCollectionView = MovieCollectionViewCell()
-        homeScreen = HomeScreenController()
+    public func makeApiCalls(completionHandler: @escaping () -> Void) -> Void {
         // Request's
-        let group = DispatchGroup()
         let queue = OperationQueue()
+        let group = DispatchGroup()
         queue.addOperation {
             self.popularRequest = PopularProcess()
             // Cell 1
@@ -70,16 +68,14 @@ class NetworkManager {
             self.popularRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
                 print("Thing 2")
+                self.popularRequest.makeUrlAnImage(completionHandler: { (images, error) in
+                    if let error = error { print(error) }
+                    guard let images = images else { print("Error, \(error.debugDescription)"); return }
+                    self.movieImages = images
+                })
             })
             group.leave()
-            group.enter()
-            self.popularRequest.makeUrlAnImage(completionHandler: { (images, error) in
-                if let error = error { print(error) }
-                guard let images = images else { print("Error, \(error.debugDescription)"); return }
-                self.movieImages = images
-                print("Finishing Things")
-            })
-            group.leave()
+            group.wait()
         // Cell 2
             self.nowPlayingRequest = NowPlayingProcess()
             group.enter()
@@ -106,16 +102,14 @@ class NetworkManager {
             self.nowPlayingRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
                 print("done 2")
+                self.nowPlayingRequest.makeUrlAnImage(completionHandler: { (images, error) in
+                    if let error = error { print(error) }
+                    guard let images = images else { print("Error, \(error.debugDescription)"); return }
+                    self.nowPlayingImages = images
+                })
             })
             group.leave()
-            group.enter()
-            self.nowPlayingRequest.makeUrlAnImage(completionHandler: { (images, error) in
-                if let error = error { print(error) }
-                guard let images = images else { print("Error, \(error.debugDescription)"); return }
-                self.nowPlayingImages = images
-                print("Images")
-            })
-            group.leave()
+            group.wait()
         // Cell 3
             self.upcomingRequest = UpcomingProcess()
             group.enter()
@@ -142,14 +136,11 @@ class NetworkManager {
             self.upcomingRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
                 print("working")
-            })
-            group.leave()
-            group.enter()
-            self.upcomingRequest.makeUrlAnImage(completionHandler: { (images, error) in
-                if let error = error { print(error) }
-                guard let images = images else { print("Error, \(error.debugDescription)"); return }
-                self.upcomingImages = images
-                print("Anything")
+                self.upcomingRequest.makeUrlAnImage(completionHandler: { (images, error) in
+                    if let error = error { print(error) }
+                    guard let images = images else { print("Error, \(error.debugDescription)"); return }
+                    self.upcomingImages = images
+                })
             })
             group.leave()
         // Cell 4
@@ -178,17 +169,15 @@ class NetworkManager {
             self.topRatedRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
                 print("here?")
-            })
-            group.leave()
-            group.enter()
-            self.topRatedRequest.makeUrlAnImage(completionHandler: { (images, error) in
-                if let error = error { print(error) }
-                guard let images = images else { print("Error, \(error.debugDescription)"); return }
-                self.topRatedImages = images
-                print("Images Yet")
+                self.topRatedRequest.makeUrlAnImage(completionHandler: { (images, error) in
+                    if let error = error { print(error) }
+                    guard let images = images else { print("Error, \(error.debugDescription)"); return }
+                    self.topRatedImages = images
+                })
             })
             group.leave()
             group.wait()
+            completionHandler()
         }
     }
     

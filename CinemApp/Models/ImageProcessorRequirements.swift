@@ -16,7 +16,7 @@ protocol ImageProcessorRequirements {
     var secureImageUrl: String { get set }
     var imageSize: String { get set }
     var fullImageUrl: [String] { get set }
-    var movieImages: [UIImage] { get set }
+//    var movieImages: [UIImage] { get set }
     func filePathRequest(completionHandler: @escaping (_ filePath: [String]?, Error?) -> Void) -> Void
     func convertToUrl(completionHandler: @escaping (_ fullUrl: [String]?, Error?) -> Void) -> Void
     func makeUrlAnImage(completionHandler: @escaping (_ image: [UIImage]?, Error?) -> Void) -> Void

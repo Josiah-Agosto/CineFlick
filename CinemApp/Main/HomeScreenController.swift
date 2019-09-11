@@ -28,16 +28,11 @@ class HomeScreenController: UIViewController {
     let fourthHeaderId = "fourthHeaderId"
     // References
     var categoryView: UIViewController!
-    let movieNetworkManager = NetworkManager()
-    var movieCell: MovieCollectionViewCell!
+    var movieNetworkManager: NetworkManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        movieNetworkManager.makeApiCalls()
-        movieCell = MovieCollectionViewCell()
-        movieCell.reloadViews()
-        print("Reloaded")
     }
     
     
@@ -56,6 +51,7 @@ class HomeScreenController: UIViewController {
         collectionView.allowsSelection = false
         collectionView.delegate = self
         collectionView.dataSource = self
+        
         self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         // Header
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
@@ -63,12 +59,6 @@ class HomeScreenController: UIViewController {
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: thirdHeaderId)
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: fourthHeaderId)
         view.addSubview(collectionView)
-        movieCell = MovieCollectionViewCell()
-        // Inner Collection View Registered Cells
-        movieCell.innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
-        movieCell.innerCollectionView.register(NowPlayingCellsCell.self, forCellWithReuseIdentifier: "nowPlayingCellsCell")
-        movieCell.innerCollectionView.register(UpcomingCellsCell.self, forCellWithReuseIdentifier: "upcomingCellsCell")
-        movieCell.innerCollectionView.register(TopRatedCellsCell.self, forCellWithReuseIdentifier: "topRatedCellsCell")
     }
     
     // Animation for Pressing Image Button
@@ -133,6 +123,7 @@ class HomeScreenController: UIViewController {
         slideOutCategoriesView(shouldExpand: isOpen)
     }
 } // Class end
+
 
 // Collection View Stuff
 extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

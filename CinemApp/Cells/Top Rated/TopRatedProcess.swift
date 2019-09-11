@@ -21,8 +21,8 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
     var secureImageUrl: String = ""
     var imageSize: String = ""
     var fullImageUrl: [String] = []
-    var movieImages: [UIImage] = []
-    
+//    var movieImages: [UIImage] = []
+
     // Api Request
     func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, [String]?, Error?) -> Void) -> Void {
         let group = DispatchGroup()
@@ -132,17 +132,14 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
     
     
     func makeUrlAnImage(completionHandler: @escaping ([UIImage]?, Error?) -> Void) -> Void {
-        let group = DispatchGroup()
+        var movieImages: [UIImage] = []
         for imageURL in self.fullImageUrl {
             let url = URL(string: imageURL)!
             do {
                 let data = try Data(contentsOf: url)
-                group.enter()
                 let image: UIImage = UIImage(data: data)!
-                self.movieImages.append(image)
-                group.leave()
-                group.wait()
-                completionHandler(self.movieImages, nil)
+                movieImages.append(image)
+                completionHandler(movieImages, nil)
             } catch let ImageError { completionHandler(nil, ImageError) }
         }
     }
