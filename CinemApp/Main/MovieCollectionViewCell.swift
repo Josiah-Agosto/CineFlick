@@ -28,19 +28,16 @@ class MovieCollectionViewCell: UICollectionViewCell {
     private var upcomingRequest: UpcomingProcess!
     private var topRatedRequest: TopRatedProcess!
     private var movieNetworkManager = NetworkManager()
+    let home = HomeScreenController()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        // This wasn't a closire before but i foudn this way to work.
-        self.movieNetworkManager.makeApiCalls {
-            // This is also here just for now. I had everything before without the closure part and it kept calling the reload first.
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 20, execute: {
-                DispatchQueue.main.async {
-                    self.innerCollectionView.reloadData()
-                    print("Reloaded???")
-                }
-            })
+        movieNetworkManager.makeApiCalls {
+            DispatchQueue.main.async {
+                self.innerCollectionView.reloadData()
+                print("RELOADED!")
+            }
         }
     }
     
@@ -77,38 +74,41 @@ class MovieCollectionViewCell: UICollectionViewCell {
 extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     // Data inside each Cell is shown here
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            // Popular
+        let homeSections = home.collectionView.numberOfSections
+        if homeSections == 1 {
             return movieNetworkManager.movieTitleAccomplice.count
-        } else if section == 1 {
-            // Now Playing
+        } else if homeSections == 2 {
             return movieNetworkManager.nowPlayingTitles.count
-        } else if section == 2 {
-            // Upcoming
+        } else if homeSections == 3 {
             return movieNetworkManager.upcomingTitles.count
         } else {
-            // Top Rated
             return movieNetworkManager.topRatedTitles.count
         }
     }
     
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == 0 {
+        let homeSections = home.collectionView.numberOfSections
+        if homeSections == 1 {
             // Popular
             let popular = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "movieCellsCell", for: indexPath) as! PopularMovieCellsCell
             popular.movieTitle.text = movieNetworkManager.movieTitleAccomplice[indexPath.row]
             popular.movieRating.text = "\(movieNetworkManager.movieFilmRatingAccomplice[indexPath.row]) / 10"
             popular.moviePosterImage.image = movieNetworkManager.movieImages[indexPath.row]
             return popular
-        } else if indexPath.item == 1 {
+        } else if homeSections == 2 {
             // Now Playing
             let nowPlaying = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "nowPlayingCellsCell", for: indexPath) as! NowPlayingCellsCell
             nowPlaying.movieTitle.text = movieNetworkManager.nowPlayingTitles[indexPath.row]
             nowPlaying.movieReleaseTitle.text = "\(movieNetworkManager.nowPlayingReleaseDates[indexPath.row])"
             nowPlaying.movieImage.image = movieNetworkManager.nowPlayingImages[indexPath.row]
             return nowPlaying
-        } else if indexPath.item == 2 {
+        } else if homeSections == 3 {
             // Upcoming
             let upcoming = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "upcomingCellsCell", for: indexPath) as! UpcomingCellsCell
             upcoming.movieTitle.text = movieNetworkManager.upcomingTitles[indexPath.row]

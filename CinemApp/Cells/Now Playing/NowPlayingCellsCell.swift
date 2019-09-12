@@ -12,18 +12,28 @@ import UIKit
 class NowPlayingCellsCell: UICollectionViewCell {
     // Title
     let movieTitle: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
-        label.text = "Hello"
+        let label = UILabel(frame: CGRect(x: 0, y: 225, width: 150, height: 50))
+        label.text = "Now Playing"
+        label.numberOfLines = 0
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.white
+        label.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
         return label
     }()
     // Image
     let movieImage: UIImageView = {
-        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 200))
+        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
+        image.layer.cornerRadius = 5
+        image.contentMode = .scaleAspectFill
         return image
     }()
     // Release Date
     let movieReleaseTitle: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
+        let label = UILabel(frame: CGRect(x: 0, y: 275, width: 150, height: 15))
+        label.numberOfLines = 0
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.white
+        label.font = UIFont(name: "AvenirNext-DemiBold", size: 12)
         return label
     }()
     

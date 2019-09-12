@@ -30,7 +30,7 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
         // Insert YOUR API KEY here, Remove Underscore and enter a title.
         let _: String = ""
         // Data Request
-        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1")!
+        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=bf2ca98a5e17224c08b945e65322c940&language=en-US&page=1&region=US")!
         // Session for getting Title
         let session = URLSession.shared
         let dataTask = session.dataTask(with: popularMovieDataURL) {
@@ -73,8 +73,9 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                                     self.filmRatings.append(String(filmRating.vote_average))
                                 }
                                 group.leave()
-                                group.wait()
-                                completionHandler(self.titles, self.filmRatings, self.imageFilePaths, nil)
+                                group.notify(queue: DispatchQueue.main, execute: {
+                                    completionHandler(self.titles, self.filmRatings, self.imageFilePaths, nil)
+                                })
                             } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
                         }
                         dataTaskFilmRating.resume()
@@ -103,8 +104,9 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                     self.filePath.append(filePaths.poster_path ?? "Error")
                 }
                 group.leave()
-                group.wait()
-                completionHandler(self.filePath, nil)
+                group.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.filePath, nil)
+                })
             } catch let JSONError { completionHandler(nil, JSONError); print(JSONError) }
         }
         imageDataTask.resume()
@@ -127,8 +129,9 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
                 group.leave()
-                group.wait()
-                completionHandler(self.fullImageUrl, nil)
+                group.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.fullImageUrl, nil)
+                })
             } catch let JSONError { completionHandler(nil, JSONError); print(JSONError) }
         }
         imageDataTask.resume()

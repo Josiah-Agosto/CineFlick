@@ -13,9 +13,9 @@ import UIKit
 class PopularMovieCellsCell: UICollectionViewCell {
     // Movie Title
     let movieTitle: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 200, width: 150, height: 50))
+        let label = UILabel(frame: CGRect(x: 0, y: 225, width: 150, height: 50))
         // Label Text
-        label.text = "Loading"
+        label.text = "Popular"
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
@@ -24,7 +24,7 @@ class PopularMovieCellsCell: UICollectionViewCell {
     }()
     // Rating Image
     let movieRatingImage: UIImageView = {
-        let ratingImage = UIImageView(frame: CGRect(x: 0, y: 250, width: 25, height: 25))
+        let ratingImage = UIImageView(frame: CGRect(x: 0, y: 275, width: 15, height: 15))
         ratingImage.layer.cornerRadius = 5
         // Setting the ImageViews Image
         ratingImage.backgroundColor = UIColor.white
@@ -32,14 +32,14 @@ class PopularMovieCellsCell: UICollectionViewCell {
     }()
     // Poster Image
     var moviePosterImage: UIImageView = {
-        let posterImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 185))
+        let posterImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
         posterImage.layer.cornerRadius = 5
         posterImage.contentMode = .scaleAspectFill
         return posterImage
     }()
     // Movie Rating
     let movieRating: UILabel = {
-        let rating = UILabel(frame: CGRect(x: 28, y: 250, width: 100, height: 25))
+        let rating = UILabel(frame: CGRect(x: 28, y: 275, width: 100, height: 15))
         // Rating Text
         rating.text = "/10"
         rating.numberOfLines = 1

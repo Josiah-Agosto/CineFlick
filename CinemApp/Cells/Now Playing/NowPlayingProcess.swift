@@ -27,7 +27,7 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
         // Dispatch Groups
         let group = DispatchGroup()
         // Title
-        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(constant)&language=en-US&page=1")!
+        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=bf2ca98a5e17224c08b945e65322c940&language=en-US&page=1&region=US")!
         let session = URLSession.shared
         let dataTaskTitle = session.dataTask(with: nowPlayingUrl) {
             (data, response, error) in
@@ -55,8 +55,9 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
                             self.allDates.append(dates.release_date)
                         }
                         group.leave()
-                        group.wait()
-                        completionHandler(self.allTitles, self.allDates, nil)
+                        group.notify(queue: DispatchQueue.main, execute: {
+                            completionHandler(self.allTitles, self.allDates, nil)
+                        })
                     } catch let JSONError { completionHandler(nil, nil, JSONError) }
                 }
                 dataTaskReleaseDate.resume()
@@ -82,8 +83,9 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
                     self.filePath.append(filePaths.poster_path ?? " ")
                 }
                 group.leave()
-                group.wait()
-                completionHandler(self.filePath, nil)
+                group.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.filePath, nil)
+                })
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
         imageDataTask.resume()
@@ -106,8 +108,9 @@ class NowPlayingProcess: ImageProcessorRequirements, ApiRequestWithDatesRequirem
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
                 group.leave()
-                group.wait()
-                completionHandler(self.fullImageUrl, nil)
+                group.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.fullImageUrl, nil)
+                })
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
         imageDataTask.resume()

@@ -11,41 +11,44 @@ import UIKit
 
 class NetworkManager {
     // Popular Movie Variables
-    var movieTitleAccomplice: [String] = []
-    var movieFilmRatingAccomplice: [String] = []
-    var movieImageURLAccomplice: [String] = []
-    var movieImages: [UIImage] = []
+    var movieTitleAccomplice: [String] = [] { didSet { updatingModel?() } }
+    var movieFilmRatingAccomplice: [String] = [] { didSet { updatingModel?() } }
+    var movieImageURLAccomplice: [String] = [] { didSet { updatingModel?() } }
+    var movieImages: [UIImage] = [] { didSet { updatingModel?() } }
     // Now Playing Variables
-    var nowPlayingTitles: [String] = []
-    var nowPlayingReleaseDates: [String] = []
-    var nowPlayingImages: [UIImage] = []
+    var nowPlayingTitles: [String] = [] { didSet { updatingModel?() } }
+    var nowPlayingReleaseDates: [String] = [] { didSet { updatingModel?() } }
+    var nowPlayingImages: [UIImage] = [] { didSet { updatingModel?() } }
     // Upcoming Variables
-    var upcomingTitles: [String] = []
-    var upcomingReleaseDates: [String] = []
-    var upcomingImages: [UIImage] = []
+    var upcomingTitles: [String] = [] { didSet { updatingModel?() } }
+    var upcomingReleaseDates: [String] = [] { didSet { updatingModel?() } }
+    var upcomingImages: [UIImage] = [] { didSet { updatingModel?() } }
     // Top Rated Variables
-    var topRatedTitles: [String] = []
-    var topRatedFilmRatings: [String] = []
-    var topRatedImages: [UIImage] = []
+    var topRatedTitles: [String] = [] { didSet { updatingModel?() } }
+    var topRatedFilmRatings: [String] = [] { didSet { updatingModel?() } }
+    var topRatedImages: [UIImage] = [] { didSet { updatingModel?() } }
     // References
     private var popularRequest: PopularProcess!
     private var nowPlayingRequest: NowPlayingProcess!
     private var upcomingRequest: UpcomingProcess!
     private var topRatedRequest: TopRatedProcess!
     private var movieCell: MovieCollectionViewCell!
-    private var home: HomeScreenController!
     let dateReference = Date()
+    var updatingModel: (()->())? = nil
     
     
-    public func makeApiCalls(completionHandler: @escaping () -> Void) -> Void {
+    public func makeApiCalls(completion: @escaping () -> Void) -> Void {
         // Request's
-        let queue = OperationQueue()
         let group = DispatchGroup()
+        let queue = OperationQueue()
         queue.addOperation {
             self.popularRequest = PopularProcess()
             // Cell 1
             group.enter()
             self.popularRequest.mainApiRequest(completionHandler: { (titles, filmRatings, _, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 guard let titles = titles else { print("Error, \(error.debugDescription)"); return }
                 guard let filmRatings = filmRatings else { print("Error, \(error.debugDescription)"); return }
@@ -57,13 +60,15 @@ class NetworkManager {
                 })
                 print("Doing Things")
             })
-            group.leave()
             group.enter()
             self.popularRequest.filePathRequest(completionHandler: { (_, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 print("Thing 1")
             })
-            group.leave()
+            group.wait()
             group.enter()
             self.popularRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
@@ -72,14 +77,18 @@ class NetworkManager {
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.movieImages = images
+                    print("Images")
                 })
+                group.leave()
             })
-            group.leave()
             group.wait()
         // Cell 2
             self.nowPlayingRequest = NowPlayingProcess()
             group.enter()
             self.nowPlayingRequest.mainDataRequest(completionHandler: { (titles, releaseDate, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 guard let titles = titles else { print("Error, \(error.debugDescription)"); return }
                 guard let releaseDate = releaseDate else { print("Error, \(error.debugDescription)"); return }
@@ -91,13 +100,15 @@ class NetworkManager {
                 })
                 print("hello")
             })
-            group.leave()
             group.enter()
             self.nowPlayingRequest.filePathRequest(completionHandler: { (_, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 print("done 1")
             })
-            group.leave()
+            group.wait()
             group.enter()
             self.nowPlayingRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
@@ -106,14 +117,18 @@ class NetworkManager {
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.nowPlayingImages = images
+                    print("Images")
                 })
+                group.leave()
             })
-            group.leave()
             group.wait()
         // Cell 3
             self.upcomingRequest = UpcomingProcess()
             group.enter()
             self.upcomingRequest.mainDataRequest(completionHandler: { (titles, releaseDate, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 guard let titles = titles else { print("Error, \(error.debugDescription)"); return }
                 guard let releaseDate = releaseDate else { print("Error, \(error.debugDescription)"); return }
@@ -125,13 +140,15 @@ class NetworkManager {
                 })
                 print("cell three")
             })
-            group.leave()
             group.enter()
             self.upcomingRequest.filePathRequest(completionHandler: { (_, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 print("hello 1")
             })
-            group.leave()
+            group.wait()
             group.enter()
             self.upcomingRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
@@ -140,13 +157,18 @@ class NetworkManager {
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.upcomingImages = images
+                    print("Images")
                 })
+                group.leave()
             })
-            group.leave()
+            group.wait()
         // Cell 4
             self.topRatedRequest = TopRatedProcess()
             group.enter()
             self.topRatedRequest.mainApiRequest(completionHandler: { (titles, filmRatings, _, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 guard let titles = titles else { print("Error, \(error.debugDescription)"); return }
                 guard let filmRatings = filmRatings else { print("Error, \(error.debugDescription)"); return }
@@ -158,13 +180,15 @@ class NetworkManager {
                 })
                 print("Got here")
             })
-            group.leave()
             group.enter()
             self.topRatedRequest.filePathRequest(completionHandler: { (_, error) in
+                defer {
+                    group.leave()
+                }
                 if let error = error { print(error) }
                 print("Ummm")
             })
-            group.leave()
+            group.wait()
             group.enter()
             self.topRatedRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
@@ -173,11 +197,14 @@ class NetworkManager {
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.topRatedImages = images
+                    print("Images")
                 })
+                group.leave()
             })
-            group.leave()
-            group.wait()
-            completionHandler()
+            group.notify(queue: DispatchQueue.main, execute: {
+                completion()
+                self.updatingModel?()
+            })
         }
     }
     

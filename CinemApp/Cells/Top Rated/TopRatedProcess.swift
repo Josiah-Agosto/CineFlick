@@ -27,7 +27,7 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
     func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, [String]?, Error?) -> Void) -> Void {
         let group = DispatchGroup()
         // Titles
-        let topRatedUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/top_rated?api_key=\(constant)&language=en-US&page=1")!
+        let topRatedUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/top_rated?api_key=bf2ca98a5e17224c08b945e65322c940&language=en-US&page=1&region=US")!
         let session =  URLSession.shared
         let topRatedTitles = session.dataTask(with: topRatedUrl) {
             (data, response, error) in
@@ -69,8 +69,9 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
                                     self.filmRatings.append(String(filmRatings.vote_average))
                                 }
                                 group.leave()
-                                group.wait()
-                                completionHandler(self.titles, self.filmRatings, self.filePath, nil)
+                                group.notify(queue: DispatchQueue.main, execute: {
+                                    completionHandler(self.titles, self.filmRatings, self.filePath, nil)
+                                })
                             } catch let JSONError { completionHandler(nil, nil, nil, JSONError) }
                         }
                         topRatedFilmRatings.resume()
@@ -99,8 +100,9 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
                     self.filePath.append(filePaths.poster_path ?? " ")
                 }
                 group.leave()
-                group.wait()
-                completionHandler(self.filePath, nil)
+                group.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.filePath, nil)
+                })
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
         imageDataTask.resume()
@@ -123,8 +125,9 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
                 group.leave()
-                group.wait()
-                completionHandler(self.fullImageUrl, nil)
+                group.notify(queue: DispatchQueue.main, execute: {
+                    completionHandler(self.fullImageUrl, nil)
+                })
             } catch let JSONError { completionHandler(nil, JSONError) }
         }
         imageDataTask.resume()

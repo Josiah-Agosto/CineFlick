@@ -28,7 +28,6 @@ class HomeScreenController: UIViewController {
     let fourthHeaderId = "fourthHeaderId"
     // References
     var categoryView: UIViewController!
-    var movieNetworkManager: NetworkManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +50,6 @@ class HomeScreenController: UIViewController {
         collectionView.allowsSelection = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        
         self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         // Header
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
