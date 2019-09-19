@@ -12,17 +12,7 @@ import UIKit
 struct BaseImageModel: Decodable {
     let change_keys: [String]
     let images: Images
-    
-    //    private enum CodingKeys: String, CodingKey {
-    //        case change_keys
-    //        case images
-    //    }
-    //
-    //    init(json: [String: Any]) {
-    //        change_keys = json["change_keys"] as! ChangeKeys
-    //        images = json["images"] as! Images
-    //    }
-    
+
     struct Images: Decodable {
         var base_url: String
         var secure_base_url: String

@@ -11,23 +11,22 @@ import UIKit
 
 class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
     // Constant
-    let constant = apiKey
+    private let constant = apiKey
     // ImageProcess
-    var titles: [String] = []
-    var filmRatings: [String] = []
-    var imageFilePaths: [String] = []
+    internal var titles: [String] = []
+    internal var filmRatings: [String] = []
+    internal var imageFilePaths: [String] = []
     // Api Request Requirements
-    var filePath: [String] = []
-    var secureImageUrl: String = ""
-    var imageSize: String = ""
-    var fullImageUrl: [String] = []
-//    var movieImages: [UIImage] = []
+    internal var filePath: [String] = []
+    internal var secureImageUrl: String = ""
+    internal var imageSize: String = ""
+    internal var fullImageUrl: [String] = []
 
     // Api Request
-    func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, [String]?, Error?) -> Void) -> Void {
+    func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, Error?) -> Void) -> Void {
         let group = DispatchGroup()
         // Titles
-        let topRatedUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/top_rated?api_key=bf2ca98a5e17224c08b945e65322c940&language=en-US&page=1&region=US")!
+        let topRatedUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/top_rated?api_key=\(constant)&language=en-US&page=1&region=US")!
         let session =  URLSession.shared
         let topRatedTitles = session.dataTask(with: topRatedUrl) {
             (data, response, error) in
@@ -35,26 +34,12 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
             do {
                 let topRatedModel = try JSONDecoder().decode(MovieModel.self, from: data)
                 guard let results = topRatedModel.results else { print("Error 8, \(error.debugDescription)"); return }
-                self.titles.removeAll()
                 group.enter()
+                self.titles.removeAll()
                 for titles in results {
                     self.titles.append(titles.title)
                 }
                 group.leave()
-                // Image File Paths
-                let filePathSession = URLSession.shared
-                let topRatedFilePaths = filePathSession.dataTask(with: topRatedUrl) {
-                    (data, response, error) in
-                    guard let data = data else { print("Error 9, \(error.debugDescription)"); return }
-                    do {
-                        let topRatedModel = try JSONDecoder().decode(MovieModel.self, from: data)
-                        guard let results = topRatedModel.results else { print("Error 10, \(error.debugDescription)"); return }
-                        self.filePath.removeAll()
-                        group.enter()
-                        for filePaths in results {
-                            self.filePath.append(filePaths.poster_path ?? " ")
-                        }
-                        group.leave()
                         // Film Ratings
                         let filmRatingSession = URLSession.shared
                         let topRatedFilmRatings = filmRatingSession.dataTask(with: topRatedUrl) {
@@ -63,26 +48,23 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
                             do {
                                 let topRatedModel = try JSONDecoder().decode(MovieModel.self, from: data)
                                 guard let results = topRatedModel.results else { print("Error 12, \(error.debugDescription)"); return }
-                                self.filmRatings.removeAll()
                                 group.enter()
+                                self.filmRatings.removeAll()
                                 for filmRatings in results {
                                     self.filmRatings.append(String(filmRatings.vote_average))
                                 }
                                 group.leave()
                                 group.notify(queue: DispatchQueue.main, execute: {
-                                    completionHandler(self.titles, self.filmRatings, self.filePath, nil)
+                                    completionHandler(self.titles, self.filmRatings, nil)
                                 })
-                            } catch let JSONError { completionHandler(nil, nil, nil, JSONError) }
+                            } catch let JSONError { completionHandler(nil, nil, JSONError); print(JSONError) }
                         }
                         topRatedFilmRatings.resume()
-                    } catch let JSONError { completionHandler(nil, nil, nil, JSONError) }
-                }
-                topRatedFilePaths.resume()
-            } catch let JSONError { completionHandler(nil, nil, nil, JSONError) }
+            } catch let JSONError { completionHandler(nil, nil, JSONError); print(JSONError) }
         }
         topRatedTitles.resume()
     }
-    // MARK: - Fix number 14
+
     // Image Processors
     func filePathRequest(completionHandler: @escaping ([String]?, Error?) -> Void) -> Void {
         let group = DispatchGroup()
@@ -94,16 +76,17 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
             do {
                 let nowPlayingModel = try JSONDecoder().decode(MovieModelWithDates.self, from: data)
                 guard let results = nowPlayingModel.results else { print("Error 14, \(error.debugDescription)"); return }
-                self.filePath.removeAll()
                 group.enter()
+                self.filePath.removeAll()
                 for filePaths in results {
                     self.filePath.append(filePaths.poster_path ?? " ")
                 }
+                print("Top Rated: \(self.filePath)")
                 group.leave()
                 group.notify(queue: DispatchQueue.main, execute: {
                     completionHandler(self.filePath, nil)
                 })
-            } catch let JSONError { completionHandler(nil, JSONError) }
+            } catch let JSONError { completionHandler(nil, JSONError); print(JSONError) }
         }
         imageDataTask.resume()
     }
@@ -117,18 +100,19 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
             (data, response, error) in
             guard let data = data else { print("Error 15, \(error.debugDescription)"); return }
             do {
-                let imageProcessor = try JSONDecoder().decode(BaseImageModel.self, from: data)
                 group.enter()
+                let imageProcessor = try JSONDecoder().decode(BaseImageModel.self, from: data)
                 self.secureImageUrl = imageProcessor.images.secure_base_url
                 self.imageSize = imageProcessor.images.poster_sizes[4]
                 for filePath in self.filePath {
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
+                print("Top Rated: \(self.fullImageUrl)")
                 group.leave()
                 group.notify(queue: DispatchQueue.main, execute: {
                     completionHandler(self.fullImageUrl, nil)
                 })
-            } catch let JSONError { completionHandler(nil, JSONError) }
+            } catch let JSONError { completionHandler(nil, JSONError); print(JSONError) }
         }
         imageDataTask.resume()
     }
@@ -143,7 +127,7 @@ class TopRatedProcess: ApiRequestRequirements, ImageProcessorRequirements {
                 let image: UIImage = UIImage(data: data)!
                 movieImages.append(image)
                 completionHandler(movieImages, nil)
-            } catch let ImageError { completionHandler(nil, ImageError) }
+            } catch let ImageError { completionHandler(nil, ImageError); print(ImageError) }
         }
     }
     

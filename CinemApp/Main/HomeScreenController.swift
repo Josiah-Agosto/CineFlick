@@ -11,27 +11,38 @@ import Foundation
 // TIP: - When programmatically making Navigation Bars you need to NOT subclass it as a UINavigationController
 class HomeScreenController: UIViewController {
     private var isOpen: Bool = false
+    private let headerId = "headerId"
+    private let secondHeaderId = "secondId"
+    private let thirdHeaderId = "thirdId"
+    private let fourthHeaderId = "fourthHeaderId"
     // Buttons, Labels, etc.
     private let categoryButton = UIButton(frame: CGRect(x: 20, y: 10, width: 25, height: 25))
     public let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 20
-        let collection = UICollectionView(frame: CGRect(x: 0, y: 150, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 150), collectionViewLayout: layout)
+        let layout = MainCollectionViewFlowLayout()
+        let collection = UICollectionView(frame: CGRect(x: 5, y: 150, width: UIScreen.main.bounds.width - 10, height: UIScreen.main.bounds.height - 150), collectionViewLayout: layout)
         collection.backgroundColor = UIColor.clear
         return collection
     }()
     public let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
-    let headerId = "headerId"
-    let secondHeaderId = "secondId"
-    let thirdHeaderId = "thirdId"
-    let fourthHeaderId = "fourthHeaderId"
+    var movieNetworkManager: NetworkManager!
     // References
-    var categoryView: UIViewController!
+    private var categoryView = Categories()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
+        movieNetworkManager = NetworkManager()
+        movieNetworkManager.makeApiCalls {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                for cell in self.collectionView.visibleCells {
+                    if let cell = cell as? MovieCollectionViewCell {
+                        cell.innerCollectionView.reloadData()
+                    }
+                }
+            }
+        }
     }
     
     
@@ -71,7 +82,6 @@ class HomeScreenController: UIViewController {
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        categoryView = Categories()
         guard let window = UIApplication.shared.keyWindow else { return }
         window.addSubview(categoryView.view)
         blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
@@ -85,14 +95,14 @@ class HomeScreenController: UIViewController {
                 }
             }
             // Pop-In of Category View
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: 0.9, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 self.categoryView.view.frame = CGRect(x: 0, y: 0, width: window.frame.width - 90.0, height: window.frame.height)
                 self.view.addSubview(blurEffectView)
             }, completion: nil)
         } else {
             self.isOpen = false
             // Hides the Category View
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.9, animations: {
                 self.categoryView.view.frame = CGRect(x: -window.frame.width - 90, y: 0, width: window.frame.width - 90.0, height: window.frame.height)
                 // Removes the Blur Effect
                 for subview in self.view.subviews {
@@ -137,19 +147,45 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 15, left: 0, bottom: 15, right: 0)
+        return UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width, height: 300)
+        return CGSize(width: self.collectionView.bounds.width - 10, height: 300)
     }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // Able to access the MoviecollectionViewCell because of the dequeueReusableCell constant. No need for reference.
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MovieCollectionViewCell
         cell.layer.cornerRadius = 5
         cell.backgroundColor = UIColor.clear
+        if indexPath.section == 0 {
+            cell.movieSection = .popular
+            cell.movieNetworkManager = movieNetworkManager
+            DispatchQueue.main.async {
+                cell.innerCollectionView.reloadData()
+            }
+        } else if indexPath.section == 1 {
+            cell.movieSection = .nowPlaying
+            cell.movieNetworkManager = movieNetworkManager
+            DispatchQueue.main.async {
+                cell.innerCollectionView.reloadData()
+            }
+        } else if indexPath.section == 2 {
+            cell.movieSection = .upcoming
+            cell.movieNetworkManager = movieNetworkManager
+            DispatchQueue.main.async {
+                cell.innerCollectionView.reloadData()
+            }
+        } else {
+            cell.movieSection = .topRated
+            cell.movieNetworkManager = movieNetworkManager
+            DispatchQueue.main.async {
+                cell.innerCollectionView.reloadData()
+            }
+        }
         return cell
     }
     
@@ -165,10 +201,10 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
         thirdHeader.backgroundColor = UIColor(red: 58/255, green: 15/255, blue: 15/255, alpha: 1.0)
         fourthHeader.backgroundColor = UIColor(red: 58/255, green: 15/255, blue: 15/255, alpha: 1.0)
         // Rows
-        if indexPath.section == 1 {
+        if indexPath.section == 0 {
             let secondHeaderTitle: UILabel = {
                 let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
-                headerTitleLabel.text = "Now Playing"
+                headerTitleLabel.text = "Popular"
                 headerTitleLabel.textColor = UIColor.white
                 headerTitleLabel.textAlignment = NSTextAlignment.left
                 headerTitleLabel.backgroundColor = UIColor.clear
@@ -177,10 +213,10 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
             }()
             secondHeader.addSubview(secondHeaderTitle)
             return secondHeader
-        } else if indexPath.section == 2 {
+        } else if indexPath.section == 1 {
             let thirdHeaderTitle: UILabel = {
                 let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
-                headerTitleLabel.text = "Upcoming"
+                headerTitleLabel.text = "Now Playing"
                 headerTitleLabel.textColor = UIColor.white
                 headerTitleLabel.textAlignment = NSTextAlignment.left
                 headerTitleLabel.backgroundColor = UIColor.clear
@@ -189,10 +225,10 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
             }()
             thirdHeader.addSubview(thirdHeaderTitle)
             return thirdHeader
-        } else if indexPath.section == 3 {
+        } else if indexPath.section == 2 {
             let fourthHeaderTitle: UILabel = {
                 let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
-                headerTitleLabel.text = "Top Rated"
+                headerTitleLabel.text = "Upcoming"
                 headerTitleLabel.textColor = UIColor.white
                 headerTitleLabel.textAlignment = NSTextAlignment.left
                 headerTitleLabel.backgroundColor = UIColor.clear
@@ -204,7 +240,7 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
         } else {
             let headerTitle: UILabel = {
                 let headerTitleLabel = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width - 40, height: 40))
-                headerTitleLabel.text = "Popular"
+                headerTitleLabel.text = "Top Rated"
                 headerTitleLabel.textColor = UIColor.white
                 headerTitleLabel.textAlignment = NSTextAlignment.left
                 headerTitleLabel.backgroundColor = UIColor.clear

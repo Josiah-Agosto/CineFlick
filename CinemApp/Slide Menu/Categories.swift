@@ -10,8 +10,8 @@ import UIKit
 
 class Categories: UIViewController {
     // Buttons, Labels, etc.
-    let movieButton = UIButton(frame: CGRect(x: 0, y: 100, width: 200, height: 125))
     let categoryTitle = UILabel(frame: CGRect(x: 0, y: 0, width: 250, height: 160))
+    let movieButton = UIButton(frame: CGRect(x: 0, y: 100, width: 200, height: 125))
     let tvShowButton = UIButton(frame: CGRect(x: 0, y: 250, width: 200, height: 125))
     let popularActorsButton = UIButton(frame: CGRect(x: 0, y: 400, width: 200, height: 125))
     
@@ -21,7 +21,7 @@ class Categories: UIViewController {
     }
     
     
-    func setup() {
+    private func setup() {
         // View Appearance
         view.backgroundColor = UIColor(red: 65/255, green: 0, blue: 0, alpha: 1.0)
         // Category
@@ -49,12 +49,16 @@ class Categories: UIViewController {
         view.addSubview(movieButton)
         view.addSubview(tvShowButton)
         view.addSubview(popularActorsButton)
+        // Button Pressed Actions
+        movieButton.addTarget(self, action: #selector(movieButtonAction(sender:)), for: .touchUpInside)
+        tvShowButton.addTarget(self, action: #selector(tvShowButtonAction(sender:)), for: .touchUpInside)
+        popularActorsButton.addTarget(self, action: #selector(popularActorButton(sender:)), for: .touchUpInside)
         // Configuring the Constraints
         configureConstraints()
     }
     
     // Constraints
-    func configureConstraints() {
+    private func configureConstraints() {
         // Category
         categoryTitle.translatesAutoresizingMaskIntoConstraints = false
         categoryTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -72,5 +76,19 @@ class Categories: UIViewController {
         popularActorsButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 246).isActive = true
         popularActorsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
     }
+
+    // Movie Button
+    @objc private func movieButtonAction(sender: UIButton) {
+        print("Movie Button")
+    }
     
+    // TV Show Button
+    @objc private func tvShowButtonAction(sender: UIButton) {
+        print("TV SHow Button")
+    }
+    
+    // Actor Button
+    @objc private func popularActorButton(sender: UIButton) {
+        print("Popular Actor Button")
+    }
 }

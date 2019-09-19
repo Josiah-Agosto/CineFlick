@@ -14,19 +14,6 @@ struct MovieModel: Decodable {
     let total_results: Int?
     let total_pages: Int?
     let results: [Results]?
-    
-    //    private enum MainCodingKeys: String, CodingKey {
-    //        case page
-    //        case total_results
-    //        case total_pages
-    //        case results = "results"
-    //    }
-    //    init(json: [String: Any]) {
-    //        page = json["page"] as? Int ?? 0
-    //        total_results = json["total_results"] as? Int ?? 0
-    //        total_pages = json["total_pages"] as? Int ?? 0
-    //        results = json["results"] as! [Results]
-    //    }
 }
 
 struct Results: Decodable {

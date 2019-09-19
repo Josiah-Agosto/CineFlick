@@ -9,12 +9,19 @@
 import Foundation
 import UIKit
 
+public enum MovieSectionEnum {
+    case popular
+    case nowPlaying
+    case upcoming
+    case topRated
+}
+
 class MovieCollectionViewCell: UICollectionViewCell {
+    // Variables
+    var movieSection: MovieSectionEnum = .popular
     // Inner Cell
     let innerCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 25
-        layout.scrollDirection = .horizontal
+        let layout = InnerCollectionViewFlowLayout()
         // Inner Collection View NOT Cell
         let initializingCollectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
         initializingCollectionView.backgroundColor = UIColor.clear
@@ -27,27 +34,20 @@ class MovieCollectionViewCell: UICollectionViewCell {
     private var nowPlayingRequest: NowPlayingProcess!
     private var upcomingRequest: UpcomingProcess!
     private var topRatedRequest: TopRatedProcess!
-    private var movieNetworkManager = NetworkManager()
-    let home = HomeScreenController()
+    var movieNetworkManager = NetworkManager()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        movieNetworkManager.makeApiCalls {
-            DispatchQueue.main.async {
-                self.innerCollectionView.reloadData()
-                print("RELOADED!")
-            }
-        }
     }
     
     
-    func setup() {
+    private func setup() {
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self
         innerCollectionView.showsHorizontalScrollIndicator = false
         innerCollectionView.allowsSelection = true
-        innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "movieCellsCell")
+        innerCollectionView.register(PopularMovieCellsCell.self, forCellWithReuseIdentifier: "popularCellsCell")
         innerCollectionView.register(NowPlayingCellsCell.self, forCellWithReuseIdentifier: "nowPlayingCellsCell")
         innerCollectionView.register(UpcomingCellsCell.self, forCellWithReuseIdentifier: "upcomingCellsCell")
         innerCollectionView.register(TopRatedCellsCell.self, forCellWithReuseIdentifier: "topRatedCellsCell")
@@ -71,68 +71,77 @@ class MovieCollectionViewCell: UICollectionViewCell {
 } // Class End
 
 
-extension MovieCollectionViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+// Movie Cell Data Source
+extension MovieCollectionViewCell: UICollectionViewDataSource {
     // Data inside each Cell is shown here
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let homeSections = home.collectionView.numberOfSections
-        if homeSections == 1 {
-            return movieNetworkManager.movieTitleAccomplice.count
-        } else if homeSections == 2 {
+        if movieSection == .popular {
+            return movieNetworkManager.popularTitles.count
+        } else if movieSection == .nowPlaying{
             return movieNetworkManager.nowPlayingTitles.count
-        } else if homeSections == 3 {
+        } else if movieSection == .upcoming {
             return movieNetworkManager.upcomingTitles.count
         } else {
             return movieNetworkManager.topRatedTitles.count
         }
     }
-    
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let homeSections = home.collectionView.numberOfSections
-        if homeSections == 1 {
+        switch movieSection {
+        case .popular:
             // Popular
-            let popular = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "movieCellsCell", for: indexPath) as! PopularMovieCellsCell
-            popular.movieTitle.text = movieNetworkManager.movieTitleAccomplice[indexPath.row]
-            popular.movieRating.text = "\(movieNetworkManager.movieFilmRatingAccomplice[indexPath.row]) / 10"
-            popular.moviePosterImage.image = movieNetworkManager.movieImages[indexPath.row]
+            let popular = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "popularCellsCell", for: indexPath) as! PopularMovieCellsCell
+            popular.movieTitle.text = movieNetworkManager.popularTitles[safe: indexPath.row]
+            popular.movieRating.text = "\(movieNetworkManager.popularFilmRating[safe: indexPath.row] ?? "nil") / 10"
+            popular.moviePosterImage.image = movieNetworkManager.popularImages[safe: indexPath.row]
+            print("Popular: \(movieNetworkManager.popularTitles)")
             return popular
-        } else if homeSections == 2 {
+        case .nowPlaying:
             // Now Playing
             let nowPlaying = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "nowPlayingCellsCell", for: indexPath) as! NowPlayingCellsCell
-            nowPlaying.movieTitle.text = movieNetworkManager.nowPlayingTitles[indexPath.row]
-            nowPlaying.movieReleaseTitle.text = "\(movieNetworkManager.nowPlayingReleaseDates[indexPath.row])"
-            nowPlaying.movieImage.image = movieNetworkManager.nowPlayingImages[indexPath.row]
+            nowPlaying.movieTitle.text = movieNetworkManager.nowPlayingTitles[safe: indexPath.row]
+            nowPlaying.movieReleaseTitle.text = "\(movieNetworkManager.nowPlayingReleaseDates[safe: indexPath.row] ?? "nil")"
+            nowPlaying.movieImage.image = movieNetworkManager.nowPlayingImages[safe: indexPath.row]
+            print("Now Playing: \(movieNetworkManager.upcomingTitles)")
             return nowPlaying
-        } else if homeSections == 3 {
+        case .upcoming:
             // Upcoming
             let upcoming = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "upcomingCellsCell", for: indexPath) as! UpcomingCellsCell
-            upcoming.movieTitle.text = movieNetworkManager.upcomingTitles[indexPath.row]
-            upcoming.movieReleaseTitle.text = "\(movieNetworkManager.upcomingReleaseDates[indexPath.row])"
-            upcoming.movieImage.image = movieNetworkManager.upcomingImages[indexPath.row]
+            upcoming.movieTitle.text = movieNetworkManager.upcomingTitles[safe: indexPath.row]
+            upcoming.movieReleaseTitle.text = "\(movieNetworkManager.upcomingReleaseDates[safe: indexPath.row] ?? "nil")"
+            upcoming.movieImage.image = movieNetworkManager.upcomingImages[safe: indexPath.row]
+            print("Upcoming: \(movieNetworkManager.upcomingTitles)")
             return upcoming
-        } else {
+        case .topRated:
             // Top Rated
             let topRated = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "topRatedCellsCell", for: indexPath) as! TopRatedCellsCell
-            topRated.movieTitle.text = movieNetworkManager.topRatedTitles[indexPath.row]
-            topRated.movieRating.text = "\(movieNetworkManager.topRatedFilmRatings[indexPath.row]) / 10"
-            topRated.movieImage.image = movieNetworkManager.topRatedImages[indexPath.row]
+            topRated.movieTitle.text = movieNetworkManager.topRatedTitles[safe: indexPath.row]
+            topRated.movieRating.text = "\(movieNetworkManager.topRatedFilmRatings[safe: indexPath.row] ?? "nil") / 10"
+            topRated.movieImage.image = movieNetworkManager.topRatedImages[safe: indexPath.row]
+            print("Top Rated: \(movieNetworkManager.topRatedTitles)")
             return topRated
         }
     }
-    
-    
+} // Data Source End
+
+
+// Movie Cell Delegate
+extension MovieCollectionViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 150, height: 200)
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 10, bottom: 80, right: 10)
+        return UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
     }
-    
+} // Delegate End
+
+
+// Extension which makes the Array indexes able to go out of Index without crashing application.
+extension Collection {
+    subscript(safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
 }

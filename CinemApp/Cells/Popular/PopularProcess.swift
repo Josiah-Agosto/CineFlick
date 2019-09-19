@@ -11,26 +11,24 @@ import UIKit
 
 class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
     // Constant
-    let constant: String = apiKey
+    private let constant: String = apiKey
     // Temporary Data Holders from JSON
-    var titles: [String] = []
-    var filmRatings: [String] = []
-    var imageFilePaths: [String] = []
+    internal var titles: [String] = []
+    internal var filmRatings: [String] = []
     // Image Processor Protocol Stubs
-    var filePath: [String] = []
-    var secureImageUrl: String = ""
-    var imageSize: String = ""
-    var fullImageUrl: [String] = []
-//    var movieImages: [UIImage] = []
+    internal var filePath: [String] = []
+    internal var secureImageUrl: String = ""
+    internal var imageSize: String = ""
+    internal var fullImageUrl: [String] = []
     
     // Movie Request
-    func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, [String]?, Error?) -> Void) {
+    func mainApiRequest(completionHandler: @escaping ([String]?, [String]?, Error?) -> Void) {
         let group = DispatchGroup()
         //MARK: - Insert API Key Here
         // Insert YOUR API KEY here, Remove Underscore and enter a title.
         let _: String = ""
         // Data Request
-        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=bf2ca98a5e17224c08b945e65322c940&language=en-US&page=1&region=US")!
+        let popularMovieDataURL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1&region=US")!
         // Session for getting Title
         let session = URLSession.shared
         let dataTask = session.dataTask(with: popularMovieDataURL) {
@@ -45,52 +43,35 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                     self.titles.append(titles.title)
                 }
                 group.leave()
-                // Movie Image Request
-                let sessionMovieImage = URLSession.shared
-                let dataTaskMovieImage = sessionMovieImage.dataTask(with: popularMovieDataURL) {
-                    (data, response, error) in
-                    guard let data = data else { print("Error 21, \(error.debugDescription)"); return }
-                    do {
-                        let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                        guard let results = popularMovies.results else { print("Error 22, \(error.debugDescription)"); return }
-                        group.enter()
-                        self.imageFilePaths.removeAll()
-                        for movieImages in results {
-                            self.imageFilePaths.append(movieImages.poster_path ?? "Error")
-                        }
-                        group.leave()
-                        // Session for getting Film Rating
-                        let sessionFilmRating = URLSession.shared
-                        let dataTaskFilmRating = sessionFilmRating.dataTask(with: popularMovieDataURL) {
-                            (data, response, error) in
-                            guard let data = data else { print("Error 23, \(error.debugDescription)"); return }
-                            do {
-                                let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
-                                guard let results = popularMovies.results else { print("Error 24, \(error.debugDescription)"); return }
-                                group.enter()
-                                self.filmRatings.removeAll()
-                                for filmRating in results {
-                                    self.filmRatings.append(String(filmRating.vote_average))
-                                }
-                                group.leave()
-                                group.notify(queue: DispatchQueue.main, execute: {
-                                    completionHandler(self.titles, self.filmRatings, self.imageFilePaths, nil)
-                                })
-                            } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
-                        }
-                        dataTaskFilmRating.resume()
-                    } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
-                }
-                dataTaskMovieImage.resume()
-            } catch let JSONError { completionHandler(nil, nil, nil, JSONError); print(JSONError) }
+                    // Session for getting Film Rating
+                    let sessionFilmRating = URLSession.shared
+                    let dataTaskFilmRating = sessionFilmRating.dataTask(with: popularMovieDataURL) {
+                        (data, response, error) in
+                        guard let data = data else { print("Error 23, \(error.debugDescription)"); return }
+                        do {
+                            let popularMovies = try JSONDecoder().decode(MovieModel.self, from: data)
+                            guard let results = popularMovies.results else { print("Error 24, \(error.debugDescription)"); return }
+                            group.enter()
+                            self.filmRatings.removeAll()
+                            for filmRating in results {
+                                self.filmRatings.append(String(filmRating.vote_average))
+                            }
+                            group.leave()
+                            group.notify(queue: DispatchQueue.main, execute: {
+                                completionHandler(self.titles, self.filmRatings, nil)
+                            })
+                        } catch let JSONError { completionHandler(nil, nil, JSONError); print(JSONError) }
+                    }
+                    dataTaskFilmRating.resume()
+            } catch let JSONError { completionHandler(nil, nil, JSONError); print(JSONError) }
         }
-        dataTask.resume()
+    dataTask.resume()
     }
     
-    // MARK: - Fix number 26
+    // File Path Request
     func filePathRequest(completionHandler: @escaping ([String]?, Error?) -> Void) {
         let group = DispatchGroup()
-        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1")!
+        let nowPlayingUrl: URL = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(constant)&language=en-US&page=1&region=US")!
         let session = URLSession.shared
         let imageDataTask = session.dataTask(with: nowPlayingUrl) {
             (data, response, error) in
@@ -101,8 +82,9 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                 group.enter()
                 self.filePath.removeAll()
                 for filePaths in results {
-                    self.filePath.append(filePaths.poster_path ?? "Error")
+                    self.filePath.append(filePaths.poster_path ?? " ")
                 }
+                print("Popular: \(self.filePath)")
                 group.leave()
                 group.notify(queue: DispatchQueue.main, execute: {
                     completionHandler(self.filePath, nil)
@@ -128,6 +110,7 @@ class PopularProcess: ImageProcessorRequirements, ApiRequestRequirements {
                 for filePath in self.filePath {
                     self.fullImageUrl.append("\(self.secureImageUrl)\(self.imageSize)\(filePath)")
                 }
+                print("Popular: \(self.fullImageUrl)")
                 group.leave()
                 group.notify(queue: DispatchQueue.main, execute: {
                     completionHandler(self.fullImageUrl, nil)

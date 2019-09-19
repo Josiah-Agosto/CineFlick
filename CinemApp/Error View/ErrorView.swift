@@ -14,7 +14,7 @@ class ErrorView: UIView {
     let errorHolder = UILabel(frame: CGRect(x: 15, y: 25, width: UIScreen.main.bounds.width - 40, height: 25))
     let connectionErrorMessage: String = "Hmm, Seems like there's a problem with your Internet Connection."
     
-    public func errorOccured() {
+    fileprivate func errorOccured() {
         self.backgroundColor = UIColor(red: 210/255, green: 75/255, blue: 69/255, alpha: 1)
         self.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 8)
         errorTitle.text = "Error"

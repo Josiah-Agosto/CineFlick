@@ -48,7 +48,6 @@ class TopRatedCellsCell: UICollectionViewCell {
         addSubview(movieTitle)
         addSubview(movieImage)
         addSubview(movieRating)
-        print("Inside the cells Cell")
     }
     
     

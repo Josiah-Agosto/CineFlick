@@ -11,10 +11,10 @@ import UIKit
 
 class NetworkManager {
     // Popular Movie Variables
-    var movieTitleAccomplice: [String] = [] { didSet { updatingModel?() } }
-    var movieFilmRatingAccomplice: [String] = [] { didSet { updatingModel?() } }
-    var movieImageURLAccomplice: [String] = [] { didSet { updatingModel?() } }
-    var movieImages: [UIImage] = [] { didSet { updatingModel?() } }
+    var popularTitles: [String] = [] { didSet { updatingModel?() } }
+    var popularFilmRating: [String] = [] { didSet { updatingModel?() } }
+    var popularImageUrl: [String] = [] { didSet { updatingModel?() } }
+    var popularImages: [UIImage] = [] { didSet { updatingModel?() } }
     // Now Playing Variables
     var nowPlayingTitles: [String] = [] { didSet { updatingModel?() } }
     var nowPlayingReleaseDates: [String] = [] { didSet { updatingModel?() } }
@@ -32,8 +32,7 @@ class NetworkManager {
     private var nowPlayingRequest: NowPlayingProcess!
     private var upcomingRequest: UpcomingProcess!
     private var topRatedRequest: TopRatedProcess!
-    private var movieCell: MovieCollectionViewCell!
-    let dateReference = Date()
+    private let dateReference = Date()
     var updatingModel: (()->())? = nil
     
     
@@ -45,7 +44,7 @@ class NetworkManager {
             self.popularRequest = PopularProcess()
             // Cell 1
             group.enter()
-            self.popularRequest.mainApiRequest(completionHandler: { (titles, filmRatings, _, error) in
+            self.popularRequest.mainApiRequest(completionHandler: { (titles, filmRatings, error) in
                 defer {
                     group.leave()
                 }
@@ -53,12 +52,11 @@ class NetworkManager {
                 guard let titles = titles else { print("Error, \(error.debugDescription)"); return }
                 guard let filmRatings = filmRatings else { print("Error, \(error.debugDescription)"); return }
                 titles.forEach({ (title) in
-                    self.movieTitleAccomplice.append(title)
+                    self.popularTitles.append(title)
                 })
                 filmRatings.forEach({ (filmRating) in
-                    self.movieFilmRatingAccomplice.append(filmRating)
+                    self.popularFilmRating.append(filmRating)
                 })
-                print("Doing Things")
             })
             group.enter()
             self.popularRequest.filePathRequest(completionHandler: { (_, error) in
@@ -66,18 +64,15 @@ class NetworkManager {
                     group.leave()
                 }
                 if let error = error { print(error) }
-                print("Thing 1")
             })
             group.wait()
             group.enter()
             self.popularRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
-                print("Thing 2")
                 self.popularRequest.makeUrlAnImage(completionHandler: { (images, error) in
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
-                    self.movieImages = images
-                    print("Images")
+                    self.popularImages = images
                 })
                 group.leave()
             })
@@ -98,7 +93,6 @@ class NetworkManager {
                 releaseDate.forEach({ (date) in
                     self.nowPlayingReleaseDates.append(self.dateReference.convertStringToDate(dateString: date))
                 })
-                print("hello")
             })
             group.enter()
             self.nowPlayingRequest.filePathRequest(completionHandler: { (_, error) in
@@ -106,18 +100,15 @@ class NetworkManager {
                     group.leave()
                 }
                 if let error = error { print(error) }
-                print("done 1")
             })
             group.wait()
             group.enter()
             self.nowPlayingRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
-                print("done 2")
                 self.nowPlayingRequest.makeUrlAnImage(completionHandler: { (images, error) in
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.nowPlayingImages = images
-                    print("Images")
                 })
                 group.leave()
             })
@@ -138,7 +129,6 @@ class NetworkManager {
                 releaseDate.forEach({ (date) in
                     self.upcomingReleaseDates.append(self.dateReference.convertStringToDate(dateString: date))
                 })
-                print("cell three")
             })
             group.enter()
             self.upcomingRequest.filePathRequest(completionHandler: { (_, error) in
@@ -146,18 +136,15 @@ class NetworkManager {
                     group.leave()
                 }
                 if let error = error { print(error) }
-                print("hello 1")
             })
             group.wait()
             group.enter()
             self.upcomingRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
-                print("working")
                 self.upcomingRequest.makeUrlAnImage(completionHandler: { (images, error) in
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.upcomingImages = images
-                    print("Images")
                 })
                 group.leave()
             })
@@ -165,7 +152,7 @@ class NetworkManager {
         // Cell 4
             self.topRatedRequest = TopRatedProcess()
             group.enter()
-            self.topRatedRequest.mainApiRequest(completionHandler: { (titles, filmRatings, _, error) in
+            self.topRatedRequest.mainApiRequest(completionHandler: { (titles, filmRatings, error) in
                 defer {
                     group.leave()
                 }
@@ -178,7 +165,6 @@ class NetworkManager {
                 filmRatings.forEach({ (filmRating) in
                     self.topRatedFilmRatings.append(filmRating)
                 })
-                print("Got here")
             })
             group.enter()
             self.topRatedRequest.filePathRequest(completionHandler: { (_, error) in
@@ -186,18 +172,15 @@ class NetworkManager {
                     group.leave()
                 }
                 if let error = error { print(error) }
-                print("Ummm")
             })
             group.wait()
             group.enter()
             self.topRatedRequest.convertToUrl(completionHandler: { (_, error) in
                 if let error = error { print(error) }
-                print("here?")
                 self.topRatedRequest.makeUrlAnImage(completionHandler: { (images, error) in
                     if let error = error { print(error) }
                     guard let images = images else { print("Error, \(error.debugDescription)"); return }
                     self.topRatedImages = images
-                    print("Images")
                 })
                 group.leave()
             })

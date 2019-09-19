@@ -48,7 +48,6 @@ class NowPlayingCellsCell: UICollectionViewCell {
         addSubview(movieTitle)
         addSubview(movieImage)
         addSubview(movieReleaseTitle)
-        print("Inside the cells Cell")
     }
     
     

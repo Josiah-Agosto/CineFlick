@@ -61,7 +61,6 @@ class PopularMovieCellsCell: UICollectionViewCell {
         addSubview(movieRating)
         addSubview(movieTitle)
         addSubview(moviePosterImage)
-        print("Inside the cells Cell")
     }
     
     

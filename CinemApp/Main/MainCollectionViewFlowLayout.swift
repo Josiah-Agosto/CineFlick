@@ -11,11 +11,10 @@ import UIKit
 class MainCollectionViewFlowLayout: UICollectionViewFlowLayout {
     override init() {
         super.init()
-        self.minimumLineSpacing = 5
-        self.minimumInteritemSpacing = 5
+        self.minimumLineSpacing = 20
+        self.minimumInteritemSpacing = 15
         self.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         self.scrollDirection = .vertical
-        self.itemSize = CGSize(width: 125, height: 200)
     }
     
     

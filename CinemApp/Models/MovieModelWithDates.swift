@@ -14,22 +14,6 @@ struct MovieModelWithDates: Decodable {
     let total_pages: Int?
     let results: [Results]?
     let dates: Dates?
-    //
-    //    private enum MainCodingKeys: String, CodingKey {
-    //        case page
-    //        case total_results
-    //        case total_pages
-    //        case results = "results"
-    //        case dates = "dates"
-    //    }
-    //    init(json: [String: Any]) {
-    //        page = json["page"] as? Int ?? 0
-    //        total_results = json["total_results"] as? Int ?? 0
-    //        total_pages = json["total_pages"] as? Int ?? 0
-    //        results = json["results"] as? [Results]
-    //        dates = json["dates"] as! Dates
-    //    }
-    
     // Result Array
     struct Results: Decodable {
         let vote_count: Int
