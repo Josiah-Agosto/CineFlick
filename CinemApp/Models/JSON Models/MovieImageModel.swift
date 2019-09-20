@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 struct MovieImageModel: Decodable {
-    var change_keys: [String]
-    var images: Images
+    let change_keys: [String]?
+    let images: Images?
     
     private enum CodingKeys: String, CodingKey {
         case change_keys

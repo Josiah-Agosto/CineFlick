@@ -24,16 +24,15 @@ class HomeScreenController: UIViewController {
         return collection
     }()
     public let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
-    var movieNetworkManager: NetworkManager!
+    private var apiManager: APINetworkManager!
     // References
     private var categoryView = Categories()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        movieNetworkManager = NetworkManager()
-        movieNetworkManager.makeApiCalls {
+        apiManager = APINetworkManager()
+        apiManager.makeApiRequest {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 for cell in self.collectionView.visibleCells {
@@ -162,26 +161,22 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.layer.cornerRadius = 5
         cell.backgroundColor = UIColor.clear
         if indexPath.section == 0 {
-            cell.movieSection = .popular
-            cell.movieNetworkManager = movieNetworkManager
+            cell.movieEnum = .popular
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }
         } else if indexPath.section == 1 {
-            cell.movieSection = .nowPlaying
-            cell.movieNetworkManager = movieNetworkManager
+            cell.movieEnum = .nowPlaying
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }
         } else if indexPath.section == 2 {
-            cell.movieSection = .upcoming
-            cell.movieNetworkManager = movieNetworkManager
+            cell.movieEnum = .upcoming
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }
         } else {
-            cell.movieSection = .topRated
-            cell.movieNetworkManager = movieNetworkManager
+            cell.movieEnum = .topRated
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }

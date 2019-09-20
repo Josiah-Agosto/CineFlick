@@ -20,8 +20,8 @@ struct Results: Decodable {
     let vote_count: Int?
     let id: Int?
     let video: Bool?
-    let vote_average: Float
-    let title: String
+    let vote_average: Float?
+    let title: String?
     let popularity: Double?
     let poster_path: String?
     let original_language: String?

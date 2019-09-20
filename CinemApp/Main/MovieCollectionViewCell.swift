@@ -9,16 +9,9 @@
 import Foundation
 import UIKit
 
-public enum MovieSectionEnum {
-    case popular
-    case nowPlaying
-    case upcoming
-    case topRated
-}
-
 class MovieCollectionViewCell: UICollectionViewCell {
-    // Variables
-    var movieSection: MovieSectionEnum = .popular
+    // Date Formatter
+    private let dateFormatter = DateFormatter()
     // Inner Cell
     let innerCollectionView: UICollectionView = {
         let layout = InnerCollectionViewFlowLayout()
@@ -27,14 +20,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
         initializingCollectionView.backgroundColor = UIColor.clear
         return initializingCollectionView
     }()
-    // Date Formatter
-    private let dateFormatter = DateFormatter()
-    // References
-    private var popularRequest: PopularProcess!
-    private var nowPlayingRequest: NowPlayingProcess!
-    private var upcomingRequest: UpcomingProcess!
-    private var topRatedRequest: TopRatedProcess!
-    var movieNetworkManager = NetworkManager()
+    // Movie Enum
+    var movieEnum: MovieSectionEnum = .popular
+    // Reference to API Manager
+    var apiManager = APINetworkManager()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,53 +62,45 @@ class MovieCollectionViewCell: UICollectionViewCell {
 
 // Movie Cell Data Source
 extension MovieCollectionViewCell: UICollectionViewDataSource {
-    // Data inside each Cell is shown here
+    // Number of each cells
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if movieSection == .popular {
-            return movieNetworkManager.popularTitles.count
-        } else if movieSection == .nowPlaying{
-            return movieNetworkManager.nowPlayingTitles.count
-        } else if movieSection == .upcoming {
-            return movieNetworkManager.upcomingTitles.count
+        if movieEnum == .popular {
+            return apiManager.popularTitles.count
+        } else if movieEnum == .nowPlaying {
+            return apiManager.upcomingTitles.count
+        } else if movieEnum == .upcoming {
+            return apiManager.upcomingTitles.count
         } else {
-            return movieNetworkManager.topRatedTitles.count
+            return apiManager.topRatedTitles.count
         }
     }
 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch movieSection {
+        switch movieEnum {
         case .popular:
-            // Popular
             let popular = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "popularCellsCell", for: indexPath) as! PopularMovieCellsCell
-            popular.movieTitle.text = movieNetworkManager.popularTitles[safe: indexPath.row]
-            popular.movieRating.text = "\(movieNetworkManager.popularFilmRating[safe: indexPath.row] ?? "nil") / 10"
-            popular.moviePosterImage.image = movieNetworkManager.popularImages[safe: indexPath.row]
-            print("Popular: \(movieNetworkManager.popularTitles)")
+            popular.movieTitle.text = apiManager.popularTitles[safe: indexPath.row]
+            popular.movieRating.text = "\(apiManager.popularRatings[safe: indexPath.row] ?? "nil") / 10"
+            popular.moviePosterImage.image = apiManager.popularImages[safe: indexPath.row]
             return popular
         case .nowPlaying:
-            // Now Playing
             let nowPlaying = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "nowPlayingCellsCell", for: indexPath) as! NowPlayingCellsCell
-            nowPlaying.movieTitle.text = movieNetworkManager.nowPlayingTitles[safe: indexPath.row]
-            nowPlaying.movieReleaseTitle.text = "\(movieNetworkManager.nowPlayingReleaseDates[safe: indexPath.row] ?? "nil")"
-            nowPlaying.movieImage.image = movieNetworkManager.nowPlayingImages[safe: indexPath.row]
-            print("Now Playing: \(movieNetworkManager.upcomingTitles)")
+            nowPlaying.movieTitle.text = apiManager.nowPlayingTitles[safe: indexPath.row]
+            nowPlaying.movieReleaseTitle.text = apiManager.nowPlayingReleases[safe: indexPath.row]
+            nowPlaying.movieImage.image = apiManager.nowPlayingImages[safe: indexPath.row]
             return nowPlaying
         case .upcoming:
-            // Upcoming
             let upcoming = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "upcomingCellsCell", for: indexPath) as! UpcomingCellsCell
-            upcoming.movieTitle.text = movieNetworkManager.upcomingTitles[safe: indexPath.row]
-            upcoming.movieReleaseTitle.text = "\(movieNetworkManager.upcomingReleaseDates[safe: indexPath.row] ?? "nil")"
-            upcoming.movieImage.image = movieNetworkManager.upcomingImages[safe: indexPath.row]
-            print("Upcoming: \(movieNetworkManager.upcomingTitles)")
+            upcoming.movieTitle.text = apiManager.upcomingTitles[safe: indexPath.row]
+            upcoming.movieReleaseTitle.text = apiManager.upcomingReleases[safe: indexPath.row]
+            upcoming.movieImage.image = apiManager.upcomingImages[safe: indexPath.row]
             return upcoming
         case .topRated:
-            // Top Rated
             let topRated = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "topRatedCellsCell", for: indexPath) as! TopRatedCellsCell
-            topRated.movieTitle.text = movieNetworkManager.topRatedTitles[safe: indexPath.row]
-            topRated.movieRating.text = "\(movieNetworkManager.topRatedFilmRatings[safe: indexPath.row] ?? "nil") / 10"
-            topRated.movieImage.image = movieNetworkManager.topRatedImages[safe: indexPath.row]
-            print("Top Rated: \(movieNetworkManager.topRatedTitles)")
+            topRated.movieTitle.text = apiManager.topRatedTitles[safe: indexPath.row]
+            topRated.movieRating.text = apiManager.topRatedReleases[safe: indexPath.row]
+            topRated.movieImage.image = apiManager.topRatedImages[safe: indexPath.row]
             return topRated
         }
     }
