@@ -15,17 +15,16 @@ protocol Endpoint {
 
 // Creates the URL
 extension Endpoint {
-    var secretKey: String {
-        return apiKey
-    }
-    var extraQuery: String {
-        return "&language=en-US&page=1&region=US"
-    }
     // What makes the URL
     var urlComponents: URLComponents {
         var components = URLComponents(string: base)!
         components.path = path
-        components.query = secretKey + extraQuery
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: "\(apiKey)"),
+            URLQueryItem(name: "language", value: "en-US"),
+            URLQueryItem(name: "page", value: "1"),
+            URLQueryItem(name: "region", value: "US")
+        ]
         return components
     }
     // Creating the Request with the URL above

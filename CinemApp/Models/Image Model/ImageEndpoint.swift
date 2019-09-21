@@ -22,7 +22,9 @@ extension ImageEndpoint {
     var urlComponents: URLComponents {
         var components = URLComponents(string: base)!
         components.path = path
-        components.query = secretKey
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: "\(secretKey)")
+        ]
         return components
     }
     

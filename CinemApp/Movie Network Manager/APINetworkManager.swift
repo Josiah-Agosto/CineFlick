@@ -41,135 +41,184 @@ class APINetworkManager {
     var topRatedImagesURLs: [String] = [] { didSet { updater?() } }
     var topRatedImages: [UIImage] = [] { didSet { updater?() } }
 // Image Variables
-    private var secureBaseUrl: String = ""
-    private var imageSize: String = ""
+    var secureBaseUrl: String = ""
+    var imageSize: String = ""
 // Empty Closure
     var updater: (()->())? = nil
     
     // Request
     public func makeApiRequest(completion: @escaping () -> Void) -> Void {
-        // Popular
-        client.getFeed(from: .popular) { (result) in
-            switch result {
-            case .success(let popularFeedResult):
-                guard let popularResult = popularFeedResult?.results else { return }
-                for titles in popularResult {
-                    self.popularTitles.append(titles.title ?? "nil")
+        let group = DispatchGroup()
+        
+        DispatchQueue(label: "apiRequest", qos: .background).async {
+            // Popular
+            group.enter()
+            self.client.getFeed(from: .popular) { (result) in
+                switch result {
+                case .success(let popularFeedResult):
+                    guard let popularResult = popularFeedResult?.results else { return }
+                    for titles in popularResult {
+                        self.popularTitles.append(titles.title ?? "nil")
+                    }
+                    for filePaths in popularResult {
+                        self.popularFilePaths.append(filePaths.poster_path ?? "nil")
+                    }
+                    for ratings in popularResult {
+                        let rating = "\(ratings.vote_average ?? 0)"
+                        self.popularRatings.append(rating)
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-                for filePaths in popularResult {
-                    self.popularFilePaths.append(filePaths.poster_path ?? "nil")
-                }
-                for ratings in popularResult {
-                    self.popularRatings.append("\(String(describing: ratings.vote_average))")
-                }
-            case .failure(let error):
-                print(error)
             }
-        }
-        // Now Playing
-        client.getFeed(from: .nowPlaying) { (result) in
-            switch result {
-            case.success(let nowPlayingFeedResult):
-                guard let nowPlayingResult = nowPlayingFeedResult?.results else { return }
-                for titles in nowPlayingResult {
-                    self.nowPlayingTitles.append(titles.title ?? "nil")
+            group.leave()
+            // Now Playing
+            group.enter()
+            self.client.getFeed(from: .nowPlaying) { (result) in
+                switch result {
+                case.success(let nowPlayingFeedResult):
+                    guard let nowPlayingResult = nowPlayingFeedResult?.results else { return }
+                    for titles in nowPlayingResult {
+                        self.nowPlayingTitles.append(titles.title ?? "nil")
+                    }
+                    for filePaths in nowPlayingResult {
+                        self.nowPlayingFilePaths.append(filePaths.poster_path ?? "nil")
+                    }
+                    for dates in nowPlayingResult {
+                        guard let releasedDate = dates.release_date else { return }
+                        self.nowPlayingReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-                for filePaths in nowPlayingResult {
-                    self.nowPlayingFilePaths.append(filePaths.poster_path ?? "nil")
-                }
-                for dates in nowPlayingResult {
-                    self.nowPlayingReleases.append(self.dateReference.convertStringToDate(dateString: dates.release_date ?? "nil"))
-                }
-                // Create Image Model
-            case .failure(let error) :
-                print(error)
             }
-        }
-        // Upcoming
-        client.getFeed(from: .upcoming) { (result) in
-            switch result {
-            case .success(let upcomingFeedResult):
-                guard let upcomingResult = upcomingFeedResult?.results else { return }
-                for titles in upcomingResult {
-                    self.upcomingTitles.append(titles.title ?? "nil")
+            group.leave()
+            // Upcoming
+            group.enter()
+            self.client.getFeed(from: .upcoming) { (result) in
+                switch result {
+                case .success(let upcomingFeedResult):
+                    guard let upcomingResult = upcomingFeedResult?.results else { return }
+                    for titles in upcomingResult {
+                        self.upcomingTitles.append(titles.title ?? "nil")
+                    }
+                    for filePaths in upcomingResult {
+                        self.upcomingFilePaths.append(filePaths.poster_path ?? "nil")
+                    }
+                    for dates in upcomingResult {
+                        guard let releasedDate = dates.release_date else { return }
+                        self.upcomingReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-                for filePaths in upcomingResult {
-                    self.upcomingFilePaths.append(filePaths.poster_path ?? "nil")
-                }
-                for dates in upcomingResult {
-                    self.upcomingReleases.append(self.dateReference.convertStringToDate(dateString: dates.release_date ?? "nil"))
-                }
-                // Create Image Model
-            case .failure(let error):
-                print(error)
             }
-        }
-        // Top Rated
-        client.getFeed(from: .topRated) { (result) in
-            switch result {
-            case .success(let topRatedFeedResult):
-                guard let topRatedResult = topRatedFeedResult?.results else { return }
-                for titles in topRatedResult {
-                    self.topRatedTitles.append(titles.title ?? "nil")
+            group.leave()
+            // Top Rated
+            group.enter()
+            self.client.getFeed(from: .topRated) { (result) in
+                switch result {
+                case .success(let topRatedFeedResult):
+                    guard let topRatedResult = topRatedFeedResult?.results else { return }
+                    for titles in topRatedResult {
+                        self.topRatedTitles.append(titles.title ?? "nil")
+                    }
+                    for filePaths in topRatedResult {
+                        self.topRatedFilePaths.append(filePaths.poster_path ?? "nil")
+                    }
+                    for dates in topRatedResult {
+                        guard let releasedDate = dates.release_date else { return }
+                        self.topRatedReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-                for filePaths in topRatedResult {
-                    self.topRatedFilePaths.append(filePaths.poster_path ?? "nil")
-                }
-                for dates in topRatedResult {
-                    self.topRatedReleases.append(self.dateReference.convertStringToDate(dateString: dates.release_date ?? "nil"))
-                }
-                // Create Image Model
-            case .failure(let error):
-                print(error)
             }
+            group.leave()
         }
         
-        // Create Image Model
-        imageClient.createImage(from: .configure, completion: { (imageResult) in
-            switch imageResult {
-            case .success(let imageFeedResult):
-                guard let imageCreation = imageFeedResult?.images else { return }
-                self.secureBaseUrl = imageCreation.secure_base_url
-                self.imageSize = imageCreation.poster_sizes[4]
+        DispatchQueue(label: "createImages", qos: .background).async {
+            // Create Image Model
+            group.enter()
+            self.imageClient.createImage(from: .configure, completion: { (imageResult) in
+                switch imageResult {
+                case .success(let imageFeedResult):
+                    print("Success")
+                    guard let imageCreation = imageFeedResult?.images else { return }
+                    self.secureBaseUrl = imageCreation.secure_base_url
+                    self.imageSize = imageCreation.poster_sizes[4]
+                case .failure(let error):
+                    print(error)
+                }
+            })
+            group.leave()
             // MARK: - Creating the URL's
-                // Popular Image URL's
-                self.popularFilePaths.forEach({ (paths) in
-                    self.popularImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                })
-                // Now Playing Image URL's
-                self.nowPlayingFilePaths.forEach({ (paths) in
-                    self.nowPlayingImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                })
-                // Upcoming Image URL's
-                self.upcomingFilePaths.forEach({ (paths) in
-                    self.upcomingImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                })
-                // Top Rated Image URL's
-                self.topRatedFilePaths.forEach({ (paths) in
-                    self.topRatedImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                })
-                
+            // Popular Image URL's
+            group.enter()
+            self.popularFilePaths.forEach({ (paths) in
+                self.popularImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
+                print("Creating URL")
+            })
+            group.leave()
+            // Now Playing Image URL's
+            group.enter()
+            self.nowPlayingFilePaths.forEach({ (paths) in
+                self.nowPlayingImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
+                print("Creating URL")
+            })
+            group.leave()
+            // Upcoming Image URL's
+            group.enter()
+            self.upcomingFilePaths.forEach({ (paths) in
+                self.upcomingImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
+                print("Creating URL")
+            })
+            group.leave()
+            // Top Rated Image URL's
+            group.enter()
+            self.topRatedFilePaths.forEach({ (paths) in
+                self.topRatedImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
+                print("Creating URL")
+            })
+            group.leave()
             // MARK: - Creating the UIImage
-                // Popular
-                self.popularImagesURLs.forEach({ (urls) in
-                    self.popularImages.append(self.imageReference.convertUrlToImage(with: urls))
-                })
-                // Now Playing
-                self.nowPlayingImagesURLs.forEach({ (urls) in
-                    self.nowPlayingImages.append(self.imageReference.convertUrlToImage(with: urls))
-                })
-                // Upcoming
-                self.upcomingImagesURLs.forEach({ (urls) in
-                    self.upcomingImages.append(self.imageReference.convertUrlToImage(with: urls))
-                })
-                // Top Rated
-                self.topRatedImagesURLs.forEach({ (urls) in
-                    self.topRatedImages.append(self.imageReference.convertUrlToImage(with: urls))
-                })
-            case .failure(let error):
-                print(error)
-            }
-        })
+            group.enter()
+            // Popular
+            self.popularImagesURLs.forEach({ (urls) in
+                self.popularImages.append(self.imageReference.convertUrlToImage(with: urls))
+                print("Images!")
+            })
+            group.leave()
+            // Now Playing
+            group.enter()
+            self.nowPlayingImagesURLs.forEach({ (urls) in
+                self.nowPlayingImages.append(self.imageReference.convertUrlToImage(with: urls))
+                print("Images!")
+            })
+            group.leave()
+            // Upcoming
+            group.enter()
+            self.upcomingImagesURLs.forEach({ (urls) in
+                self.upcomingImages.append(self.imageReference.convertUrlToImage(with: urls))
+                print("Images!")
+            })
+            group.leave()
+            // Top Rated
+            group.enter()
+            self.topRatedImagesURLs.forEach({ (urls) in
+                self.topRatedImages.append(self.imageReference.convertUrlToImage(with: urls))
+                print("Images!")
+            })
+            group.leave()
+        }
+        
+        group.wait()
+        group.notify(queue: DispatchQueue.main) {
+            completion()
+            self.updater?()
+            print("Finished")
+        }
+        
     } // API Func End
 } // Class End
 
@@ -194,7 +243,6 @@ extension UIImage {
         do {
             let data = try Data(contentsOf: url)
             let image: UIImage = UIImage(data: data)!
-            print("Completed Image!")
             return image
         } catch let error { print(error) }
         // If it doesn't work then this will return

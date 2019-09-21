@@ -25,6 +25,7 @@ class ImageClient: ImageAPIClient {
         let result = endpoint.request
         fetchImage(with: result, decode: { (json) -> MovieImageModel? in
             guard let imageModel = json as? MovieImageModel else { print("Image Error here!"); return nil }
+            print("Uhh")
             return imageModel
         }, completion: completion)
     }

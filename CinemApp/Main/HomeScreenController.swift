@@ -19,24 +19,25 @@ class HomeScreenController: UIViewController {
     private let categoryButton = UIButton(frame: CGRect(x: 20, y: 10, width: 25, height: 25))
     public let collectionView: UICollectionView = {
         let layout = MainCollectionViewFlowLayout()
-        let collection = UICollectionView(frame: CGRect(x: 5, y: 150, width: UIScreen.main.bounds.width - 10, height: UIScreen.main.bounds.height - 150), collectionViewLayout: layout)
+        let collection = UICollectionView(frame: CGRect(x: 0, y: 150, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 150), collectionViewLayout: layout)
         collection.backgroundColor = UIColor.clear
         return collection
     }()
     public let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
-    private var apiManager: APINetworkManager!
+    private var apiManager = APINetworkManager()
     // References
     private var categoryView = Categories()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        apiManager = APINetworkManager()
         apiManager.makeApiRequest {
+            // Reloading
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 for cell in self.collectionView.visibleCells {
                     if let cell = cell as? MovieCollectionViewCell {
+                        print("Reloaded")
                         cell.innerCollectionView.reloadData()
                     }
                 }
@@ -103,25 +104,30 @@ class HomeScreenController: UIViewController {
             // Hides the Category View
             UIView.animate(withDuration: 0.9, animations: {
                 self.categoryView.view.frame = CGRect(x: -window.frame.width - 90, y: 0, width: window.frame.width - 90.0, height: window.frame.height)
-                // Removes the Blur Effect
-                for subview in self.view.subviews {
-                    if subview is UIVisualEffectView {
-                        subview.removeFromSuperview()
+                // Category Button Animations
+                UIView.animate(withDuration: 0.6) {
+                    // Removes the Blur Effect
+                    for subview in self.view.subviews {
+                        if subview is UIVisualEffectView {
+                            subview.removeFromSuperview()
+                        }
                     }
                 }
-                // Category Button Animations
-                UIView.animate(withDuration: 0.2) {
+            }, completion: { _ in
+                UIView.animate(withDuration: 0.3, animations: {
                     if self.isOpen == false {
                         self.categoryButton.transform = CGAffineTransform(rotationAngle: 0)
                     }
-                }
-            }, completion: nil)
-        }
-    }
+                })
+            })
+        } // Else
+    } // Func End
     
     
     @objc private func blurEffectTap() {
-        slideOutCategoriesView(shouldExpand: !isOpen)
+        UIView.animate(withDuration: 0.6) {
+            self.slideOutCategoriesView(shouldExpand: !self.isOpen)
+        }
     }
     
     
@@ -146,7 +152,7 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
+        return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
     
     
@@ -162,21 +168,25 @@ extension HomeScreenController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.backgroundColor = UIColor.clear
         if indexPath.section == 0 {
             cell.movieEnum = .popular
+            cell.apiManager = apiManager
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }
         } else if indexPath.section == 1 {
             cell.movieEnum = .nowPlaying
+            cell.apiManager = apiManager
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }
         } else if indexPath.section == 2 {
             cell.movieEnum = .upcoming
+            cell.apiManager = apiManager
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }
         } else {
             cell.movieEnum = .topRated
+            cell.apiManager = apiManager
             DispatchQueue.main.async {
                 cell.innerCollectionView.reloadData()
             }

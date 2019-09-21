@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 struct MovieImageModel: Decodable {
     let change_keys: [String]?
