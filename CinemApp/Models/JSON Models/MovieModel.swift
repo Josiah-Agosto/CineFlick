@@ -48,21 +48,4 @@ struct Results: Decodable {
         release_date = json["release_date"] as? String ?? ""
         original_title = json["original_title"] as? String ?? ""
     }
-    
-    //    enum CodingKeys: String, CodingKey {
-    //        case adult
-    //        case backdropPath = "backdrop_path"
-    //        case genreIds = "genre_ids"
-    //        case id
-    //        case originalLanguage = "original_language"
-    //        case originalTitle = "original_title"
-    //        case overview
-    //        case popularity
-    //        case posterPath = "poster_path"
-    //        case releaseDate = "release_date"
-    //        case title
-    //        case video
-    //        case voteAverage = "vote_average"
-    //        case voteCount = "vote_count"
-    //    }
 }

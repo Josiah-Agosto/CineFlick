@@ -32,20 +32,20 @@ struct MovieModelWithDates: Decodable {
         let release_date: String?
         
         init(json: [String: Any]) {
-            vote_count = json["vote_count"] as? Int
-            id = json["id"] as? Int
-            video = json["video"] as? Bool
-            vote_average = json["vote_average"] as? Float
-            title = json["title"] as? String
-            popularity = json["popularity"] as? Float
-            poster_path = json["poster_path"] as? String
-            original_language = json["original_language"] as? String
-            original_title = json["original_title"] as? String
-            genre_ids = json["genre_ids"] as? [Int]
-            backdrop_path = json["backdrop_path"] as? String
-            adult = json["adult"] as? Bool
-            overview = json["overview"] as? String
-            release_date = json["release_data"] as? String
+            vote_count = json["vote_count"] as? Int ?? 0
+            id = json["id"] as? Int ?? 0
+            video = json["video"] as? Bool ?? false
+            vote_average = json["vote_average"] as? Float ?? 0.0
+            title = json["title"] as? String ?? ""
+            popularity = json["popularity"] as? Float ?? 0.0
+            poster_path = json["poster_path"] as? String ?? ""
+            original_language = json["original_language"] as? String ?? ""
+            original_title = json["original_title"] as? String ?? ""
+            genre_ids = json["genre_ids"] as? [Int] ?? []
+            backdrop_path = json["backdrop_path"] as? String ?? ""
+            adult = json["adult"] as? Bool ?? false
+            overview = json["overview"] as? String ?? ""
+            release_date = json["release_data"] as? String ?? ""
         }
     }
     // Data Object

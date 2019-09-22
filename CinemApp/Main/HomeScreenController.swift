@@ -37,7 +37,6 @@ class HomeScreenController: UIViewController {
                 guard let self = self else { return }
                 for cell in self.collectionView.visibleCells {
                     if let cell = cell as? MovieCollectionViewCell {
-                        print("Reloaded")
                         cell.innerCollectionView.reloadData()
                     }
                 }

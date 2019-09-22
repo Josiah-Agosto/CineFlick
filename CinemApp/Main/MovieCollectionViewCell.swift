@@ -16,7 +16,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     let innerCollectionView: UICollectionView = {
         let layout = InnerCollectionViewFlowLayout()
         // Inner Collection View NOT Cell
-        let initializingCollectionView = UICollectionView(frame: CGRect(x: 5, y: 0, width: UIScreen.main.bounds.width - 10, height: 300), collectionViewLayout: layout)
+        let initializingCollectionView = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 10, height: 300), collectionViewLayout: layout)
         initializingCollectionView.backgroundColor = UIColor.clear
         return initializingCollectionView
     }()
@@ -115,7 +115,7 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 } // Delegate End
 

@@ -40,22 +40,25 @@ class APINetworkManager {
     var topRatedReleases: [String] = [] { didSet { updater?() } }
     var topRatedImagesURLs: [String] = [] { didSet { updater?() } }
     var topRatedImages: [UIImage] = [] { didSet { updater?() } }
-// Image Variables
+    // Image Variables
     var secureBaseUrl: String = ""
     var imageSize: String = ""
-// Empty Closure
+    // Empty Closure
     var updater: (()->())? = nil
+    // Group
+    private let group = DispatchGroup()
     
     // Request
     public func makeApiRequest(completion: @escaping () -> Void) -> Void {
-        let group = DispatchGroup()
-        
-        DispatchQueue(label: "apiRequest", qos: .background).async {
-            // Popular
-            group.enter()
+        let operation = OperationQueue()
+        let imageCreationQueue = OperationQueue()
+        // Popular
+        operation.addOperation {
+            self.group.enter()
             self.client.getFeed(from: .popular) { (result) in
                 switch result {
                 case .success(let popularFeedResult):
+                    defer { self.group.leave() }
                     guard let popularResult = popularFeedResult?.results else { return }
                     for titles in popularResult {
                         self.popularTitles.append(titles.title ?? "nil")
@@ -71,12 +74,12 @@ class APINetworkManager {
                     print(error)
                 }
             }
-            group.leave()
             // Now Playing
-            group.enter()
+            self.group.enter()
             self.client.getFeed(from: .nowPlaying) { (result) in
                 switch result {
                 case.success(let nowPlayingFeedResult):
+                    defer { self.group.leave() }
                     guard let nowPlayingResult = nowPlayingFeedResult?.results else { return }
                     for titles in nowPlayingResult {
                         self.nowPlayingTitles.append(titles.title ?? "nil")
@@ -92,12 +95,12 @@ class APINetworkManager {
                     print(error)
                 }
             }
-            group.leave()
             // Upcoming
-            group.enter()
+            self.group.enter()
             self.client.getFeed(from: .upcoming) { (result) in
                 switch result {
                 case .success(let upcomingFeedResult):
+                    defer { self.group.leave() }
                     guard let upcomingResult = upcomingFeedResult?.results else { return }
                     for titles in upcomingResult {
                         self.upcomingTitles.append(titles.title ?? "nil")
@@ -113,12 +116,12 @@ class APINetworkManager {
                     print(error)
                 }
             }
-            group.leave()
             // Top Rated
-            group.enter()
+            self.group.enter()
             self.client.getFeed(from: .topRated) { (result) in
                 switch result {
                 case .success(let topRatedFeedResult):
+                    defer { self.group.leave() }
                     guard let topRatedResult = topRatedFeedResult?.results else { return }
                     for titles in topRatedResult {
                         self.topRatedTitles.append(titles.title ?? "nil")
@@ -134,16 +137,12 @@ class APINetworkManager {
                     print(error)
                 }
             }
-            group.leave()
-        }
-        
-        DispatchQueue(label: "createImages", qos: .background).async {
             // Create Image Model
-            group.enter()
+            self.group.enter()
             self.imageClient.createImage(from: .configure, completion: { (imageResult) in
                 switch imageResult {
                 case .success(let imageFeedResult):
-                    print("Success")
+                    defer { self.group.leave() }
                     guard let imageCreation = imageFeedResult?.images else { return }
                     self.secureBaseUrl = imageCreation.secure_base_url
                     self.imageSize = imageCreation.poster_sizes[4]
@@ -151,72 +150,48 @@ class APINetworkManager {
                     print(error)
                 }
             })
-            group.leave()
+        }
+        // Worked on 09/21/2019 9:44PM
+        imageCreationQueue.addOperation {
+            self.group.wait()
             // MARK: - Creating the URL's
             // Popular Image URL's
-            group.enter()
             self.popularFilePaths.forEach({ (paths) in
                 self.popularImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                print("Creating URL")
             })
-            group.leave()
             // Now Playing Image URL's
-            group.enter()
             self.nowPlayingFilePaths.forEach({ (paths) in
                 self.nowPlayingImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                print("Creating URL")
             })
-            group.leave()
             // Upcoming Image URL's
-            group.enter()
             self.upcomingFilePaths.forEach({ (paths) in
                 self.upcomingImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                print("Creating URL")
             })
-            group.leave()
             // Top Rated Image URL's
-            group.enter()
             self.topRatedFilePaths.forEach({ (paths) in
                 self.topRatedImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
-                print("Creating URL")
             })
-            group.leave()
-            // MARK: - Creating the UIImage
-            group.enter()
+        // MARK: - Creating the UIImage
             // Popular
             self.popularImagesURLs.forEach({ (urls) in
                 self.popularImages.append(self.imageReference.convertUrlToImage(with: urls))
-                print("Images!")
             })
-            group.leave()
             // Now Playing
-            group.enter()
             self.nowPlayingImagesURLs.forEach({ (urls) in
                 self.nowPlayingImages.append(self.imageReference.convertUrlToImage(with: urls))
-                print("Images!")
             })
-            group.leave()
             // Upcoming
-            group.enter()
             self.upcomingImagesURLs.forEach({ (urls) in
                 self.upcomingImages.append(self.imageReference.convertUrlToImage(with: urls))
-                print("Images!")
             })
-            group.leave()
             // Top Rated
-            group.enter()
             self.topRatedImagesURLs.forEach({ (urls) in
                 self.topRatedImages.append(self.imageReference.convertUrlToImage(with: urls))
-                print("Images!")
             })
-            group.leave()
-        }
-        
-        group.wait()
-        group.notify(queue: DispatchQueue.main) {
-            completion()
-            self.updater?()
-            print("Finished")
+            self.group.notify(queue: DispatchQueue.main) {
+                completion()
+                self.updater?()
+            }
         }
         
     } // API Func End
@@ -246,6 +221,7 @@ extension UIImage {
             return image
         } catch let error { print(error) }
         // If it doesn't work then this will return
+        print("Doesn't work")
         return UIImage()
     }
 }
