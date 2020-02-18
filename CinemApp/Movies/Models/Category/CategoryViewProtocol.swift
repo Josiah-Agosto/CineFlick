@@ -6,6 +6,6 @@
 //  Copyright © 2019 Josiah Agosto. All rights reserved.
 //
 
-protocol SlideControllerDelegate {
+protocol CategoryViewProtocol {
     func handleSlideToggle()
 }

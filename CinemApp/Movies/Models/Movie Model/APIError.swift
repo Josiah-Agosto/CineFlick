@@ -17,14 +17,14 @@ enum APIError: Error {
     
     var localizedDescription: String {
         switch self {
-        case .requestFailed:
+        case .requestFailed:    
             return "Hmm, seems like the Request to server Failed"
         case .jsonConversionFailure:
             return "Hmm, seems like JSON conversion Failed"
         case .invalidData:
             return "Invalid Data"
         case .responseUnsuccessful:
-            return "Hmm, seems like the Response was Unsuccessful"
+            return "Invalid Data"
         case .jsonParsingFailure:
             return "Hmm, seemed to be a JSON Parsing Failure"
         }

@@ -17,7 +17,6 @@ class InnerCollectionViewFlowLayout: UICollectionViewFlowLayout {
         self.itemSize = CGSize(width: 150, height: 300)
     }
     
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

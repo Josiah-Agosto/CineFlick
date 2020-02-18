@@ -38,7 +38,7 @@ class TopRatedCellsCell: UICollectionViewCell {
         return label
     }()
     
-    // Not being Displayed References; For Detail View
+    // MARK: - For Detail View
     let backdropImage: UIImageView = {
         let backdrop = UIImageView()
         backdrop.layer.cornerRadius = 5
@@ -62,6 +62,11 @@ class TopRatedCellsCell: UICollectionViewCell {
         return backdrop
     }()
     let rating: UILabel = {
+        let backdrop = UILabel()
+        backdrop.text = ""
+        return backdrop
+    }()
+    let releaseDate: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop

@@ -12,16 +12,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var navigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
     // Creating Navigation Controller
-        let mainScreen = HomeScreenController()
-        navigationController = UINavigationController(rootViewController: mainScreen)
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let mainScreen: HomeScreenController = HomeScreenController()
+        let navigationController: UINavigationController = UINavigationController(rootViewController: mainScreen)
     // This removes the small Border under the Navigation Bar
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController.navigationBar.shadowImage = UIImage()
+        navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
         window?.rootViewController = navigationController
     // Need this to make it visible
         window?.makeKeyAndVisible()

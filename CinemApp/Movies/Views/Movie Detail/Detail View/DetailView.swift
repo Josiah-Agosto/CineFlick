@@ -9,10 +9,8 @@
 import Foundation
 import UIKit
 
-class DetailView: UIViewController {
-    // References
-    lazy var apiManager = APINetworkManager()
-    // Collection View
+class DetailView: UIView {
+    // MARK: - UI Components
     let castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: CGRect(), collectionViewLayout: viewLayout)
@@ -157,30 +155,34 @@ class DetailView: UIViewController {
         return placeholder
     }()
     private let blur = UIBlurEffect(style: UIBlurEffect.Style.light)
+
+// Move to Controller
     // Data transfer Holders
     var castCountForSection: Int = 0
     var name: [String] = []
     var charName: [String] = []
     var profileImage: [UIImage] = []
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
     
-    
+    // MARK: - Setup
     private func setup() {
         // Sizes
         let screenWidth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
         // View
-        view.backgroundColor = UIColor(red: 40/255, green: 40/255, blue: 40/255, alpha: 0)
-        view.frame = CGRect(x: 10, y: 40, width: screenWidth - 20, height: screenHeight - 60)
-        view.layer.cornerRadius = 10
+        backgroundColor = UIColor(red: 40/255, green: 40/255, blue: 40/255, alpha: 0)
+        frame = CGRect(x: 10, y: 40, width: screenWidth - 20, height: screenHeight - 60)
+        layer.cornerRadius = 10
         let blurView = UIVisualEffectView(effect: blur)
         blurView.frame = CGRect(x: -10, y: 0, width: screenWidth - 10, height: 1010)
         blurView.layer.cornerRadius = 10
-    // MARK: - Frames in Order of View
+    // Frames in Order of View
         // Remover Button
         removeDetailButton.frame = CGRect(x: screenWidth - 60, y: 5, width: 30, height: 30)
         // Backdrop
@@ -202,9 +204,9 @@ class DetailView: UIViewController {
         // Collection View for Cast
         castPlaceholder.frame = CGRect(x: 10, y: 670, width: screenWidth - 40, height: 20)
         castCollectionView.frame = CGRect(x: 10, y: 700, width: screenWidth - 40, height: 180)
-    // MARK: - Subviews
-        view.addSubview(scrollView)
-        view.addSubview(removeDetailButton)
+        // Subviews
+        addSubview(scrollView)
+        addSubview(removeDetailButton)
         // To Scroll View, In order
         scrollView.addSubview(blurView)
         scrollView.addSubview(backdropImage)
@@ -223,6 +225,9 @@ class DetailView: UIViewController {
         extraSetup()
     }
     
+    
+    
+    
     private func extraSetup() {
         castCollectionView.delegate = self
         castCollectionView.dataSource = self
@@ -231,6 +236,9 @@ class DetailView: UIViewController {
     }
     
     
+    
+    
+    // MARK: Constraints
     private func constraints() {
         scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: -5).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -239,14 +247,21 @@ class DetailView: UIViewController {
     }
     
     
+    
+    
     @objc private func removeDetailView(sender: UIButton) {
         self.view.removeFromSuperview()
     }
 
+    
+    
+    
 } // Class End
 
-// Collection View
-// Delegate
+
+// Goes somewhere else
+
+// MARK: - Collection View Extensions
 extension DetailView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)

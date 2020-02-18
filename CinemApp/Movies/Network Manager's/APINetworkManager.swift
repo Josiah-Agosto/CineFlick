@@ -16,7 +16,7 @@ class APINetworkManager {
     private let detailClient = DetailClient()
     private let dateReference = Date()
     private let imageReference = UIImage()
-// Variables
+// MARK: - Variables
     // Popular
     var popularTitles: [String] = [] { didSet { updater?() } }
     private var popularFilePaths: [String] = [] { didSet { updater?() } }
@@ -24,6 +24,7 @@ class APINetworkManager {
     var popularIds: [String] = [] { didSet { updater?() } }
     var popularOverview: [String] = [] { didSet { updater?() } }
     var popularRuntime: [String] = [] { didSet { updater?() } }
+    var popularRelease: [String] = [] { didSet { updater?() } }
     private var popularBackdropPaths: [String] = [] { didSet { updater?() } }
     private var popularBackdropURLs: [String] = [] { didSet { updater?() } }
     var popularBackdropImages: [UIImage] = [] { didSet { updater?() } }
@@ -77,7 +78,7 @@ class APINetworkManager {
     // Group
     private let group = DispatchGroup()
     
-    // Request
+    // MARK: - Requests
     public func makeApiRequest(completion: @escaping () -> Void) -> Void {
         let operation = OperationQueue()
         let imageCreationQueue = OperationQueue()
@@ -87,6 +88,7 @@ class APINetworkManager {
             self.client.getFeed(from: .popular) { (result) in
                 switch result {
                 case .success(let popularFeedResult):
+                    defer { self.group.leave() }
                     guard let popularResult = popularFeedResult?.results else { return }
                     for titles in popularResult {
                         self.popularTitles.append(titles.title ?? "nil")
@@ -108,9 +110,12 @@ class APINetworkManager {
                         let rating = Int(ratings.vote_average ?? 0)
                         self.popularRatings.append(String(rating * 10))
                     }
-                    defer { self.group.leave() }
+                    for release in popularResult {
+                        guard let releases = release.release_date else { return }
+                        self.popularRelease.append(self.dateReference.convertStringToDate(dateString: releases))
+                    }
                 case .failure(let error):
-                    print(error)
+                    print("Popular: \(error)")
                 }
             }
             // Now Playing
@@ -118,6 +123,7 @@ class APINetworkManager {
             self.client.getFeed(from: .nowPlaying) { (result) in
                 switch result {
                 case.success(let nowPlayingFeedResult):
+                    defer { self.group.leave() }
                     guard let nowPlayingResult = nowPlayingFeedResult?.results else { return }
                     for titles in nowPlayingResult {
                         self.nowPlayingTitles.append(titles.title ?? "nil")
@@ -143,9 +149,8 @@ class APINetworkManager {
                         guard let releasedDate = dates.release_date else { return }
                         self.nowPlayingReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
                     }
-                    defer { self.group.leave() }
                 case .failure(let error):
-                    print(error)
+                    print("Now Playing: \(error)")
                 }
             }
             // Upcoming
@@ -153,6 +158,7 @@ class APINetworkManager {
             self.client.getFeed(from: .upcoming) { (result) in
                 switch result {
                 case .success(let upcomingFeedResult):
+                    defer { self.group.leave() }
                     guard let upcomingResult = upcomingFeedResult?.results else { return }
                     for titles in upcomingResult {
                         self.upcomingTitles.append(titles.title ?? "nil")
@@ -178,9 +184,8 @@ class APINetworkManager {
                         guard let releasedDate = dates.release_date else { return }
                         self.upcomingReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
                     }
-                    defer { self.group.leave() }
                 case .failure(let error):
-                    print(error)
+                    print("Upcoming: \(error)")
                 }
             }
             // Top Rated
@@ -188,6 +193,7 @@ class APINetworkManager {
             self.client.getFeed(from: .topRated) { (result) in
                 switch result {
                 case .success(let topRatedFeedResult):
+                    defer { self.group.leave() }
                     guard let topRatedResult = topRatedFeedResult?.results else { return }
                     for titles in topRatedResult {
                         self.topRatedTitles.append(titles.title ?? "nil")
@@ -213,9 +219,8 @@ class APINetworkManager {
                         guard let releasedDate = dates.release_date else { return }
                         self.topRatedReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
                     }
-                    defer { self.group.leave() }
                 case .failure(let error):
-                    print(error)
+                    print("Top Rated: \(error)")
                 }
             }
             // Create Image Model
@@ -223,6 +228,7 @@ class APINetworkManager {
             self.imageClient.createImage(from: .configure, completion: { (imageResult) in
                 switch imageResult {
                 case .success(let imageFeedResult):
+                    defer { self.group.leave() }
                     guard let imageCreation = imageFeedResult?.images else { return }
                     guard let secure = imageCreation.secure_base_url else { return }
                     guard let posterSize = imageCreation.poster_sizes?[4] else { return }
@@ -230,9 +236,8 @@ class APINetworkManager {
                     self.secureBaseUrl = secure
                     self.imageSize = posterSize
                     self.backdropSize = backdropSize
-                    defer { self.group.leave() }
                 case .failure(let error):
-                    print(error)
+                    print("Image Creation: \(error)")
                 }
             })
         }
@@ -285,7 +290,7 @@ class APINetworkManager {
                         let runtime = "\(popularRuntime)m"
                         self.popularRuntime.append(runtime)
                     case .failure(let error):
-                        print(error)
+                        print("Popular Id's: \(error)")
                     }
                 })
             })
@@ -298,7 +303,7 @@ class APINetworkManager {
                         let runtime = "\(nowPlayingRuntime)m"
                         self.nowPlayingRuntime.append(runtime)
                     case .failure(let error):
-                        print(error)
+                        print("Now Playing id's: \(error)")
                     }
                 })
             })
@@ -311,7 +316,7 @@ class APINetworkManager {
                         let runtime = "\(upcomingRuntime)m"
                         self.upcomingRuntime.append(runtime)
                     case .failure(let error):
-                        print(error)
+                        print("Upcoming Id's: \(error)")
                     }
                 })
             })
@@ -324,7 +329,7 @@ class APINetworkManager {
                         let runtime = "\(topRatedRuntime)m"
                         self.topRatedRuntime.append(runtime)
                     case .failure(let error):
-                        print(error)
+                        print("Top Rated Id's: \(error)")
                     }
                 })
             })
@@ -379,7 +384,7 @@ class APINetworkManager {
 } // Class End
 
 
-// Converts String to Date
+// MARK: - String to Date Extension
 extension Date {
     func convertStringToDate(dateString: String) -> String {
         let formatter = DateFormatter()
@@ -392,7 +397,7 @@ extension Date {
 }
 
 
-// Converting String to UIImage
+// MARK: - String to Image Extension
 public extension UIImage {
     func convertUrlToImage(with url: String) -> UIImage {
         guard let url = URL(string: url) else { print("Not Valid URL"); return UIImage() }
@@ -402,6 +407,6 @@ public extension UIImage {
             return image
         } catch let error { print(error) }
         // If it doesn't work then this will return
-        return UIImage(named: "ImageNotFound")
+        return UIImage(named: "ImageNotFound")!
     }
 }

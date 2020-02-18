@@ -1,55 +1,43 @@
 //
-//  PopularMovieCellsCell.swift
+//  UpcomingCellsCell.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 9/1/19.
 //  Copyright © 2019 Josiah Agosto. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-// Inner Cell
-class PopularMovieCellsCell: UICollectionViewCell {
-    // Movie Title
+class UpcomingCellsCell: UICollectionViewCell {
+    // Title
     let movieTitle: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 225, width: 150, height: 50))
-        // Label Text
-        label.text = "Popular"
+        label.text = "Upcoming"
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.white
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
         return label
     }()
-    // Rating Image
-    let movieRatingImage: UIImageView = {
-        let ratingImage = UIImageView(frame: CGRect(x: 0, y: 275, width: 15, height: 15))
-        ratingImage.layer.cornerRadius = 5
-        ratingImage.backgroundColor = UIColor.white
-        return ratingImage
+    // Image
+    let movieImage: UIImageView = {
+        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
+        image.layer.cornerRadius = 10
+        image.clipsToBounds = true
+        image.contentMode = .scaleAspectFill
+        return image
     }()
-    // Poster Image
-    var moviePosterImage: UIImageView = {
-        let posterImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
-        posterImage.layer.cornerRadius = 10
-        posterImage.clipsToBounds = true
-        posterImage.contentMode = .scaleAspectFill
-        return posterImage
-    }()
-    // Movie Rating
-    let movieRating: UILabel = {
-        let rating = UILabel(frame: CGRect(x: 28, y: 275, width: 100, height: 15))
-        // Rating Text
-        rating.text = "/10"
-        rating.numberOfLines = 1
-        rating.textAlignment = NSTextAlignment.left
-        rating.textColor = UIColor.white
-        rating.font = UIFont(name: "Avenir-Light", size: 18)
-        return rating
+    // Release Date
+    let movieReleaseTitle: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 275, width: 150, height: 15))
+        label.numberOfLines = 0
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.white
+        label.font = UIFont(name: "AvenirNext-DemiBold", size: 12)
+        return label
     }()
     
-    // Not being Displayed References; For Detail View
+    // MARK: - For Detail View
     let backdropImage: UIImageView = {
         let backdrop = UIImageView()
         backdrop.layer.cornerRadius = 5
@@ -72,6 +60,11 @@ class PopularMovieCellsCell: UICollectionViewCell {
         backdrop.text = ""
         return backdrop
     }()
+    let rating: UILabel = {
+        let backdrop = UILabel()
+        backdrop.text = ""
+        return backdrop
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -81,10 +74,9 @@ class PopularMovieCellsCell: UICollectionViewCell {
     
     private func setup() {
         backgroundColor = UIColor.clear
-        addSubview(movieRatingImage)
-        addSubview(movieRating)
         addSubview(movieTitle)
-        addSubview(moviePosterImage)
+        addSubview(movieImage)
+        addSubview(movieReleaseTitle)
     }
     
     

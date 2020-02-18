@@ -38,7 +38,7 @@ class NowPlayingCellsCell: UICollectionViewCell {
         return label
     }()
     
-    // Not being Displayed References; For Detail View
+// MARK: - For Detail View
     let backdropImage: UIImageView = {
         let backdrop = UIImageView()
         backdrop.layer.cornerRadius = 5

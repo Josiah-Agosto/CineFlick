@@ -38,7 +38,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         setup()
     }
     
-    
+    // MARK: - Setup
     private func setup() {
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self
@@ -67,7 +67,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
 } // Class End
 
-
+// MARK: - Collection View Extension
 // Movie Cell Data Source
 extension MovieCollectionViewCell: UICollectionViewDataSource {
     // Number of each cells
@@ -96,6 +96,7 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             popular.id.text = apiManager.popularIds[safe: indexPath.row]
             popular.overview.text = apiManager.popularOverview[safe: indexPath.row]
             popular.runtime.text = apiManager.popularRuntime[safe: indexPath.row]
+            popular.releaseDate.text = apiManager.popularRelease[safe: indexPath.row]
             return popular
         case .nowPlaying:
             let nowPlaying = innerCollectionView.dequeueReusableCell(withReuseIdentifier: "nowPlayingCellsCell", for: indexPath) as! NowPlayingCellsCell
@@ -132,6 +133,7 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             topRated.overview.text = apiManager.topRatedOverview[safe: indexPath.row]
             topRated.runtime.text = apiManager.topRatedRuntime[safe: indexPath.row]
             topRated.rating.text = apiManager.topRatedRatings[safe: indexPath.row]
+            topRated.releaseDate.text = apiManager.topRatedReleases[safe: indexPath.row]
             return topRated
         }
     }
@@ -158,7 +160,31 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
             detail.overview.text = cell.overview.text
             detail.runtime.text = cell.runtime.text
             detail.movieRating.text = cell.movieRating.text
+            detail.releaseDate.text = cell.releaseDate.text
             let id = apiManager.popularIds[safe: indexPath.row] ?? ""
+            // Showing it to Detail
+            group.enter()
+            self.detailManager.detailCast(id) { (name, characterName, image, totalCellCount) in
+                self.detail.name = name
+                print(name)
+                self.detail.charName = characterName
+                self.detail.profileImage = image
+                self.detail.castCountForSection = totalCellCount
+                self.group.leave()
+            }
+            group.notify(queue: DispatchQueue.main) {
+                self.detail.castCollectionView.reloadData()
+                print("reloaded")
+            }
+            mainWindow?.addSubview(detail.view)
+        case .nowPlaying:
+            let cell2 = collectionView.cellForItem(at: indexPath) as! NowPlayingCellsCell
+            detail.movieTitle.text = cell2.movieTitle.text
+            detail.backdropImage.image = cell2.backdropImage.image
+            detail.overview.text = cell2.overview.text
+            detail.runtime.text = cell2.runtime.text
+            detail.releaseDate.text = cell2.movieReleaseTitle.text
+            let id = apiManager.nowPlayingIds[safe: indexPath.row] ?? ""
             // Showing it to Detail
             group.enter()
             self.detailManager.detailCast(id) { (name, characterName, image, totalCellCount) in
@@ -171,15 +197,6 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
             group.notify(queue: DispatchQueue.main) {
                 self.detail.castCollectionView.reloadData()
             }
-            // Adding View Controller to Screen
-            mainWindow?.addSubview(detail.view)
-        case .nowPlaying:
-            let cell2 = collectionView.cellForItem(at: indexPath) as! NowPlayingCellsCell
-            detail.movieTitle.text = cell2.movieTitle.text
-            detail.backdropImage.image = cell2.backdropImage.image
-            detail.overview.text = cell2.overview.text
-            detail.runtime.text = cell2.runtime.text
-            // Adding View Controller to Screen
             mainWindow?.addSubview(detail.view)
         case .upcoming:
             let cell3 = collectionView.cellForItem(at: indexPath) as! UpcomingCellsCell
@@ -187,7 +204,20 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
             detail.backdropImage.image = cell3.backdropImage.image
             detail.overview.text = cell3.overview.text
             detail.runtime.text = cell3.runtime.text
-            // Adding View Controller to Screen
+            detail.releaseDate.text = cell3.movieReleaseTitle.text
+            let id = apiManager.upcomingIds[safe: indexPath.row] ?? ""
+            // Showing it to Detail
+            group.enter()
+            self.detailManager.detailCast(id) { (name, characterName, image, totalCellCount) in
+                self.detail.name = name
+                self.detail.charName = characterName
+                self.detail.profileImage = image
+                self.detail.castCountForSection = totalCellCount
+                self.group.leave()
+            }
+            group.notify(queue: DispatchQueue.main) {
+                self.detail.castCollectionView.reloadData()
+            }
             mainWindow?.addSubview(detail.view)
         case .topRated:
             let cell4 = collectionView.cellForItem(at: indexPath) as! TopRatedCellsCell
@@ -195,15 +225,27 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
             detail.backdropImage.image = cell4.backdropImage.image
             detail.overview.text = cell4.overview.text
             detail.runtime.text = cell4.runtime.text
-            // Adding View Controller to Screen
+            detail.releaseDate.text = cell4.releaseDate.text
+            let id = apiManager.topRatedIds[safe: indexPath.row] ?? ""
+            // Showing it to Detail
+            group.enter()
+            self.detailManager.detailCast(id) { (name, characterName, image, totalCellCount) in
+                self.detail.name = name
+                self.detail.charName = characterName
+                self.detail.profileImage = image
+                self.detail.castCountForSection = totalCellCount
+                self.group.leave()
+            }
+            group.notify(queue: DispatchQueue.main) {
+                self.detail.castCollectionView.reloadData()
+            }
             mainWindow?.addSubview(detail.view)
         }
-        
     }
 } // Delegate End
 
 
-// Extension which makes the Array indexes able to go out of Index without crashing application.
+// MARK: - Collection Extension
 public extension Collection {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
