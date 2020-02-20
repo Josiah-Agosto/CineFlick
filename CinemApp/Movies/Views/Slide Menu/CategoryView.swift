@@ -40,6 +40,8 @@ class CategoryView: UIView {
         button.titleLabel?.textAlignment = NSTextAlignment.left
         return button
     }()
+    // Properties
+    private var isOpen: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -93,5 +95,14 @@ class CategoryView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
+extension CategoryView: CategoryViewProtocol {
+    func handleSlideToggle() {
+        isOpen = !isOpen
+        slideOutCategoriesView(shouldExpand: isOpen)
     }
 }
