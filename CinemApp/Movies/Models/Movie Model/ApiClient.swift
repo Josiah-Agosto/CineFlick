@@ -1,5 +1,5 @@
 //
-//  APINetworkManager.swift
+//  APIClient.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 9/19/19.

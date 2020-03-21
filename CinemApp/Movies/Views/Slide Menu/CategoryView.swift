@@ -11,7 +11,7 @@ import UIKit
 class CategoryView: UIView {
     // Buttons, Labels, etc.
     // Title
-    public var categoryTitle: UILabel = {
+    public lazy var categoryTitle: UILabel = {
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = "Categories"
@@ -21,24 +21,54 @@ class CategoryView: UIView {
         return title
     }()
     // Movie Button
-    public var movieButton: UIButton = {
+    public lazy var movieButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Movies", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 18)
-        button.titleLabel?.textAlignment = NSTextAlignment.left
+        button.contentHorizontalAlignment = .leading
         return button
     }()
     // About Button
-    public var aboutButton: UIButton = {
+    public lazy var aboutButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Settings", for: .normal)
+        button.setTitle("About", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 18)
-        button.titleLabel?.textAlignment = NSTextAlignment.left
+        button.contentHorizontalAlignment = .leading
         return button
+    }()
+    // Movie Image
+    public lazy var movieImageView: UIImageView = {
+        let imageView = UIImageView()
+        if #available(iOS 13.0, *) {
+            let movieImage = UIImage(systemName: "film")!
+            let movieImageWithColor = movieImage.withTintColor(UIColor.white, renderingMode: .alwaysOriginal)
+            imageView.image = movieImageWithColor
+        } else {
+            // Fallback on earlier versions
+            imageView.image = UIImage(named: "ImageNotFound")
+        }
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    // About Image
+    public lazy var aboutImageView: UIImageView = {
+        let imageView = UIImageView()
+        if #available(iOS 13.0, *) {
+            let movieImage = UIImage(systemName: "gear")!
+            let movieImageWithColor = movieImage.withTintColor(UIColor.white, renderingMode: .alwaysOriginal)
+            imageView.image = movieImageWithColor
+        } else {
+            // Fallback on earlier versions
+            imageView.image = UIImage(named: "ImageNotFound")
+        }
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     // Properties
     private var isOpen: Bool = false
@@ -55,7 +85,9 @@ class CategoryView: UIView {
         // Adding to View
         addSubview(categoryTitle)
         addSubview(movieButton)
+        addSubview(movieImageView)
         addSubview(aboutButton)
+        addSubview(aboutImageView)
         // Configuring the Constraints
         configureConstraints()
     }
@@ -78,18 +110,28 @@ class CategoryView: UIView {
         // Category
         categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         categoryTitle.topAnchor.constraint(equalTo: topAnchor, constant: 50).isActive = true
-        categoryTitle.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        categoryTitle.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        categoryTitle.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        categoryTitle.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        // Movies Image View
+        movieImageView.topAnchor.constraint(equalTo: topAnchor, constant: 150).isActive = true
+        movieImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        movieImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        movieImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         // Movies
-        movieButton.topAnchor.constraint(equalTo: topAnchor, constant: 205).isActive = true
-        movieButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        movieButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        movieButton.heightAnchor.constraint(equalToConstant: 125).isActive = true
+        movieButton.topAnchor.constraint(equalTo: topAnchor, constant: 150).isActive = true
+        movieButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50).isActive = true
+        movieButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        movieButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        // About Image View
+        aboutImageView.topAnchor.constraint(equalTo: topAnchor, constant: 220).isActive = true
+        aboutImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        aboutImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        aboutImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         // About
-        aboutButton.topAnchor.constraint(equalTo: topAnchor, constant: 340).isActive = true
-        aboutButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25).isActive = true
-        aboutButton.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        aboutButton.heightAnchor.constraint(equalToConstant: 125).isActive = true
+        aboutButton.topAnchor.constraint(equalTo: topAnchor, constant: 220).isActive = true
+        aboutButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50).isActive = true
+        aboutButton.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        aboutButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     

@@ -11,63 +11,64 @@ import UIKit
 
 class APINetworkManager {
 // Reference
-    private let client = MovieClient()
-    private let imageClient = ImageClient()
-    private let detailClient = DetailClient()
+    static var shared = APINetworkManager()
+    private var client: MovieClient!
+    private var imageClient: ImageClient!
+    private var detailClient: DetailClient!
     private let dateReference = Date()
     private let imageReference = UIImage()
 // MARK: - Variables
     // Popular
     var popularTitles: [String] = [] { didSet { updater?() } }
-    private var popularFilePaths: [String] = [] { didSet { updater?() } }
+    var popularFilePaths: [String] = [] { didSet { updater?() } } //
     var popularRatings: [String] = [] { didSet { updater?() } }
     var popularIds: [String] = [] { didSet { updater?() } }
     var popularOverview: [String] = [] { didSet { updater?() } }
     var popularRuntime: [String] = [] { didSet { updater?() } }
     var popularRelease: [String] = [] { didSet { updater?() } }
-    private var popularBackdropPaths: [String] = [] { didSet { updater?() } }
-    private var popularBackdropURLs: [String] = [] { didSet { updater?() } }
+    var popularBackdropPaths: [String] = [] { didSet { updater?() } } //
+    var popularBackdropURLs: [String] = [] { didSet { updater?() } } //
     var popularBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var popularImagesURLs: [String] = [] { didSet { updater?() } }
+    var popularImagesURLs: [String] = [] { didSet { updater?() } } //
     var popularImages: [UIImage] = [] { didSet { updater?() } }
     // Now Playing
     var nowPlayingTitles: [String] = [] { didSet { updater?() } }
-    private var nowPlayingFilePaths: [String] = [] { didSet { updater?() } }
+    var nowPlayingFilePaths: [String] = [] { didSet { updater?() } } //
     var nowPlayingReleases: [String] = [] { didSet { updater?() } }
     var nowPlayingRatings: [String] = [] { didSet { updater?() } }
     var nowPlayingIds: [String] = [] { didSet { updater?() } }
     var nowPlayingOverview: [String] = [] { didSet { updater?() } }
     var nowPlayingRuntime: [String] = [] { didSet { updater?() } }
-    private var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } }
-    private var nowPlayingBackdropURLs: [String] = [] { didSet { updater?() } }
+    var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } } //
+    var nowPlayingBackdropURLs: [String] = [] { didSet { updater?() } } //
     var nowPlayingBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var nowPlayingImagesURLs: [String] = [] { didSet { updater?() } }
+    var nowPlayingImagesURLs: [String] = [] { didSet { updater?() } } //
     var nowPlayingImages: [UIImage] = [] { didSet { updater?() } }
     // Upcoming
     var upcomingTitles: [String] = [] { didSet { updater?() } }
-    private var upcomingFilePaths: [String] = [] { didSet { updater?() } }
+    var upcomingFilePaths: [String] = [] { didSet { updater?() } } //
     var upcomingReleases: [String] = [] { didSet { updater?() } }
     var upcomingRatings: [String] = [] { didSet { updater?() } }
     var upcomingIds: [String] = [] { didSet { updater?() } }
     var upcomingOverview: [String] = [] { didSet { updater?() } }
     var upcomingRuntime: [String] = [] { didSet { updater?() } }
-    private var upcomingBackdropPaths: [String] = [] { didSet { updater?() } }
-    private var upcomingBackdropURLs: [String] = [] { didSet { updater?() } }
+    var upcomingBackdropPaths: [String] = [] { didSet { updater?() } } //
+    var upcomingBackdropURLs: [String] = [] { didSet { updater?() } } //
     var upcomingBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var upcomingImagesURLs: [String] = [] { didSet { updater?() } }
+    var upcomingImagesURLs: [String] = [] { didSet { updater?() } } //
     var upcomingImages: [UIImage] = [] { didSet { updater?() } }
     // Top Rated
     var topRatedTitles: [String] = [] { didSet { updater?() } }
-    private var topRatedFilePaths: [String] = [] { didSet { updater?() } }
+    var topRatedFilePaths: [String] = [] { didSet { updater?() } } //
     var topRatedReleases: [String] = [] { didSet { updater?() } }
     var topRatedRatings: [String] = [] { didSet { updater?() } }
     var topRatedIds: [String] = [] { didSet { updater?() } }
     var topRatedOverview: [String] = [] { didSet { updater?() } }
     var topRatedRuntime: [String] = [] { didSet { updater?() } }
-    private var topRatedBackdropPaths: [String] = [] { didSet { updater?() } }
-    private var topRatedBackdropURLs: [String] = [] { didSet { updater?() } }
+    var topRatedBackdropPaths: [String] = [] { didSet { updater?() } } //
+    var topRatedBackdropURLs: [String] = [] { didSet { updater?() } } //
     var topRatedBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var topRatedImagesURLs: [String] = [] { didSet { updater?() } }
+    var topRatedImagesURLs: [String] = [] { didSet { updater?() } } //
     var topRatedImages: [UIImage] = [] { didSet { updater?() } }
     // Image Variables
     private var secureBaseUrl: String = ""
@@ -77,7 +78,6 @@ class APINetworkManager {
     var updater: (()->())? = nil
     // Group
     private let group = DispatchGroup()
-    
     // MARK: - Requests
     public func makeApiRequest(completion: @escaping () -> Void) -> Void {
         let operation = OperationQueue()
@@ -85,6 +85,7 @@ class APINetworkManager {
         // Popular
         operation.addOperation {
             self.group.enter()
+            self.client = MovieClient()
             self.client.getFeed(from: .popular) { (result) in
                 switch result {
                 case .success(let popularFeedResult):
@@ -225,6 +226,7 @@ class APINetworkManager {
             }
             // Create Image Model
             self.group.enter()
+            self.imageClient = ImageClient()
             self.imageClient.createImage(from: .configure, completion: { (imageResult) in
                 switch imageResult {
                 case .success(let imageFeedResult):
@@ -283,6 +285,7 @@ class APINetworkManager {
             // Runtime
             // Popular
             self.popularIds.forEach({ (ids) in
+                self.detailClient = DetailClient()
                 self.detailClient.detailRequest(with: ids, completion: { (result) in
                     switch result {
                     case .success(let detailResult):
@@ -296,6 +299,7 @@ class APINetworkManager {
             })
             // Now Playing
             self.nowPlayingIds.forEach({ (ids) in
+                self.detailClient = DetailClient()
                 self.detailClient.detailRequest(with: ids, completion: { (result) in
                     switch result {
                     case .success(let detailResult):
@@ -309,6 +313,7 @@ class APINetworkManager {
             })
             // Upcoming
             self.upcomingIds.forEach({ (ids) in
+                self.detailClient = DetailClient()
                 self.detailClient.detailRequest(with: ids, completion: { (result) in
                     switch result {
                     case .success(let detailResult):
@@ -322,6 +327,7 @@ class APINetworkManager {
             })
             // Top Rated
             self.topRatedIds.forEach({ (ids) in
+                self.detailClient = DetailClient()
                 self.detailClient.detailRequest(with: ids, completion: { (result) in
                     switch result {
                     case .success(let detailResult):

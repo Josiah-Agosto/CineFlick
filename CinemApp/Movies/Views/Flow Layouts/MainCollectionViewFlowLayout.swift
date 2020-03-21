@@ -21,3 +21,7 @@ class MainCollectionViewFlowLayout: UICollectionViewFlowLayout {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+extension MainCollectionViewFlowLayout: UICollectionViewDelegateFlowLayout {
+}

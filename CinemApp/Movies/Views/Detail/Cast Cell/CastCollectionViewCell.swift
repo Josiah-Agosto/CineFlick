@@ -37,6 +37,7 @@ class CastCollectionViewCell: UICollectionViewCell {
         label.text = "Error"
         return label
     }()
+    static let reuseIdentifier = "cell"
     
     override init(frame: CGRect) {
         super.init(frame: frame)

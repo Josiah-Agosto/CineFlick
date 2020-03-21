@@ -11,37 +11,35 @@ import UIKit
 
 class DetailNetworkManager {
     // Variables
-    var cellCount: Int = 0
-    var personName: [String] = []
-    var characterName: [String] = []
     var path: [String] = []
     var fullPath: [String] = []
     // Image Variables
     private var secureUrl: String = ""
     private var sizeUrl: String = ""
     private var imageHolder: [UIImage] = []
-    var detailImage: [UIImage] = []
     // Reference
     private let imageReference: UIImage! = UIImage()
     private let castClient = CastClient()
     private let imageClient = ImageClient()
-    private let detail = DetailView()
     private let group = DispatchGroup()
     private let operation = OperationQueue()
     private let finishingOperation = OperationQueue()
+    // Delegate, Contains Cell Count, PersonName, CharacterName and UIImage
+    weak var castPropertiesDelegate: CastDataSourceProtocol?
+    // TODO: Add properties
     
     // MARK: - Requests
-    public func detailCast(_ id: String, completion: @escaping (_ name: [String], _ characterName: [String], _ profileImage: [UIImage], _ cellCount: Int) -> Void) -> Void {
+    public func detailCast(_ id: String) {
         operation.addOperation {
             self.group.enter()
             self.castClient.castRequest(with: id) { (result) in
                 switch result {
                 case .success(let castFromResult):
                     guard let castArray = castFromResult?.cast else { return }
-                    self.cellCount = castArray.count
+                    self.castPropertiesDelegate?.castCountForSection = castArray.count
                     for perCell in castArray {
-                        self.personName.append(perCell.name ?? "")
-                        self.characterName.append(perCell.character ?? "")
+                        self.castPropertiesDelegate?.name.append(perCell.name ?? "")
+                        self.castPropertiesDelegate?.charName.append(perCell.character ?? "")
                         self.path.append(perCell.profile_path ?? "")
                     }
                     self.imageClient.createImage(from: .configure, completion: { (result) in
@@ -73,9 +71,8 @@ class DetailNetworkManager {
                     self.imageHolder.append(self.imageReference.convertUrlToImage(with: url))
                 }
                 for image in self.imageHolder {
-                    self.detailImage.append(image)
+                    self.castPropertiesDelegate?.profileImage.append(image)
                 }
-                completion(self.personName, self.characterName, self.detailImage, self.cellCount)
             }
         }
     } // Func End

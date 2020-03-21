@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 // Inner Cell
-class PopularMovieCellsCell: UICollectionViewCell {
+class PopularMovieCellsView: UICollectionViewCell {
     // Movie Title
-    let movieTitle: UILabel = {
+    public var movieTitle: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 225, width: 150, height: 50))
         // Label Text
         label.text = "Popular"
@@ -23,14 +23,14 @@ class PopularMovieCellsCell: UICollectionViewCell {
         return label
     }()
     // Rating Image
-    let movieRatingImage: UIImageView = {
+    public var movieRatingImage: UIImageView = {
         let ratingImage = UIImageView(frame: CGRect(x: 0, y: 275, width: 15, height: 15))
         ratingImage.layer.cornerRadius = 5
         ratingImage.backgroundColor = UIColor.white
         return ratingImage
     }()
     // Poster Image
-    var moviePosterImage: UIImageView = {
+    public var moviePosterImage: UIImageView = {
         let posterImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
         posterImage.layer.cornerRadius = 10
         posterImage.clipsToBounds = true
@@ -38,7 +38,7 @@ class PopularMovieCellsCell: UICollectionViewCell {
         return posterImage
     }()
     // Movie Rating
-    let movieRating: UILabel = {
+    public var movieRating: UILabel = {
         let rating = UILabel(frame: CGRect(x: 28, y: 275, width: 100, height: 15))
         // Rating Text
         rating.text = "/10"
@@ -50,33 +50,34 @@ class PopularMovieCellsCell: UICollectionViewCell {
     }()
     
     // MARK: - For Detail View
-    let backdropImage: UIImageView = {
+    public var backdropImage: UIImageView = {
         let backdrop = UIImageView()
         backdrop.layer.cornerRadius = 5
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill
         return backdrop
     }()
-    let id: UILabel = {
+    public var id: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let overview: UILabel = {
+    public var overview: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let runtime: UILabel = {
+    public var runtime: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let releaseDate: UILabel = {
+    public var releaseDate: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
+    static let reuseIdentifier = "PopularCellsCell"
     
     override init(frame: CGRect) {
         super.init(frame: frame)

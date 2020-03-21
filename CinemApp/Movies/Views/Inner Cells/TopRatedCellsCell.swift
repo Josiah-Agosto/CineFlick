@@ -8,9 +8,9 @@
 
 import UIKit
 
-class TopRatedCellsCell: UICollectionViewCell {
+class TopRatedCellsView: UICollectionViewCell {
     // Title
-    let movieTitle: UILabel = {
+    public var movieTitle: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 225, width: 150, height: 50))
         // Label Text
         label.text = "Top Rated"
@@ -21,7 +21,7 @@ class TopRatedCellsCell: UICollectionViewCell {
         return label
     }()
     // Image
-    let movieImage: UIImageView = {
+    public var movieImage: UIImageView = {
         let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
         image.layer.cornerRadius = 10
         image.clipsToBounds = true
@@ -29,7 +29,7 @@ class TopRatedCellsCell: UICollectionViewCell {
         return image
     }()
     // Release Date
-    let movieRating: UILabel = {
+    public var movieRating: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 275, width: 150, height: 15))
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.left
@@ -39,38 +39,39 @@ class TopRatedCellsCell: UICollectionViewCell {
     }()
     
     // MARK: - For Detail View
-    let backdropImage: UIImageView = {
+    public var backdropImage: UIImageView = {
         let backdrop = UIImageView()
         backdrop.layer.cornerRadius = 5
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill
         return backdrop
     }()
-    let id: UILabel = {
+    public var id: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let overview: UILabel = {
+    public var overview: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let runtime: UILabel = {
+    public var runtime: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let rating: UILabel = {
+    public var rating: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    let releaseDate: UILabel = {
+    public var releaseDate: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
+    static let reuseIdentifier = "TopRatedCellsCell"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
