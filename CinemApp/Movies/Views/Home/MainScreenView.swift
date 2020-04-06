@@ -11,10 +11,19 @@ import UIKit
 
 class MainScreenView: UIView {
     // Buttons, Labels, etc.
-    public lazy var categoryButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 15, y: 0, width: 25, height: 25))
-        button.setImage(UIImage(named: "CategoryButton"), for: .normal)
-        return button
+    public lazy var categoryImageView: UIImageView = {
+        let imageView = UIImageView(frame: CGRect(x: 15, y: 0, width: 30, height: 30))
+        if #available(iOS 13.0, *) {
+            let systemImage = UIImage(systemName: "text.justify", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!
+            let systemImageWithColor = systemImage.withTintColor(UIColor.white, renderingMode: .alwaysOriginal)
+            imageView.contentMode = .scaleAspectFill
+            imageView.image = systemImageWithColor
+        } else {
+            let assetImage = UIImage(named: "CategoryButton")!
+            imageView.image = assetImage
+        }
+        
+        return imageView
     }()
     public lazy var collectionView: UICollectionView = {
         let layout = MainCollectionViewFlowLayout()
@@ -42,6 +51,7 @@ class MainScreenView: UIView {
     }
     
     private func setup() {
+        print("Umm 3")
         backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1.0)
         // Collection View
         homeScreenDelegate = HomeScreenMainDelegate()

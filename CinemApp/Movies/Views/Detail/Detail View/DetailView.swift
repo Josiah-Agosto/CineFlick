@@ -11,6 +11,17 @@ import UIKit
 
 class DetailView: UIView {
     // MARK: - UI Components
+    public lazy var closeButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 35, height: 35))
+        if #available(iOS 13.0, *) {
+            let xmarkImage = UIImage(systemName: "xmark.circle.fill")!
+            let xmarkWithColor = xmarkImage.withTintColor(UIColor.black, renderingMode: .alwaysOriginal)
+            button.setImage(xmarkWithColor, for: .normal)
+        } else {
+            button.setImage(UIImage(named: "Detail Close Button"), for: .normal)
+        }
+        return button
+    }()
     public lazy var castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
@@ -22,23 +33,20 @@ class DetailView: UIView {
         collectionView.bounces = false
         return collectionView
     }()
-// Appearance
     // Scroll View
     public lazy var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
+        let scroll = UIScrollView(frame: .zero)
         scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.backgroundColor = UIColor.clear
-        scroll.bounces = true
+        scroll.backgroundColor = UIColor.black
         scroll.showsVerticalScrollIndicator = false
-        scroll.showsHorizontalScrollIndicator = false
-        scroll.layer.cornerRadius = 10
-        scroll.contentSize.height = 875
+        scroll.contentSize.height = 905
         return scroll
     }()
     // Backdrop Image
     public lazy var backdropImage: UIImageView = {
-        let backdrop = UIImageView()
+        let backdrop = UIImageView(frame: .zero)
         backdrop.translatesAutoresizingMaskIntoConstraints = false
+        backdrop.contentMode = .scaleAspectFill
         backdrop.backgroundColor = UIColor.clear
         backdrop.layer.cornerRadius = 8
         backdrop.layer.layoutIfNeeded()
@@ -46,118 +54,138 @@ class DetailView: UIView {
     }()
     // Movie Rating
     public lazy var movieRating: UILabel = {
-        let rating = UILabel()
+        let rating = UILabel(frame: .zero)
         rating.translatesAutoresizingMaskIntoConstraints = false
-        rating.text = "83"
+        rating.text = "99"
         rating.numberOfLines = 1
         rating.backgroundColor = UIColor.clear
         rating.textAlignment = NSTextAlignment.center
         rating.layer.cornerRadius = 25
         rating.layer.borderWidth = 3
         rating.layer.borderColor = UIColor.green.cgColor
-        rating.font = UIFont(name: "AvenirNext-Bold", size: 20)
+        rating.layer.masksToBounds = false
+        rating.shadowColor = UIColor.black
+        rating.layer.shadowOpacity = 0.5
+        rating.layer.shadowOffset = CGSize(width: rating.frame.width, height: 3)
+        rating.layer.shadowRadius = 3.0
+        rating.font = UIFont(name: "AvenirNext-Medium", size: 18)
         rating.textColor = UIColor.green
         return rating
     }()
     // Movie Title Placeholder
     public lazy var titlePlaceholder: UILabel = {
-        let placeholder = UILabel()
+        let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Title:"
+        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
-        placeholder.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        placeholder.font = UIFont(name: "AvenirNext", size: 15)
         return placeholder
     }()
     // Movie Title
     public lazy var movieTitle: UILabel = {
-        let title = UILabel()
+        let title = UILabel(frame: .zero)
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = "Title"
-        title.numberOfLines = 0
+        title.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
         title.backgroundColor = UIColor.clear
         title.textAlignment = NSTextAlignment.left
-        title.font = UIFont(name: "AvenirNext-Bold", size: 25)
+        title.font = UIFont(name: "AvenirNext-Medium", size: 25)
+        title.numberOfLines = 0
         return title
     }()
     // Release Date Placeholder
     public lazy var releasePlaceholder: UILabel = {
-        let placeholder = UILabel()
+        let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Release Date:"
+        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
-        placeholder.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        placeholder.font = UIFont(name: "AvenirNext", size: 15)
         return placeholder
     }()
     // Release Date
     public lazy var releaseDate: UILabel = {
-        let releaseTitle = UILabel()
+        let releaseTitle = UILabel(frame: .zero)
         releaseTitle.translatesAutoresizingMaskIntoConstraints = false
         releaseTitle.text = "Release"
+        releaseTitle.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
         releaseTitle.backgroundColor = UIColor.clear
-        releaseTitle.numberOfLines = 1
         releaseTitle.textAlignment = NSTextAlignment.left
-        releaseTitle.font = UIFont(name: "AvenirNext-Medium", size: 18)
+        releaseTitle.font = UIFont(name: "AvenirNext-Medium", size: 23)
+        releaseTitle.numberOfLines = 0
         return releaseTitle
     }()
     // Overview Placeholder
     public lazy var overviewPlaceholder: UILabel = {
-        let placeholder = UILabel()
+        let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Overview:"
+        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
-        placeholder.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        placeholder.font = UIFont(name: "AvenirNext", size: 15)
         return placeholder
     }()
     // Movie Overview Message
     public lazy var overview: UILabel = {
-        let overviewTitle = UILabel()
+        let overviewTitle = UILabel(frame: .zero)
         overviewTitle.translatesAutoresizingMaskIntoConstraints = false
         overviewTitle.text = "Overview"
-        overviewTitle.numberOfLines = 0
+        overviewTitle.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
         overviewTitle.backgroundColor = UIColor.clear
         overviewTitle.textAlignment = NSTextAlignment.left
         overviewTitle.textColor = UIColor.white
-        overviewTitle.sizeToFit()
-        overviewTitle.font = UIFont(name: "AvenirNext", size: 18)
+        overviewTitle.font = UIFont(name: "AvenirNext-Medium", size: 23)
+        overviewTitle.numberOfLines = 0
+        overviewTitle.clipsToBounds = true
         return overviewTitle
     }()
     // Runtime Placeholder
     public lazy var runtimePlaceholder: UILabel = {
-        let placeholder = UILabel()
+        let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Runtime:"
+        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
-        placeholder.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        placeholder.font = UIFont(name: "AvenirNext", size: 15)
         return placeholder
     }()
     // Runtime
     public lazy var runtime: UILabel = {
-        let runtimeTitle = UILabel()
+        let runtimeTitle = UILabel(frame: .zero)
         runtimeTitle.translatesAutoresizingMaskIntoConstraints = false
         runtimeTitle.text = "Runtime"
-        runtimeTitle.numberOfLines = 1
+        runtimeTitle.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
         runtimeTitle.backgroundColor = UIColor.clear
         runtimeTitle.textAlignment = NSTextAlignment.left
-        runtimeTitle.font = UIFont(name: "AvenirNext", size: 12)
+        runtimeTitle.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        runtimeTitle.numberOfLines = 0
         return runtimeTitle
     }()
     // Cast Placeholder
     public lazy var castPlaceholder: UILabel = {
-        let placeholder = UILabel()
+        let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Cast:"
+        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
-        placeholder.font = UIFont(name: "AvenirNext-Medium", size: 20)
+        placeholder.font = UIFont(name: "AvenirNext", size: 15)
         return placeholder
     }()
+    public lazy var detailController = DetailViewController()
     // Delegates
-    private let castDelegate = CastCollectionViewDelegate()
-    public let castDataSource = CastCollectionViewDataSource()
+    private var castDelegate: CastCollectionViewDelegate?
+    public var castDataSource: CastCollectionViewDataSource?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -166,9 +194,9 @@ class DetailView: UIView {
     
     // MARK: - Setup
     private func setup() {
-        // View
-        backgroundColor = UIColor(red: 40/255, green: 40/255, blue: 40/255, alpha: 0)
         // Cast Collection View
+        castDelegate = CastCollectionViewDelegate()
+        castDataSource = CastCollectionViewDataSource(detailController: detailController)
         castCollectionView.delegate = castDelegate
         castCollectionView.dataSource = castDataSource
         castCollectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseIdentifier)
@@ -195,69 +223,65 @@ class DetailView: UIView {
         let screenWidth = UIScreen.main.bounds.width
         // Scroll View
         scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        scrollView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        scrollView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         // Inside Scroll View
         // Backdrop Image
-        backdropImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        backdropImage.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        backdropImage.widthAnchor.constraint(equalToConstant: screenWidth - 40).isActive = true
-        backdropImage.heightAnchor.constraint(equalToConstant: 210).isActive = true
+        backdropImage.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        backdropImage.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        backdropImage.widthAnchor.constraint(equalToConstant: screenWidth).isActive = true
+        backdropImage.heightAnchor.constraint(equalToConstant: 300).isActive = true
         // Movie Rating
-        movieRating.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
-        movieRating.topAnchor.constraint(equalTo: topAnchor, constant: 160).isActive = true
+        movieRating.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        movieRating.topAnchor.constraint(equalTo: topAnchor, constant: 234).isActive = true
         movieRating.widthAnchor.constraint(equalToConstant: 50).isActive = true
         movieRating.heightAnchor.constraint(equalToConstant: 50).isActive = true
         // Title Placeholder
-        titlePlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        titlePlaceholder.topAnchor.constraint(equalTo: topAnchor, constant: 230).isActive = true
-        titlePlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
-        titlePlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        titlePlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        titlePlaceholder.topAnchor.constraint(equalTo: backdropImage.bottomAnchor, constant: 4).isActive = true
+        titlePlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
+        titlePlaceholder.heightAnchor.constraint(equalToConstant: 25).isActive = true
         // Movie Title
-        movieTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        movieTitle.topAnchor.constraint(equalTo: topAnchor, constant: 250).isActive = true
-        movieTitle.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
-        movieTitle.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        movieTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        movieTitle.topAnchor.constraint(equalTo: titlePlaceholder.bottomAnchor, constant: 4).isActive = true
+        movieTitle.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
+        // Runtime Placeholder
+        runtimePlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        runtimePlaceholder.topAnchor.constraint(equalTo: movieTitle.bottomAnchor, constant: 4).isActive = true
+        runtimePlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
+        runtimePlaceholder.heightAnchor.constraint(equalToConstant: 25).isActive = true
         // Runtime
-        runtimePlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        runtimePlaceholder.topAnchor.constraint(equalTo: topAnchor, constant: 340).isActive = true
-        runtimePlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
-        runtimePlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        // Runtime
-        runtime.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        runtime.topAnchor.constraint(equalTo: topAnchor, constant: 360).isActive = true
+        runtime.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        runtime.topAnchor.constraint(equalTo: runtimePlaceholder.bottomAnchor, constant: 4).isActive = true
         runtime.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        runtime.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        // Release
-        releasePlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        releasePlaceholder.topAnchor.constraint(equalTo: topAnchor, constant: 400).isActive = true
-        releasePlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
+        // Release Placeholder
+        releasePlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        releasePlaceholder.topAnchor.constraint(equalTo: runtime.bottomAnchor, constant: 4).isActive = true
+        releasePlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
         releasePlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
         // Release Date
-        releaseDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        releaseDate.topAnchor.constraint(equalTo: topAnchor, constant: 420).isActive = true
-        releaseDate.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
-        releaseDate.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        releaseDate.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        releaseDate.topAnchor.constraint(equalTo: releasePlaceholder.bottomAnchor, constant: 4).isActive = true
+        releaseDate.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
         // Overview Placeholder
-        overviewPlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        overviewPlaceholder.topAnchor.constraint(equalTo: topAnchor, constant: 460).isActive = true
-        overviewPlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
+        overviewPlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        overviewPlaceholder.topAnchor.constraint(equalTo: releaseDate.bottomAnchor, constant: 4).isActive = true
+        overviewPlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
         overviewPlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
         // Overview
-        overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        overview.topAnchor.constraint(equalTo: topAnchor, constant: 480).isActive = true
-        overview.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
-        overview.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        overview.topAnchor.constraint(equalTo: overviewPlaceholder.bottomAnchor, constant: 4).isActive = true
+        overview.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
         // Cast Placeholder
-        castPlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        castPlaceholder.topAnchor.constraint(equalTo: topAnchor, constant: 670).isActive = true
-        castPlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
+        castPlaceholder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        castPlaceholder.topAnchor.constraint(equalTo: overview.bottomAnchor, constant: 4).isActive = true
+        castPlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
         castPlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
         // Cast Collection View
-        castCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
-        castCollectionView.topAnchor.constraint(equalTo: topAnchor, constant: 700).isActive = true
-        castCollectionView.widthAnchor.constraint(equalToConstant: screenWidth - 10).isActive = true
+        castCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        castCollectionView.topAnchor.constraint(equalTo: castPlaceholder.bottomAnchor, constant: 6).isActive = true
+        castCollectionView.widthAnchor.constraint(equalToConstant: screenWidth).isActive = true
         castCollectionView.heightAnchor.constraint(equalToConstant: 180).isActive = true
     }
 

@@ -9,11 +9,18 @@
 import Foundation
 import UIKit
 
-class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource {
+class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDataSourceProtocol {
+    // Properties
+    private var detailController: DetailViewController!
+    // Cast Data Source Properties
     var castCountForSection: Int = 0
     var name: [String] = []
     var charName: [String] = []
     var profileImage: [UIImage] = []
+    
+    init(detailController: DetailViewController) {
+        self.detailController = detailController
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return castCountForSection

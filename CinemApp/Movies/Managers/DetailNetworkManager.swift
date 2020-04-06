@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class DetailNetworkManager {
+    // Propterties
+    static let shared = DetailNetworkManager()
     // Variables
     var path: [String] = []
     var fullPath: [String] = []
@@ -25,11 +27,11 @@ class DetailNetworkManager {
     private let operation = OperationQueue()
     private let finishingOperation = OperationQueue()
     // Delegate, Contains Cell Count, PersonName, CharacterName and UIImage
-    weak var castPropertiesDelegate: CastDataSourceProtocol?
+    public weak var castPropertiesDelegate: CastDataSourceProtocol?
     // TODO: Add properties
     
     // MARK: - Requests
-    public func detailCast(_ id: String) {
+    public func detailCast(_ id: String, completion: @escaping () -> Void) -> Void {
         operation.addOperation {
             self.group.enter()
             self.castClient.castRequest(with: id) { (result) in
@@ -73,6 +75,7 @@ class DetailNetworkManager {
                 for image in self.imageHolder {
                     self.castPropertiesDelegate?.profileImage.append(image)
                 }
+                completion()
             }
         }
     } // Func End

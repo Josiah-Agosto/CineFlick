@@ -12,16 +12,12 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var navigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Creating Navigation Controller
         window = UIWindow(frame: UIScreen.main.bounds)
-        let mainScreen = HomeScreenController()
-        navigationController = UINavigationController(rootViewController: mainScreen)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        window?.rootViewController = navigationController
+        let container = ContainerController()
+        window?.rootViewController = container
         window?.makeKeyAndVisible()
         return true
     }

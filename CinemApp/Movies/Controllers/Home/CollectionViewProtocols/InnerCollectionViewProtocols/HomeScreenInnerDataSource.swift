@@ -34,7 +34,7 @@ class HomeScreenInnerDataSource: NSObject, UICollectionViewDataSource {
         case .popular:
             let popular = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCellsView.reuseIdentifier, for: indexPath) as! PopularMovieCellsView
             popular.movieTitle.text = parent.mainController.apiManager.popularTitles[safe: indexPath.row]
-            popular.movieRating.text = "\(parent.mainController.apiManager.popularRatings[safe: indexPath.row] ?? "nil")%"
+            popular.movieRating.text = "\(parent.mainController.apiManager.popularRatings[safe: indexPath.row] ?? "nil") %"
             popular.moviePosterImage.image = parent.mainController.apiManager.popularImages[safe: indexPath.row]
             // For Detail View
             popular.backdropImage.image = parent.mainController.apiManager.popularBackdropImages[safe: indexPath.row]

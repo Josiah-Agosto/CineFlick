@@ -37,6 +37,16 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BD35E57D242929790041AAA3"
+               BuildableName = "CinemAppTests.xctest"
+               BlueprintName = "CinemAppTests"
+               ReferencedContainer = "container:CinemApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

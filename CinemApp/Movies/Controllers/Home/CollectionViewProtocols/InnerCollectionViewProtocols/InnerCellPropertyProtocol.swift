@@ -8,7 +8,11 @@
 
 import Foundation
 
-protocol InnerCellPropertyProtocol: class {
-    var movieId: String { get set }
+protocol InnerSelectedCellProtocol: class {
     func selectedCell(isSelected: Bool)
+}
+
+
+protocol InnerSelectedIdProtocol: class {
+    var movieId: String { get set }
 }

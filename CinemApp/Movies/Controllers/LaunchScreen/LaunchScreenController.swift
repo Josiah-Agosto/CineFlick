@@ -33,11 +33,14 @@ class LaunchScreenController: UIViewController, LaunchScreenProtocol {
     }
 
     // MARK: Delegate Function
-    // MARK: TEST - Status: Undone
     func isLoadingFinished(_ dataLoaded: Bool) {
         if dataLoaded == true {
-            launchView.dataActivityIndicator.stopAnimating()
-            navigationController?.popToRootViewController(animated: false)
+            DispatchQueue.main.async {
+                self.launchView.dataActivityIndicator.stopAnimating()
+                self.navigationController?.popToRootViewController(animated: false)
+            }
+        } else {
+            
         }
     }
 }

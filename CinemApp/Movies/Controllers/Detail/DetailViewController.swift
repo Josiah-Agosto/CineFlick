@@ -9,20 +9,18 @@
 import Foundation
 import UIKit
 
-class DetailViewController: UIViewController, CastDataSourceProtocol {
-    // Data Source Properties
-    var castCountForSection: Int = 0
-    var name: [String] = []
-    var charName: [String] = []
-    var profileImage: [UIImage] = []
+class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     // References
     public lazy var detailView = DetailView()
-    public lazy var detailManager = DetailNetworkManager()
-    public weak var homeController: HomeScreenController!
+    public lazy var detailManager = DetailNetworkManager.shared
+    private weak var homeController: HomeScreenController?
+    // Movie Id Delegate Property
+    var movieId: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        fetchRequest()
     }
         
     
@@ -32,16 +30,25 @@ class DetailViewController: UIViewController, CastDataSourceProtocol {
     
     
     private func setup() {
-        // Navigation Controller
-        navigationController?.title = ""
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.barTintColor = UIColor.black
-        // Data Source
-        detailView.castDataSource.castCountForSection = castCountForSection
-        detailView.castDataSource.name = name
-        detailView.castDataSource.charName = charName
-        detailView.castDataSource.profileImage = profileImage
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.setHidesBackButton(true, animated: true)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: detailView.closeButton)
+        navigationController?.navigationBar.addSubview(detailView.closeButton)
     }
-
+    
+    
+    @objc private func closeCurrentViewController() {
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
+    
+    private func fetchRequest() {
+        detailManager.detailCast(movieId) {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.detailView.castCollectionView.reloadData()
+            }
+        }
+    }
 
 }

@@ -20,55 +20,55 @@ class APINetworkManager {
 // MARK: - Variables
     // Popular
     var popularTitles: [String] = [] { didSet { updater?() } }
-    var popularFilePaths: [String] = [] { didSet { updater?() } } //
+    private var popularFilePaths: [String] = [] { didSet { updater?() } } //
     var popularRatings: [String] = [] { didSet { updater?() } }
     var popularIds: [String] = [] { didSet { updater?() } }
     var popularOverview: [String] = [] { didSet { updater?() } }
     var popularRuntime: [String] = [] { didSet { updater?() } }
     var popularRelease: [String] = [] { didSet { updater?() } }
-    var popularBackdropPaths: [String] = [] { didSet { updater?() } } //
-    var popularBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var popularBackdropPaths: [String] = [] { didSet { updater?() } } //
+    private var popularBackdropURLs: [String] = [] { didSet { updater?() } } //
     var popularBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    var popularImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var popularImagesURLs: [String] = [] { didSet { updater?() } } //
     var popularImages: [UIImage] = [] { didSet { updater?() } }
     // Now Playing
     var nowPlayingTitles: [String] = [] { didSet { updater?() } }
-    var nowPlayingFilePaths: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingFilePaths: [String] = [] { didSet { updater?() } } //
     var nowPlayingReleases: [String] = [] { didSet { updater?() } }
     var nowPlayingRatings: [String] = [] { didSet { updater?() } }
     var nowPlayingIds: [String] = [] { didSet { updater?() } }
     var nowPlayingOverview: [String] = [] { didSet { updater?() } }
     var nowPlayingRuntime: [String] = [] { didSet { updater?() } }
-    var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } } //
-    var nowPlayingBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingBackdropURLs: [String] = [] { didSet { updater?() } } //
     var nowPlayingBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    var nowPlayingImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingImagesURLs: [String] = [] { didSet { updater?() } } //
     var nowPlayingImages: [UIImage] = [] { didSet { updater?() } }
     // Upcoming
     var upcomingTitles: [String] = [] { didSet { updater?() } }
-    var upcomingFilePaths: [String] = [] { didSet { updater?() } } //
+    private var upcomingFilePaths: [String] = [] { didSet { updater?() } } //
     var upcomingReleases: [String] = [] { didSet { updater?() } }
     var upcomingRatings: [String] = [] { didSet { updater?() } }
     var upcomingIds: [String] = [] { didSet { updater?() } }
     var upcomingOverview: [String] = [] { didSet { updater?() } }
     var upcomingRuntime: [String] = [] { didSet { updater?() } }
-    var upcomingBackdropPaths: [String] = [] { didSet { updater?() } } //
-    var upcomingBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var upcomingBackdropPaths: [String] = [] { didSet { updater?() } } //
+    private var upcomingBackdropURLs: [String] = [] { didSet { updater?() } } //
     var upcomingBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    var upcomingImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var upcomingImagesURLs: [String] = [] { didSet { updater?() } } //
     var upcomingImages: [UIImage] = [] { didSet { updater?() } }
     // Top Rated
     var topRatedTitles: [String] = [] { didSet { updater?() } }
-    var topRatedFilePaths: [String] = [] { didSet { updater?() } } //
+    private var topRatedFilePaths: [String] = [] { didSet { updater?() } } //
     var topRatedReleases: [String] = [] { didSet { updater?() } }
     var topRatedRatings: [String] = [] { didSet { updater?() } }
     var topRatedIds: [String] = [] { didSet { updater?() } }
     var topRatedOverview: [String] = [] { didSet { updater?() } }
     var topRatedRuntime: [String] = [] { didSet { updater?() } }
-    var topRatedBackdropPaths: [String] = [] { didSet { updater?() } } //
-    var topRatedBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var topRatedBackdropPaths: [String] = [] { didSet { updater?() } } //
+    private var topRatedBackdropURLs: [String] = [] { didSet { updater?() } } //
     var topRatedBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    var topRatedImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var topRatedImagesURLs: [String] = [] { didSet { updater?() } } //
     var topRatedImages: [UIImage] = [] { didSet { updater?() } }
     // Image Variables
     private var secureBaseUrl: String = ""
@@ -374,7 +374,6 @@ class APINetworkManager {
             self.topRatedBackdropURLs.forEach({ (backUrls) in
                 self.topRatedBackdropImages.append(self.imageReference.convertUrlToImage(with: backUrls))
             })
-            
             self.group.notify(queue: DispatchQueue.main) {
                 completion()
                 self.updater?()

@@ -39,7 +39,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // MARK: - Setup
     private func setup() {
         // Collection View
-        innerCollectionDelegate = HomeScreenInnerDelegate(parentCell: self, withDelegate: mainController)
+        innerCollectionDelegate = HomeScreenInnerDelegate(parentCell: self, selectedCellDelegate: mainController, movieIdDelegate: mainController.detailController)
         innerCollectionDataSource = HomeScreenInnerDataSource(parentCell: self)
         innerCollectionView.delegate = innerCollectionDelegate
         innerCollectionView.dataSource = innerCollectionDataSource

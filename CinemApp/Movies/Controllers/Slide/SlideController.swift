@@ -11,7 +11,6 @@ import UIKit
 class SlideController: UIViewController {
     // Properties
     public lazy var slideView = CategoryView()
-    private lazy var about = AboutViewController()
     
     override func loadView() {
         view = slideView
@@ -25,11 +24,8 @@ class SlideController: UIViewController {
     
     
     private func setup() {
-        navigationController?.view.backgroundColor = UIColor.clear
-        navigationController?.isNavigationBarHidden = false
-        // Actions
-        slideView.movieButton.addTarget(self.navigationController, action: #selector(movieButtonAction), for: .touchUpInside)
-        slideView.aboutButton.addTarget(self.navigationController, action: #selector(aboutButtonAction), for: .touchUpInside)
+        slideView.movieButton.addTarget(self, action: #selector(movieButtonAction), for: .touchUpInside)
+        slideView.aboutButton.addTarget(self, action: #selector(aboutButtonAction), for: .touchUpInside)
     }
     
     

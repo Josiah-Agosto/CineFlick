@@ -22,6 +22,9 @@ extension CastApi {
         let task = session.dataTask(with: url) {
             (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse else { completion(nil, .requestFailed); return }
+            print(httpResponse.statusCode)
+            print(url)
+            print(id)
             if httpResponse.statusCode == 200 {
                 if let data = data {
                     print(data)
