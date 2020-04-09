@@ -9,7 +9,8 @@
 import Foundation
 
 protocol InnerSelectedCellProtocol: class {
-    func selectedCell(isSelected: Bool)
+    func isCellSelectedHandler()
+    var isCellSelected: Bool { get set }
 }
 
 

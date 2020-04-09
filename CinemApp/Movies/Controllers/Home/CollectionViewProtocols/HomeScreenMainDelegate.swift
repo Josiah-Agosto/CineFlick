@@ -9,8 +9,7 @@
 import Foundation
 import UIKit
 
-class HomeScreenMainDelegate: NSObject, UICollectionViewDelegate {
-    
+extension MainScreenView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
@@ -24,9 +23,10 @@ class HomeScreenMainDelegate: NSObject, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: UIScreen.main.bounds.width, height: 40)
     }
+    
 }
 
 
 // Needed to Layout the Collection View
-extension HomeScreenMainDelegate: UICollectionViewDelegateFlowLayout {
+extension MainScreenView: UICollectionViewDelegateFlowLayout {
 }

@@ -25,11 +25,11 @@ class MovieCollectionViewCell: UICollectionViewCell {
         innerCollectionView.backgroundColor = UIColor.clear
         return innerCollectionView
     }()
+    public var selectedCellDelegate: InnerSelectedCellProtocol?
+    public var movieIdDelegate: InnerSelectedIdProtocol?
     // References
     public var movieEnum: MovieSectionEnum = .popular
-    public lazy var mainController = HomeScreenController()
-    public var innerCollectionDelegate: HomeScreenInnerDelegate?
-    public var innerCollectionDataSource: HomeScreenInnerDataSource?
+    public var mainController: HomeScreenController!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,10 +39,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // MARK: - Setup
     private func setup() {
         // Collection View
-        innerCollectionDelegate = HomeScreenInnerDelegate(parentCell: self, selectedCellDelegate: mainController, movieIdDelegate: mainController.detailController)
-        innerCollectionDataSource = HomeScreenInnerDataSource(parentCell: self)
-        innerCollectionView.delegate = innerCollectionDelegate
-        innerCollectionView.dataSource = innerCollectionDataSource
+        mainController = HomeScreenController()
+        self.selectedCellDelegate = mainController
+        innerCollectionView.delegate = self
+        innerCollectionView.dataSource = self
         innerCollectionView.register(PopularMovieCellsView.self, forCellWithReuseIdentifier: PopularMovieCellsView.reuseIdentifier)
         innerCollectionView.register(NowPlayingCellsView.self, forCellWithReuseIdentifier: NowPlayingCellsView.reuseIdentifier)
         innerCollectionView.register(UpcomingCellsView.self, forCellWithReuseIdentifier: UpcomingCellsView.reuseIdentifier)

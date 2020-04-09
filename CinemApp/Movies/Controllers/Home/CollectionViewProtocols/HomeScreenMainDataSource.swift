@@ -8,13 +8,7 @@
 
 import UIKit
 
-class HomeScreenMainDataSource: NSObject, UICollectionViewDataSource {
-    private var mainController: HomeScreenController!
-    
-    init(homeController: HomeScreenController) {
-        self.mainController = homeController
-    }
-        
+extension MainScreenView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }

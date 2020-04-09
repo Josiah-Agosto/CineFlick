@@ -94,7 +94,7 @@ class CategoryView: UIView {
         // Category
         categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         categoryTitle.topAnchor.constraint(equalTo: topAnchor, constant: 50).isActive = true
-        categoryTitle.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        categoryTitle.widthAnchor.constraint(equalToConstant: 250).isActive = true
         categoryTitle.heightAnchor.constraint(equalToConstant: 100).isActive = true
         // Movies Image View
         movieImageView.topAnchor.constraint(equalTo: topAnchor, constant: 150).isActive = true

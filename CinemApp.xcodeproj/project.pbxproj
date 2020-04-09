@@ -67,7 +67,6 @@
 		BDBD55BE243517910003859E /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55BD243517910003859E /* ErrorModel.swift */; };
 		BDBD55C12435198A0003859E /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55C02435198A0003859E /* ErrorView.swift */; };
 		BDBD55C4243522B40003859E /* ErrorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55C3243522B40003859E /* ErrorController.swift */; };
-		BDBD55C62437ABF00003859E /* ContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55C52437ABF00003859E /* ContainerController.swift */; };
 		BDBD55C92437E13D0003859E /* BlurEffectBooleanProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55C82437E13D0003859E /* BlurEffectBooleanProtocol.swift */; };
 		BDBD55CB2438069E0003859E /* HandleSlideMenuProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55CA2438069E0003859E /* HandleSlideMenuProtocol.swift */; };
 		BDBD55CD2439116B0003859E /* HomeCellSelectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD55CC2439116B0003859E /* HomeCellSelectionProtocol.swift */; };
@@ -149,7 +148,6 @@
 		BDBD55BD243517910003859E /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
 		BDBD55C02435198A0003859E /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		BDBD55C3243522B40003859E /* ErrorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorController.swift; sourceTree = "<group>"; };
-		BDBD55C52437ABF00003859E /* ContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerController.swift; sourceTree = "<group>"; };
 		BDBD55C82437E13D0003859E /* BlurEffectBooleanProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffectBooleanProtocol.swift; sourceTree = "<group>"; };
 		BDBD55CA2438069E0003859E /* HandleSlideMenuProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleSlideMenuProtocol.swift; sourceTree = "<group>"; };
 		BDBD55CC2439116B0003859E /* HomeCellSelectionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCellSelectionProtocol.swift; sourceTree = "<group>"; };
@@ -221,9 +219,9 @@
 		BD10875022AF409C00EBA1B9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				BD91F9BF2333E72C00E287E0 /* APINetworkManager.swift */,
-				BD44C8E7233F0125008FD2F8 /* DetailNetworkManager.swift */,
-				BD35E58C242A6FB90041AAA3 /* InternetNetwork.swift */,
+				BDBD55CF243D08FF0003859E /* APIManager */,
+				BDBD55D0243D090A0003859E /* DetailManager */,
+				BDBD55D1243D091E0003859E /* InternetManager */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -280,7 +278,6 @@
 		BD35E572242165AB0041AAA3 /* Slide */ = {
 			isa = PBXGroup;
 			children = (
-				BDBD55C52437ABF00003859E /* ContainerController.swift */,
 				BD35E573242165C50041AAA3 /* SlideController.swift */,
 				BDBD55C72437D7240003859E /* SlideControllerProtocols */,
 			);
@@ -593,6 +590,30 @@
 			path = SlideControllerProtocols;
 			sourceTree = "<group>";
 		};
+		BDBD55CF243D08FF0003859E /* APIManager */ = {
+			isa = PBXGroup;
+			children = (
+				BD91F9BF2333E72C00E287E0 /* APINetworkManager.swift */,
+			);
+			path = APIManager;
+			sourceTree = "<group>";
+		};
+		BDBD55D0243D090A0003859E /* DetailManager */ = {
+			isa = PBXGroup;
+			children = (
+				BD44C8E7233F0125008FD2F8 /* DetailNetworkManager.swift */,
+			);
+			path = DetailManager;
+			sourceTree = "<group>";
+		};
+		BDBD55D1243D091E0003859E /* InternetManager */ = {
+			isa = PBXGroup;
+			children = (
+				BD35E58C242A6FB90041AAA3 /* InternetNetwork.swift */,
+			);
+			path = InternetManager;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -704,7 +725,6 @@
 				BD35E574242165C50041AAA3 /* SlideController.swift in Sources */,
 				BD9E4110231B79E800106FB3 /* MovieModelWithDates.swift in Sources */,
 				BD10873C22AF3B6600EBA1B9 /* HomeScreenController.swift in Sources */,
-				BDBD55C62437ABF00003859E /* ContainerController.swift in Sources */,
 				BD91F9C02333E72C00E287E0 /* APINetworkManager.swift in Sources */,
 				BD91F9CD2334980500E287E0 /* MovieSectionEnum.swift in Sources */,
 				BD6D2B6523FFA29B007A607B /* CastCollectionViewDataSource.swift in Sources */,

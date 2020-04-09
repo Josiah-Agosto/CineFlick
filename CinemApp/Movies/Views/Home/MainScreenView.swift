@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class MainScreenView: UIView {
-    // Buttons, Labels, etc.
+    // Properties
     public lazy var categoryImageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 15, y: 0, width: 30, height: 30))
         if #available(iOS 13.0, *) {
@@ -40,10 +40,7 @@ class MainScreenView: UIView {
         return controller
     }()
     public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-    // References
     public lazy var mainController = HomeScreenController()
-    private var homeScreenDelegate: HomeScreenMainDelegate?
-    private var homeScreenDataSource: HomeScreenMainDataSource?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,13 +48,10 @@ class MainScreenView: UIView {
     }
     
     private func setup() {
-        print("Umm 3")
         backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1.0)
         // Collection View
-        homeScreenDelegate = HomeScreenMainDelegate()
-        homeScreenDataSource = HomeScreenMainDataSource(homeController: mainController)
-        collectionView.delegate = homeScreenDelegate
-        collectionView.dataSource = homeScreenDataSource
+        collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.reuseIdentifier)
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "firstId")
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "secondId")
