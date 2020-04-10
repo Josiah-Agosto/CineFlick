@@ -39,4 +39,5 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
         cell.person.image = profileImage[safe: indexPath.row] ?? UIImage(named: "ImageNotFound")
         return cell
     }
+
 }

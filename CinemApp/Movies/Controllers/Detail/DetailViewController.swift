@@ -17,23 +17,26 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     // Movie Id Delegate Property
     var movieId: String = ""
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
-        fetchRequest()
-    }
-        
-    
     override func loadView() {
         view = detailView
     }
     
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setup()
+        fetchRequest()
+    }
+
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 190)
+    }
+    
+    
     private func setup() {
-        navigationItem.leftBarButtonItem = nil
-        navigationItem.setHidesBackButton(true, animated: true)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: detailView.closeButton)
-        navigationController?.navigationBar.addSubview(detailView.closeButton)
+
     }
     
     
@@ -47,6 +50,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.detailView.castCollectionView.reloadData()
+                print("Reloaded")
             }
         }
     }

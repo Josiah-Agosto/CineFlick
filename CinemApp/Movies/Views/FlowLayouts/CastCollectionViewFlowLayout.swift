@@ -11,7 +11,7 @@ import UIKit
 class CastCollectionViewFlowLayout: UICollectionViewFlowLayout {
     override init() {
         super.init()
-        self.minimumLineSpacing = 10
+        self.minimumLineSpacing = 8
         self.minimumInteritemSpacing = 0
         self.scrollDirection = .horizontal
         self.itemSize = CGSize(width: 125, height: 180)

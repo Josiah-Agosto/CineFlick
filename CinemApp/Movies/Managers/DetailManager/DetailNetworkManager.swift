@@ -79,4 +79,5 @@ class DetailNetworkManager {
             }
         }
     } // Func End
+    
 } // Class End

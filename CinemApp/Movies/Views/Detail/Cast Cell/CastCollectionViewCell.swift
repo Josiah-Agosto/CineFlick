@@ -9,35 +9,41 @@
 import UIKit
 
 class CastCollectionViewCell: UICollectionViewCell {
+    static let reuseIdentifier = "cell"
+    // MARK: Properties
     let person: UIImageView = {
-        let image = UIImageView()
+        let image = UIImageView(frame: .zero)
+        image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.backgroundColor = UIColor.white
         image.layer.borderWidth = 1.5
-        image.layer.borderColor = UIColor.black.cgColor
+        image.layer.borderColor = UIColor.white.cgColor
         image.layer.cornerRadius = 50
         return image
     }()
     let name: UILabel = {
-        let label = UILabel()
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = UIColor.clear
         label.text = "Error"
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont(name: "AvenirNext-DemiBold", size: 16)
+        label.sizeToFit()
+        label.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
         return label
     }()
     let characterName: UILabel = {
-        let label = UILabel()
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = UIColor.clear
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont(name: "AvenirNext-Medium", size: 14)
+        label.sizeToFit()
+        label.font = UIFont(name: "AvenirNext-Medium", size: 12)
         label.text = "Error"
         return label
     }()
-    static let reuseIdentifier = "cell"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,21 +52,37 @@ class CastCollectionViewCell: UICollectionViewCell {
     
     
     private func setup() {
-        // Frames
-        person.frame = CGRect(x: 12.5, y: 0, width: 100, height: 100)
-        name.frame = CGRect(x: 5, y: 100, width: 115, height: 50)
-        characterName.frame = CGRect(x: 5, y: 150, width: 115, height: 30)
-        // View
         backgroundColor = UIColor.clear
+        // Subviews
         addSubview(person)
         addSubview(name)
         addSubview(characterName)
+        constraints()
+    }
+    
+    
+    private func constraints() {
+        // Person
+        person.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12.5).isActive = true
+        person.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        person.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        person.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        // Name
+        name.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
+        name.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
+        name.widthAnchor.constraint(equalToConstant: 115).isActive = true
+        name.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        // Character Name
+        characterName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
+        characterName.topAnchor.constraint(equalTo: topAnchor, constant: 142).isActive = true
+        characterName.widthAnchor.constraint(equalToConstant: 115).isActive = true
+        characterName.heightAnchor.constraint(equalToConstant: 38).isActive = true
     }
     
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.frame.size.width = UIScreen.main.bounds.width - 80
+        self.frame.size.width = UIScreen.main.bounds.width
         self.frame.size.height = 180
     }
     

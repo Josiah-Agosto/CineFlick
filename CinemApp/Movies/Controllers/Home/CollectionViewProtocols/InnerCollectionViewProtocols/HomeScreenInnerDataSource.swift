@@ -34,7 +34,7 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
         case .popular:
             let popular = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCellsView.reuseIdentifier, for: indexPath) as! PopularMovieCellsView
             popular.movieTitle.text = mainController.apiManager.popularTitles[safe: indexPath.row]
-            popular.movieRating.text = "\(mainController.apiManager.popularRatings[safe: indexPath.row] ?? "nil") %"
+            popular.movieRating.text = "\(mainController.apiManager.popularRatings[safe: indexPath.row] ?? "nil")%"
             popular.moviePosterImage.image = mainController.apiManager.popularImages[safe: indexPath.row]
             // For Detail View
             popular.backdropImage.image = mainController.apiManager.popularBackdropImages[safe: indexPath.row]

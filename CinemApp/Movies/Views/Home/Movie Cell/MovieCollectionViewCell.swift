@@ -41,6 +41,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         // Collection View
         mainController = HomeScreenController()
         self.selectedCellDelegate = mainController
+        self.movieIdDelegate = mainController.detailController
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self
         innerCollectionView.register(PopularMovieCellsView.self, forCellWithReuseIdentifier: PopularMovieCellsView.reuseIdentifier)

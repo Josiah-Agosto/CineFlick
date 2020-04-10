@@ -84,6 +84,13 @@ class HomeScreenController: UIViewController, InnerSelectedCellProtocol {
         view.insertSubview(blurEffectView, at: 1)
         // Refresh Control
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
+        backButtonForDetailView()
+    }
+
+    
+    private func backButtonForDetailView() {
+        let backButtonApperance = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = backButtonApperance
     }
     
     
