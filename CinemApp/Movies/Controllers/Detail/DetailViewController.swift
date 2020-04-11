@@ -12,43 +12,41 @@ import UIKit
 class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     // References
     public lazy var detailView = DetailView()
-    public lazy var detailManager = DetailNetworkManager.shared
-    private weak var homeController: HomeScreenController?
+    public var detailManager = DetailNetworkManager.shared
     // Movie Id Delegate Property
     var movieId: String = ""
     
     override func loadView() {
         view = detailView
     }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
-        fetchRequest()
-    }
 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 190)
+        print("Appeared")
+        detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 185)
+        fetchRequest()
     }
     
     
-    private func setup() {
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("Removed")
+        uponViewsRemoval()
+    }
 
-    }
     
-    
-    @objc private func closeCurrentViewController() {
-        navigationController?.popToRootViewController(animated: true)
+    private func uponViewsRemoval() {
+        detailManager.deleteAllSavedData()
     }
     
     
     private func fetchRequest() {
+        print(movieId)
         detailManager.detailCast(movieId) {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                print(self.movieId)
                 self.detailView.castCollectionView.reloadData()
                 print("Reloaded")
             }

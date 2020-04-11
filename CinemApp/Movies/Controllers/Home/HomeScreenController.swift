@@ -13,7 +13,7 @@ class HomeScreenController: UIViewController, InnerSelectedCellProtocol {
     // References / Properties
     public var mainView: MainScreenView!
     public var apiManager = APINetworkManager.shared
-    public var detailController = DetailViewController()
+    public lazy var detailController = DetailViewController()
     public var launchScreenController = LaunchScreenController()
     public lazy var internetNetwork = InternetNetwork(parent: self)
     private var blurEffectView = UIVisualEffectView()

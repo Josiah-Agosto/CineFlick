@@ -23,6 +23,7 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(castCountForSection)
         return castCountForSection
     }
     
@@ -34,9 +35,12 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CastCollectionViewCell
-        cell.name.text = name[safe: indexPath.row] ?? ""
-        cell.characterName.text = charName[safe: indexPath.row] ?? ""
+        cell.name.text = name[safe: indexPath.row] ?? "Not Found"
+        cell.characterName.text = charName[safe: indexPath.row] ?? "Not Found"
         cell.person.image = profileImage[safe: indexPath.row] ?? UIImage(named: "ImageNotFound")
+        print(name[safe: indexPath.row])
+        print(charName[safe: indexPath.row])
+        print(profileImage[safe: indexPath.row])
         return cell
     }
 

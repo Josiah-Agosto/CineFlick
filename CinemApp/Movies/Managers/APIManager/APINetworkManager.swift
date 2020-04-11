@@ -16,7 +16,7 @@ class APINetworkManager {
     private var imageClient: ImageClient!
     private var detailClient: DetailClient!
     private let dateReference = Date()
-    private let imageReference = UIImage()
+    private let imageReference = UIImageView()
 // MARK: - Variables
     // Popular
     var popularTitles: [String] = [] { didSet { updater?() } }
@@ -403,8 +403,12 @@ extension Date {
 
 
 // MARK: - String to Image Extension
-public extension UIImage {
+// Is used for both Home and Detail Colleciton Views
+extension UIImageView {
     func convertUrlToImage(with url: String) -> UIImage {
+        DispatchQueue.main.async {
+            self.image = nil
+        }
         guard let url = URL(string: url) else { print("Not Valid URL"); return UIImage() }
         do {
             let data = try Data(contentsOf: url)

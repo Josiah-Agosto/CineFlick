@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 class MovieCollectionViewCell: UICollectionViewCell {
+    static let reuseIdentifier = "cell"
     // Needed For other Properties
     public var apiManager = APINetworkManager.shared
-    static let reuseIdentifier = "cell"
     // Date Formatter
     lazy var dateFormatter = DateFormatter()
     // Inner Cell
@@ -30,6 +30,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // References
     public var movieEnum: MovieSectionEnum = .popular
     public var mainController: HomeScreenController!
+    public let group = DispatchGroup()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

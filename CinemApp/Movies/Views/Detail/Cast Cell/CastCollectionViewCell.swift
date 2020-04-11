@@ -26,7 +26,7 @@ class CastCollectionViewCell: UICollectionViewCell {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = UIColor.clear
-        label.text = "Error"
+        label.text = "Not Found"
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.center
         label.sizeToFit()
@@ -41,7 +41,7 @@ class CastCollectionViewCell: UICollectionViewCell {
         label.textAlignment = NSTextAlignment.center
         label.sizeToFit()
         label.font = UIFont(name: "AvenirNext-Medium", size: 12)
-        label.text = "Error"
+        label.text = "Not Found"
         return label
     }()
     

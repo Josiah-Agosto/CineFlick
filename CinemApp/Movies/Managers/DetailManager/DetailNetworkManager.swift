@@ -20,7 +20,7 @@ class DetailNetworkManager {
     private var sizeUrl: String = ""
     private var imageHolder: [UIImage] = []
     // Reference
-    private let imageReference: UIImage! = UIImage()
+    private let imageReference: UIImageView = UIImageView()
     private let castClient = CastClient()
     private let imageClient = ImageClient()
     private let group = DispatchGroup()
@@ -28,9 +28,9 @@ class DetailNetworkManager {
     private let finishingOperation = OperationQueue()
     // Delegate, Contains Cell Count, PersonName, CharacterName and UIImage
     public weak var castPropertiesDelegate: CastDataSourceProtocol?
-    // TODO: Add properties
     
     // MARK: - Requests
+    /// Organizes data from Api
     public func detailCast(_ id: String, completion: @escaping () -> Void) -> Void {
         operation.addOperation {
             self.group.enter()
@@ -65,7 +65,7 @@ class DetailNetworkManager {
         
         finishingOperation.addOperation {
             self.group.wait()
-            self.group.notify(queue: DispatchQueue.main) {
+            self.group.notify(queue: .global()) {
                 for path in self.path {
                     self.fullPath.append("\(self.secureUrl)\(self.sizeUrl)\(path)")
                 }
@@ -75,9 +75,33 @@ class DetailNetworkManager {
                 for image in self.imageHolder {
                     self.castPropertiesDelegate?.profileImage.append(image)
                 }
+                print(self.fullPath)
+                print(self.imageHolder)
                 completion()
             }
         }
     } // Func End
+    
+    /// Actually resets all saved Data
+    public func deleteAllSavedData() {
+        path = []
+        fullPath = []
+        secureUrl = ""
+        sizeUrl = ""
+        imageHolder = []
+        castPropertiesDelegate?.castCountForSection = 0
+        castPropertiesDelegate?.charName = []
+        castPropertiesDelegate?.name = []
+        castPropertiesDelegate?.profileImage = []
+        print(path)
+        print(fullPath)
+        print(secureUrl)
+        print(sizeUrl)
+        print(imageHolder)
+        print(castPropertiesDelegate?.castCountForSection)
+        print(castPropertiesDelegate?.charName)
+        print(castPropertiesDelegate?.name)
+        print(castPropertiesDelegate?.profileImage)
+    }
     
 } // Class End
