@@ -12,9 +12,7 @@ import Foundation
 class LaunchScreenController: UIViewController, LaunchScreenProtocol {
     // Properties
     public var launchView: LaunchScreenView!
-    // Delegate
-    private weak var homeController: HomeScreenController?
-    
+        
     override func loadView() {
         launchView = LaunchScreenView()
         view = launchView
@@ -40,7 +38,15 @@ class LaunchScreenController: UIViewController, LaunchScreenProtocol {
                 self.navigationController?.popToRootViewController(animated: false)
             }
         } else {
-            
+            errorAlertController()
         }
+    }
+    
+    
+    private func errorAlertController() {
+        let alertController = UIAlertController(title: "Error accessing API!", message: "Please, try again.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Done", style: .default, handler: { (action) in
+            print("I don't know")
+        }))
     }
 }

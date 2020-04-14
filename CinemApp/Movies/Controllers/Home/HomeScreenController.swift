@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  HomeScreenController.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 6/10/19.
@@ -18,7 +18,6 @@ class HomeScreenController: UIViewController {
     public lazy var internetNetwork = InternetNetwork(parent: self)
     private var blurEffectView = UIVisualEffectView()
     private var slideController: SlideViewController!
-    private var thisController: HomeScreenController!
     private var aboutController: AboutViewController!
     private lazy var slideMenuHelper = SlideMenuHelper()
     private var blurIsHidden: Bool = true
@@ -35,34 +34,38 @@ class HomeScreenController: UIViewController {
     }
     
     // MARK: Lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         internetNetwork.checkForInternetConnectivity()
-        initialSetup()
-        makeApiCallSetup()
     }
     
     
-    private func makeApiCallSetup() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
+            initialSetup()
+            setupLaunchScreen()
+            makeRequestToServer()
+        } else {
+            initialSetup()
+            leftBarButtonView()
+            makeRequestToServer()
+        }
+    }
+    
+    
+    private func setupLaunchScreen() {
         launchScreenDelegate = launchScreenController
         navigationController?.pushViewController(launchScreenController, animated: false)
-        makeRequestToServer()
     }
     
     // MARK: Api Function
     private func makeRequestToServer() {
-        apiManager.makeApiRequest {
-            self.leftBarButtonView()
-            self.mainView.refreshControl.endRefreshing()
-            self.launchScreenDelegate?.isLoadingFinished(true)
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                for cell in self.mainView.collectionView.visibleCells {
-                    if let cell = cell as? MovieCollectionViewCell {
-                        cell.innerCollectionView.reloadData()
-                    }
-                }
-            }
+        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
+            firstTimeOpeningApplicationRequest()
+            launchScreenLoaded.set(true, forKey: "LaunchScreenLoaded")
+        } else {
+            applicationHasAlreadyLoadedLaunchScreenRequest()
         }
     }
     
@@ -74,16 +77,6 @@ class HomeScreenController: UIViewController {
         blurEffectSetup()
         // Refresh Control Target
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
-    }
-    
-    
-    private func leftBarButtonView() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: mainView.categoryImageView.image, style: .plain, target: self, action: #selector(categoryAction))
-    }
-    
-    
-    private func blurEffectTransition() {
-        blurEffectView.isHidden = blurIsHidden
     }
     
     // MARK: Refresh Control
@@ -106,29 +99,68 @@ class HomeScreenController: UIViewController {
     // MARK: Private Functions
     private func homeSlideMenuLogic() {
         slideMenuHelper.isOpen.toggle()
-        print(slideMenuHelper.isOpen)
         slideMenuHelper.shouldExpandSlideMenu(slideMenuHelper.isOpen) { (expanded) in
             if expanded {
                 self.blurIsHidden = !expanded
                 self.slideMenuHelper.addSlideMenuToWindow(&self.slideController)
-                print("Expanded \(expanded)")
             } else {
                 self.blurIsHidden = !expanded
                 self.slideMenuHelper.removeSlideMenuToWindow(&self.slideController)
-                print("Else \(expanded)")
             }
         }
     }
     
+    // First time loading application request
+    private func firstTimeOpeningApplicationRequest() {
+        apiManager.makeApiRequest {
+            self.leftBarButtonView()
+            self.mainView.refreshControl.endRefreshing()
+            self.launchScreenDelegate?.isLoadingFinished(true)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                for cell in self.mainView.collectionView.visibleCells {
+                    if let cell = cell as? MovieCollectionViewCell {
+                        cell.innerCollectionView.reloadData()
+                    }
+                }
+            }
+        } // Request End
+    }
     
+    // Application already been open request
+    private func applicationHasAlreadyLoadedLaunchScreenRequest() {
+        apiManager.makeApiRequest {
+            self.mainView.refreshControl.endRefreshing()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                for cell in self.mainView.collectionView.visibleCells {
+                    if let cell = cell as? MovieCollectionViewCell {
+                        cell.innerCollectionView.reloadData()
+                    }
+                }
+            }
+        } // Request End
+    }
+    
+    // MARK: Setup Functions
     private func navigationControllerSetup() {
         navigationController?.isNavigationBarHidden = false
         let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = titleAttributes
-        navigationController?.navigationBar.topItem?.title = "Movies"
+        title = "Movies"
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
+    }
+    
+    
+    private func leftBarButtonView() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: mainView.categoryImageView.image, style: .plain, target: self, action: #selector(categoryAction))
+    }
+    
+    // Assigning Blur Effect View
+    private func blurEffectTransition() {
+        blurEffectView.isHidden = blurIsHidden
     }
     
     
@@ -140,7 +172,6 @@ class HomeScreenController: UIViewController {
         blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
         view.insertSubview(blurEffectView, at: 1)
     }
-    
 } // Class end
 
 

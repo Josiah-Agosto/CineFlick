@@ -79,7 +79,7 @@ class APINetworkManager {
     // Group
     private let group = DispatchGroup()
     // MARK: - Requests
-    public func makeApiRequest(completion: @escaping () -> Void) -> Void {
+    public func makeApiRequest(completion: @escaping() -> Void) -> Void {
         let operation = OperationQueue()
         let imageCreationQueue = OperationQueue()
         // Popular

@@ -39,14 +39,10 @@ class InternetNetwork {
     // No Internet Alert
     private func displayErrorAlertController(title titleParam: String?, message messageParam: String?, preferredStyle preferredStyleParam: UIAlertController.Style, completion: @escaping((UIAlertController) -> Void)) {
         let errorAlertController = UIAlertController(title: titleParam, message: messageParam, preferredStyle: preferredStyleParam)
-//        DispatchQueue.main.async {
-            errorAlertController.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: { (action) in
-                self.checkForInternetConnectivity()
-            }))
-//        }
-//        DispatchQueue.main.async {
-            completion(errorAlertController)
-//        }
+        errorAlertController.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: { (action) in
+            self.checkForInternetConnectivity()
+        }))
+        completion(errorAlertController)
     }
     
 }

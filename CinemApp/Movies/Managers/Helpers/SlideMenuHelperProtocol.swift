@@ -17,16 +17,16 @@ struct SlideMenuHelper {
     /// Main function to check get slide menu's state
     public func shouldExpandSlideMenu(_ expanded: Bool, completion: ((Bool) -> Void)? = nil) {
         if expanded {
-            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
                 let screenWidth = UIScreen.main.bounds.width
                 self.appDelegate?.navigationController?.view.frame.origin.x = screenWidth - 100
-                completion?(expanded)
             }, completion: nil)
+            completion?(expanded)
         } else {
-            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.4, options: .curveEaseOut, animations: {
                 self.appDelegate?.navigationController?.view.frame.origin.x = 0
-                completion?(expanded)
             }, completion: nil)
+            completion?(expanded)
         }
     }
     // Add Slide Menu

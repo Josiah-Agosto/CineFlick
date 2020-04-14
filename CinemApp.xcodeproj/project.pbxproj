@@ -315,13 +315,6 @@
 			path = HelperFunctions;
 			sourceTree = "<group>";
 		};
-		BD385A502445235700A4DE8C /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		BD44C8DF233E7C19008FD2F8 /* Cast Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,7 +461,6 @@
 		BD8BFA9B23FF16A3008495B4 /* About */ = {
 			isa = PBXGroup;
 			children = (
-				BD385A502445235700A4DE8C /* New Group */,
 				BD8BFA9C23FF16DF008495B4 /* AboutViewController.swift */,
 			);
 			path = About;

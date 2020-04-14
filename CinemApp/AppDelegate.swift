@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var navigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    // Creating Navigation Controller
         window = UIWindow(frame: UIScreen.main.bounds)
         let homeController = HomeScreenController()
         navigationController = UINavigationController(rootViewController: homeController)
@@ -24,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navigationController?.navigationBar.isTranslucent = true
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        // Assigning Launch Screen Loaded Already Default
+        launchScreenLoaded.set(false, forKey: "LaunchScreenLoaded")
         return true
     }
 

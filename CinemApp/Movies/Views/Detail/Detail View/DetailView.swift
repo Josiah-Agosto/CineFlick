@@ -11,17 +11,6 @@ import UIKit
 
 class DetailView: UIView {
     // MARK: - UI Components
-    public lazy var closeButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 35, height: 35))
-        if #available(iOS 13.0, *) {
-            let xmarkImage = UIImage(systemName: "xmark.circle.fill")!
-            let xmarkWithColor = xmarkImage.withTintColor(UIColor.black, renderingMode: .automatic)
-            button.setImage(xmarkWithColor, for: .normal)
-        } else {
-            button.setImage(UIImage(named: "Detail Close Button"), for: .normal)
-        }
-        return button
-    }()
     public lazy var castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
