@@ -9,23 +9,24 @@
 import UIKit
 import Foundation
 
-class HomeScreenController: UIViewController, InnerSelectedCellProtocol {
-    // References / Properties
+class HomeScreenController: UIViewController {
+    // MARK: References / Properties
     public var mainView: MainScreenView!
     public var apiManager = APINetworkManager.shared
     public lazy var detailController = DetailViewController()
     public var launchScreenController = LaunchScreenController()
     public lazy var internetNetwork = InternetNetwork(parent: self)
     private var blurEffectView = UIVisualEffectView()
-    private var slideController: SlideController!
-    private let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    private var isOpen: Bool = false
+    private var slideController: SlideViewController!
+    private var thisController: HomeScreenController!
+    private var aboutController: AboutViewController!
+    private lazy var slideMenuHelper = SlideMenuHelper()
+    private var blurIsHidden: Bool = true
     // Delegates
     public weak var launchScreenDelegate: LaunchScreenProtocol?
     public weak var castMovieIdDelegate: CastMovieIdProtocol?
     public weak var handleSlideMenuDelegate: HandleSlideMenuProtocol?
     // Delegate Properties
-    private var blurIsHidden: Bool = true
     var isCellSelected: Bool = false
     
     override func loadView() {
@@ -33,22 +34,22 @@ class HomeScreenController: UIViewController, InnerSelectedCellProtocol {
         view = mainView
     }
     
-    
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         internetNetwork.checkForInternetConnectivity()
         initialSetup()
-        makeApiCall()
+        makeApiCallSetup()
     }
     
     
-    private func makeApiCall() {
+    private func makeApiCallSetup() {
         launchScreenDelegate = launchScreenController
         navigationController?.pushViewController(launchScreenController, animated: false)
         makeRequestToServer()
     }
     
-    
+    // MARK: Api Function
     private func makeRequestToServer() {
         apiManager.makeApiRequest {
             self.leftBarButtonView()
@@ -65,32 +66,14 @@ class HomeScreenController: UIViewController, InnerSelectedCellProtocol {
         }
     }
     
-    // MARK: - Setup
+    // MARK: Setup
     private func initialSetup() {
-        // Navigation Controller
-        navigationController?.isNavigationBarHidden = false
-        let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = titleAttributes
-        navigationController?.navigationBar.topItem?.title = "Movies"
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
+        // Navigation Controller Setup
+        navigationControllerSetup()
         // Blur Effect
-        blurEffectView.effect = mainView.blurEffect
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        blurEffectView.isHidden = true
-        blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
-        view.insertSubview(blurEffectView, at: 1)
-        // Refresh Control
+        blurEffectSetup()
+        // Refresh Control Target
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
-        backButtonForDetailView()
-    }
-
-    
-    private func backButtonForDetailView() {
-        let backButtonApperance = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem = backButtonApperance
     }
     
     
@@ -103,71 +86,82 @@ class HomeScreenController: UIViewController, InnerSelectedCellProtocol {
         blurEffectView.isHidden = blurIsHidden
     }
     
-    // MARK: - Refresh Control
+    // MARK: Refresh Control
     @objc private func refreshView() {
         makeRequestToServer()
-    }
-    
-    // MARK: Slide Menu Functions
-    // Add Slide Menu
-    private func addSlideMenuToWindow() {
-        if slideController == nil {
-            let window = appDelegate?.window
-            guard let newWindow = window else { return }
-            slideController = SlideController()
-            slideController.view.tag = 1
-            slideController.view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 100, height: UIScreen.main.bounds.height)
-            newWindow.addSubview(slideController.view)
-        }
-    }
-    
-    // Remove Slide Menu
-    private func removeSlideMenuToWindow() {
-        if slideController != nil {
-            let window = appDelegate?.window
-            guard let newWindow = window else { return }
-            newWindow.viewWithTag(1)?.removeFromSuperview()
-            slideController = nil
-        }
     }
 
     // MARK: Actions
     @objc private func blurEffectTap() {
-        shouldExpandSlideMenu(!isOpen)
+        homeSlideMenuLogic()
         blurEffectTransition()
     }
 
     
     @objc private func categoryAction() {
-        isOpen = !isOpen
-        shouldExpandSlideMenu(isOpen)
+        homeSlideMenuLogic()
         blurEffectTransition()
     }
     
-    // MARK: Slide Menu ShouldExpand
-    private func shouldExpandSlideMenu(_ expanded: Bool) {
-        if expanded {
-            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
-                let screenWidth = UIScreen.main.bounds.width
-                self.navigationController?.view.frame.origin.x = screenWidth - 100
+    // MARK: Private Functions
+    private func homeSlideMenuLogic() {
+        slideMenuHelper.isOpen.toggle()
+        print(slideMenuHelper.isOpen)
+        slideMenuHelper.shouldExpandSlideMenu(slideMenuHelper.isOpen) { (expanded) in
+            if expanded {
                 self.blurIsHidden = !expanded
-                self.addSlideMenuToWindow()
-            }, completion: nil)
-        } else {
-            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
-                self.navigationController?.view.frame.origin.x = 0
+                self.slideMenuHelper.addSlideMenuToWindow(&self.slideController)
+                print("Expanded \(expanded)")
+            } else {
                 self.blurIsHidden = !expanded
-                self.removeSlideMenuToWindow()
-            }, completion: nil)
-        }
-    }
-
-    // MARK: Cell Selection Delegate
-    func isCellSelectedHandler() {
-        if isCellSelected == true {
-            DispatchQueue.main.async {
-                self.appDelegate?.navigationController?.pushViewController(self.detailController, animated: true)
+                self.slideMenuHelper.removeSlideMenuToWindow(&self.slideController)
+                print("Else \(expanded)")
             }
         }
     }
+    
+    
+    private func navigationControllerSetup() {
+        navigationController?.isNavigationBarHidden = false
+        let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = titleAttributes
+        navigationController?.navigationBar.topItem?.title = "Movies"
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.hidesBarsOnSwipe = false
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
+    }
+    
+    
+    private func blurEffectSetup() {
+        blurEffectView.effect = mainView.blurEffect
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        blurEffectView.isHidden = true
+        blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
+        view.insertSubview(blurEffectView, at: 1)
+    }
+    
 } // Class end
+
+
+// MARK: Cell Selection Delegate Function
+extension HomeScreenController: InnerSelectedCellProtocol {
+    func isCellSelectedHandler() {
+        if isCellSelected == true {
+            DispatchQueue.main.async {
+                self.slideMenuHelper.appDelegate?.navigationController?.pushViewController(self.detailController, animated: true)
+            }
+        }
+    }
+}
+
+
+// MARK: About Delegate Function
+extension HomeScreenController: ChangeToAboutControllerProtocol {
+    func pushAboutToController() {
+        slideController = SlideViewController()
+        slideMenuHelper.isOpen.toggle()
+        homeSlideMenuLogic()
+        slideMenuHelper.removeSlideMenuToWindow(&slideController)
+    }
+}

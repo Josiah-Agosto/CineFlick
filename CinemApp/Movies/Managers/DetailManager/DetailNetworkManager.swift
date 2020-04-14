@@ -93,15 +93,6 @@ class DetailNetworkManager {
         castPropertiesDelegate?.charName = []
         castPropertiesDelegate?.name = []
         castPropertiesDelegate?.profileImage = []
-        print(path)
-        print(fullPath)
-        print(secureUrl)
-        print(sizeUrl)
-        print(imageHolder)
-        print(castPropertiesDelegate?.castCountForSection)
-        print(castPropertiesDelegate?.charName)
-        print(castPropertiesDelegate?.name)
-        print(castPropertiesDelegate?.profileImage)
     }
     
 } // Class End

@@ -21,9 +21,13 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     }
 
     
+    override func viewDidLoad() {
+        setup()
+    }
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("Appeared")
         detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 185)
         fetchRequest()
     }
@@ -31,10 +35,22 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print("Removed")
         uponViewsRemoval()
     }
 
+    
+    private func setup() {
+        // TODO: Put button in ImageView
+//        let exitButton = UIBarButtonItem(image: UIImage(named: "ExitButton"), style: .done, target: self, action: #selector(exitButtonAction))
+//        navigationItem.leftBarButtonItem = exitButton
+        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    // MARK: Actions
+    @objc private func exitButtonAction() {
+        navigationController?.popToRootViewController(animated: true)
+    }
+    
     
     private func uponViewsRemoval() {
         detailManager.deleteAllSavedData()
@@ -42,13 +58,10 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     
     private func fetchRequest() {
-        print(movieId)
         detailManager.detailCast(movieId) {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                print(self.movieId)
                 self.detailView.castCollectionView.reloadData()
-                print("Reloaded")
             }
         }
     }

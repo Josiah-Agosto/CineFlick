@@ -25,7 +25,6 @@ class InternetNetwork {
         monitor.start(queue: queue)
         monitor.pathUpdateHandler = { path in
             if path.status != .satisfied {
-                print("No Connection")
                 DispatchQueue.main.async {
                     self.displayErrorAlertController(title: "No Internet Connection", message: "Please Connect to the Internet in order to continue.",  preferredStyle: .alert) { (errorController) in
                         DispatchQueue.main.async {

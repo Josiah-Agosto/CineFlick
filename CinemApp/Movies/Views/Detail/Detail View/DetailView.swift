@@ -221,8 +221,6 @@ class DetailView: UIView {
         contentHolder.addSubview(castPlaceholder)
         contentHolder.addSubview(castCollectionView)
         constraints()
-        print(scrollView.contentSize)
-        print(castCollectionView.frame)
     }
     
     // MARK: Constraints

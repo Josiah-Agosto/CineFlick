@@ -41,7 +41,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     private func setup() {
         // Collection View
         mainController = HomeScreenController()
-        self.selectedCellDelegate = mainController
+//        self.selectedCellDelegate = mainController
         self.movieIdDelegate = mainController.detailController
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self

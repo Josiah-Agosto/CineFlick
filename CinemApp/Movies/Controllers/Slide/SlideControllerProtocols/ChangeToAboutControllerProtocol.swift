@@ -1,5 +1,5 @@
 //
-//  ContainerCellSelectionPrototol.swift
+//  ChangeToAboutControllerProtocol.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 4/4/20.
@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import UIKit
 
-protocol HomeCellSelectionProtocol: class {
-    func pushToDetailController()
+protocol ChangeToAboutControllerProtocol: class {
+    func pushAboutToController()
 }

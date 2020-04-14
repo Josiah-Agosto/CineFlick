@@ -401,7 +401,6 @@ extension Date {
     }
 }
 
-
 // MARK: - String to Image Extension
 // Is used for both Home and Detail Colleciton Views
 extension UIImageView {

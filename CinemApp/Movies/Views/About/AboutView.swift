@@ -9,40 +9,49 @@
 import Foundation
 import UIKit
 
+// TODO: Add Credits for MovieDatabase Label
 class AboutView: UIView {
     // Creator Label
-    public var creatorLabel: UILabel = {
+    public lazy var creatorLabel: UILabel = {
         let label = UILabel()
-        
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Creator:"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext-Bold", size: 20)
+        label.textColor = UIColor.white
         return label
     }()
     // Creator
-    public var creator: UILabel = {
+    public lazy var creator: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Josiah Agosto"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext", size: 16)
+        label.textColor = UIColor.white
         return label
     }()
     // GitHub Label
-    public var githubLabel: UILabel = {
+    public lazy var gitHubLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Github:"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext-Bold", size: 20)
+        label.textColor = UIColor.white
         return label
     }()
     // Github Name
-    public var githubName: UILabel = {
+    public lazy var gitHubName: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "UnknownEncrypter"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext", size: 16)
+        label.textColor = UIColor.white
         return label
     }()
+    public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,12 +60,12 @@ class AboutView: UIView {
     
     private func setup() {
         // View
-        backgroundColor = UIColor.green
+        backgroundColor = UIColor(red: 41 / 255, green: 42 / 255, blue: 47 / 255, alpha: 1.0)
         // Subviews
         addSubview(creatorLabel)
         addSubview(creator)
-        addSubview(githubLabel)
-        addSubview(githubName)
+        addSubview(gitHubLabel)
+        addSubview(gitHubName)
         constraints()
     }
     
@@ -64,25 +73,25 @@ class AboutView: UIView {
     private func constraints() {
         let width = UIScreen.main.bounds.width
         // Creator Label
-        creatorLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        creatorLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15).isActive = true
+        creatorLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        creatorLabel.topAnchor.constraint(equalTo: topAnchor, constant: 95).isActive = true
         creatorLabel.widthAnchor.constraint(equalTo: widthAnchor, constant: width).isActive = true
         creatorLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         // Creator
-        creator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        creator.topAnchor.constraint(equalTo: topAnchor, constant: 60).isActive = true
+        creator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        creator.topAnchor.constraint(equalTo: topAnchor, constant: 140).isActive = true
         creator.widthAnchor.constraint(equalToConstant: width).isActive = true
         creator.heightAnchor.constraint(equalToConstant: 30).isActive = true
         // Github Label
-        githubLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        githubLabel.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
-        githubLabel.widthAnchor.constraint(equalToConstant: width).isActive = true
-        githubLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        gitHubLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        gitHubLabel.topAnchor.constraint(equalTo: topAnchor, constant: 180).isActive = true
+        gitHubLabel.widthAnchor.constraint(equalToConstant: width).isActive = true
+        gitHubLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
         // Github Name
-        githubName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        githubName.topAnchor.constraint(equalTo: topAnchor, constant: 140).isActive = true
-        githubName.widthAnchor.constraint(equalToConstant: width).isActive = true
-        githubName.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        gitHubName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        gitHubName.topAnchor.constraint(equalTo: topAnchor, constant: 220).isActive = true
+        gitHubName.widthAnchor.constraint(equalToConstant: width).isActive = true
+        gitHubName.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
     required init?(coder: NSCoder) {
