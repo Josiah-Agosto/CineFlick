@@ -9,7 +9,7 @@
 import UIKit
 
 class CategoryView: UIView {
-    // Buttons, Labels, etc.
+    // Properties
     // Title
     public lazy var categoryTitle: UILabel = {
         let title = UILabel(frame: .zero)
@@ -75,7 +75,7 @@ class CategoryView: UIView {
         setup()
     }
     
-    // MARK: - Setup
+    // MARK: Setup
     private func setup() {
         // View
         backgroundColor = UIColor(red: 65/255, green: 0, blue: 0, alpha: 1.0)
@@ -89,7 +89,7 @@ class CategoryView: UIView {
         configureConstraints()
     }
     
-    // MARK: - Constraints
+    // MARK: Constraints
     private func configureConstraints() {
         // Category
         categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true

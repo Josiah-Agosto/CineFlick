@@ -9,11 +9,12 @@
 import UIKit
 
 class LaunchScreenView: UIView {
-    // Views
-    private lazy var imageViewLogo: UIImageView = {
+    // Properties
+    private lazy var closedClapboardView: UIImageView = {
         let imageView = UIImageView(frame: CGRect.zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "Closed Clapboard")
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "ClosedClapboard")
         return imageView
     }()
     public lazy var dataActivityIndicator: UIActivityIndicatorView = {
@@ -34,23 +35,24 @@ class LaunchScreenView: UIView {
         // Activity Indicator
         dataActivityIndicator.style = .whiteLarge
         // Subviews
-        addSubview(imageViewLogo)
+        addSubview(closedClapboardView)
         addSubview(dataActivityIndicator)
         constraints()
     }
     
     
     private func constraints() {
-        // Image View
-        imageViewLogo.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        imageViewLogo.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -50).isActive = true
-        imageViewLogo.widthAnchor.constraint(equalToConstant: 175).isActive = true
-        imageViewLogo.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        // Closed Clapboard
+        closedClapboardView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        closedClapboardView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -100).isActive = true
+        closedClapboardView.widthAnchor.constraint(equalToConstant: 175).isActive = true
+        closedClapboardView.heightAnchor.constraint(equalToConstant: 120).isActive = true
         // Activity Indicator
         dataActivityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        dataActivityIndicator.topAnchor.constraint(equalTo: imageViewLogo.bottomAnchor, constant: 50).isActive = true
+        dataActivityIndicator.topAnchor.constraint(equalTo: closedClapboardView.bottomAnchor, constant: 50).isActive = true
         dataActivityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
         dataActivityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
     }
     
     required init?(coder: NSCoder) {

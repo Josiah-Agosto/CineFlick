@@ -29,13 +29,13 @@ extension CastApi {
                         completion(type, nil)
                     } catch let error {
                         print(error)
-                        completion(nil, .jsonConversionFailure)
+                        completion(nil, .invalidData)
                     }
                 } else {
                     completion(nil, .invalidData)
                 }
             } else {
-                completion(nil, .responseUnsuccessful)
+                completion(nil, .requestFailed)
             }
         }
         return task
@@ -47,16 +47,16 @@ extension CastApi {
             DispatchQueue.main.async {
                 guard let json = json else {
                     if let error = error {
-                        completion(Result.failure(error))
+                        completion(.failure(error))
                     } else {
-                        completion(Result.failure(.invalidData))
+                        completion(.failure(.invalidData))
                     }
                     return
                 }
                 if let value = decode(json) {
                     completion(.success(value))
                 } else {
-                    completion(.failure(.jsonParsingFailure))
+                    completion(.failure(.invalidData))
                 }
             }
         }

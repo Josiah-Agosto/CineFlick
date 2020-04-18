@@ -12,17 +12,16 @@ import UIKit
 class MainScreenView: UIView {
     // Properties
     public lazy var categoryImageView: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 15, y: 0, width: 30, height: 30))
+        let imageView = UIImageView(frame: CGRect(x: 10, y: 0, width: 30, height: 30))
         if #available(iOS 13.0, *) {
             let systemImage = UIImage(systemName: "text.justify", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!
-            let systemImageWithColor = systemImage.withTintColor(UIColor.white, renderingMode: .alwaysOriginal)
+            let systemImageWithColor = systemImage.withTintColor(UIColor(named: "LabelColors")!, renderingMode: .alwaysOriginal)
             imageView.contentMode = .scaleAspectFill
             imageView.image = systemImageWithColor
         } else {
             let assetImage = UIImage(named: "CategoryButton")!
             imageView.image = assetImage
         }
-        
         return imageView
     }()
     public lazy var collectionView: UICollectionView = {
@@ -48,7 +47,11 @@ class MainScreenView: UIView {
     }
     
     private func setup() {
-        backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1.0)
+        if #available(iOS 13.0, *) {
+            backgroundColor = UIColor.systemGray5
+        } else {
+            backgroundColor = UIColor(red: 50 / 255, green: 50 / 255, blue: 50 / 255, alpha: 1.0)
+        }
         // Collection View
         collectionView.delegate = self
         collectionView.dataSource = self

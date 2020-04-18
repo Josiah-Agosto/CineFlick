@@ -23,67 +23,75 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch movieEnum {
         case .popular:
-            let cell = collectionView.cellForItem(at: indexPath) as! PopularMovieCellsView
+            let popularRow = collectionView.cellForItem(at: indexPath) as! PopularMovieCellsView
             group.enter()
-            mainController.detailController.detailView.movieTitle.text = cell.movieTitle.text
-            mainController.detailController.detailView.backdropImage.image = cell.backdropImage.image
-            mainController.detailController.detailView.overview.text = cell.overview.text
-            mainController.detailController.detailView.runtime.text = cell.runtime.text
-            mainController.detailController.detailView.movieRating.text = cell.movieRating.text
-            mainController.detailController.detailView.releaseDate.text = cell.releaseDate.text
+            mainController.detailController.detailView.movieTitle.text = popularRow.movieTitle.text
+            mainController.detailController.detailView.backdropImage.image = popularRow.backdropImage.image
+            mainController.detailController.detailView.overview.text = popularRow.overview.text
+            mainController.detailController.detailView.runtime.text = popularRow.runtime.text
+            mainController.detailController.detailView.movieRating.text = popularRow.movieRating.text
+            mainController.detailController.detailView.releaseDate.text = popularRow.releaseDate.text
             let id = mainController.apiManager.popularIds[safe: indexPath.row] ?? ""
+            let movieTitle = mainController.apiManager.popularTitles[safe: indexPath.row] ?? ""
             group.leave()
             group.wait()
             group.notify(queue: .global()) {
                 self.movieIdDelegate?.movieId = id
+                self.movieIdDelegate?.movieName = movieTitle
                 self.selectedCellDelegate?.isCellSelected = true
                 self.selectedCellDelegate?.isCellSelectedHandler()
             }
         case .nowPlaying:
-            let cell2 = collectionView.cellForItem(at: indexPath) as! NowPlayingCellsView
+            let nowPlayingRow = collectionView.cellForItem(at: indexPath) as! NowPlayingCellsView
             group.enter()
-            mainController.detailController.detailView.movieTitle.text = cell2.movieTitle.text
-            mainController.detailController.detailView.backdropImage.image = cell2.backdropImage.image
-            mainController.detailController.detailView.overview.text = cell2.overview.text
-            mainController.detailController.detailView.runtime.text = cell2.runtime.text
-            mainController.detailController.detailView.releaseDate.text = cell2.movieReleaseTitle.text
+            mainController.detailController.detailView.movieTitle.text = nowPlayingRow.movieTitle.text
+            mainController.detailController.detailView.backdropImage.image = nowPlayingRow.backdropImage.image
+            mainController.detailController.detailView.overview.text = nowPlayingRow.overview.text
+            mainController.detailController.detailView.runtime.text = nowPlayingRow.runtime.text
+            mainController.detailController.detailView.releaseDate.text = nowPlayingRow.movieReleaseTitle.text
             let id = mainController.apiManager.nowPlayingIds[safe: indexPath.row] ?? ""
+            let movieTitle = mainController.apiManager.nowPlayingTitles[safe: indexPath.row] ?? ""
             group.leave()
             group.wait()
             group.notify(queue: .global()) {
                 self.movieIdDelegate?.movieId = id
+                self.movieIdDelegate?.movieName = movieTitle
                 self.selectedCellDelegate?.isCellSelected = true
                 self.selectedCellDelegate?.isCellSelectedHandler()
             }
         case .upcoming:
-            let cell3 = collectionView.cellForItem(at: indexPath) as! UpcomingCellsView
+            let upcomingRow = collectionView.cellForItem(at: indexPath) as! UpcomingCellsView
             group.enter()
-            mainController.detailController.detailView.movieTitle.text = cell3.movieTitle.text
-            mainController.detailController.detailView.backdropImage.image = cell3.backdropImage.image
-            mainController.detailController.detailView.overview.text = cell3.overview.text
-            mainController.detailController.detailView.runtime.text = cell3.runtime.text
-            mainController.detailController.detailView.releaseDate.text = cell3.movieReleaseTitle.text
+            mainController.detailController.detailView.movieTitle.text = upcomingRow.movieTitle.text
+            mainController.detailController.detailView.backdropImage.image = upcomingRow.backdropImage.image
+            mainController.detailController.detailView.overview.text = upcomingRow.overview.text
+            mainController.detailController.detailView.runtime.text = upcomingRow.runtime.text
+            mainController.detailController.detailView.releaseDate.text = upcomingRow.movieReleaseTitle.text
             let id = mainController.apiManager.upcomingIds[safe: indexPath.row] ?? ""
+            let movieTitle = mainController.apiManager.upcomingTitles[safe: indexPath.row] ?? ""
             group.leave()
             group.wait()
             group.notify(queue: .global()) {
                 self.movieIdDelegate?.movieId = id
+                self.movieIdDelegate?.movieName = movieTitle
                 self.selectedCellDelegate?.isCellSelected = true
                 self.selectedCellDelegate?.isCellSelectedHandler()
             }
         case .topRated:
-            let cell4 = collectionView.cellForItem(at: indexPath) as! TopRatedCellsView
+            let topRatedRow = collectionView.cellForItem(at: indexPath) as! TopRatedCellsView
             group.enter()
-            mainController.detailController.detailView.movieTitle.text = cell4.movieTitle.text
-            mainController.detailController.detailView.backdropImage.image = cell4.backdropImage.image
-            mainController.detailController.detailView.overview.text = cell4.overview.text
-            mainController.detailController.detailView.runtime.text = cell4.runtime.text
-            mainController.detailController.detailView.releaseDate.text = cell4.releaseDate.text
+            mainController.detailController.detailView.movieTitle.text = topRatedRow.movieTitle.text
+            mainController.detailController.detailView.backdropImage.image = topRatedRow.backdropImage.image
+            mainController.detailController.detailView.overview.text = topRatedRow.overview.text
+            mainController.detailController.detailView.runtime.text = topRatedRow.runtime.text
+            mainController.detailController.detailView.releaseDate.text = topRatedRow.releaseDate.text
             let id = mainController.apiManager.topRatedIds[safe: indexPath.row] ?? ""
+            let movieTitle = mainController.apiManager.topRatedTitles[safe: indexPath.row] ?? ""
             group.leave()
             group.wait()
             group.notify(queue: .global()) {
                 self.movieIdDelegate?.movieId = id
+                self.movieIdDelegate?.movieName = movieTitle
                 self.selectedCellDelegate?.isCellSelected = true
                 self.selectedCellDelegate?.isCellSelectedHandler()
             }

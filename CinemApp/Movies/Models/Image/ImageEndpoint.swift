@@ -7,14 +7,14 @@
 //
 
 import Foundation
-// Used to make a URL Request. URL composes of: Base, Path to what you want, then the api key to access that path.
+
 protocol ImageEndpoint {
     var base: String { get }
     var path: String { get }
 }
 
 
-// Extension to set the Endpoint
+// Piecing URL
 extension ImageEndpoint {
     var secretKey: String {
         return apiKey
@@ -27,7 +27,6 @@ extension ImageEndpoint {
         ]
         return components
     }
-    
     var request: URLRequest {
         let url = urlComponents.url!
         return URLRequest(url: url)

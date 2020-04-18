@@ -11,34 +11,36 @@ import UIKit
 class CastCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "cell"
     // MARK: Properties
-    let person: UIImageView = {
+    public lazy var person: UIImageView = {
         let image = UIImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.backgroundColor = UIColor.white
         image.layer.borderWidth = 1.5
-        image.layer.borderColor = UIColor.white.cgColor
+        image.layer.borderColor = UIColor.black.cgColor
         image.layer.cornerRadius = 50
         return image
     }()
-    let name: UILabel = {
+    public lazy var name: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = UIColor.clear
         label.text = "Not Found"
         label.numberOfLines = 0
+        label.textColor = UIColor(named: "LabelColors")
         label.textAlignment = NSTextAlignment.center
         label.sizeToFit()
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
         return label
     }()
-    let characterName: UILabel = {
+    public lazy var characterName: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = UIColor.clear
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.center
+        label.textColor = UIColor(named: "LabelColors")
         label.sizeToFit()
         label.font = UIFont(name: "AvenirNext-Medium", size: 12)
         label.text = "Not Found"

@@ -34,6 +34,6 @@ struct Images: Decodable {
         logo_sizes = json["logo_sizes"] as? [String] ?? []
         poster_sizes = json["poster_sizes"] as? [String] ?? []
         profile_sizes = json["profile_sizes"] as? [String] ?? []
-        still_sizes = json["still_sizez"] as? [String] ?? []
+        still_sizes = json["still_sizes"] as? [String] ?? []
     }
 }

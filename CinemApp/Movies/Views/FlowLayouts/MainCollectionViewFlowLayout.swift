@@ -13,7 +13,6 @@ class MainCollectionViewFlowLayout: UICollectionViewFlowLayout {
         super.init()
         self.minimumLineSpacing = 20
         self.minimumInteritemSpacing = 15
-        self.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         self.scrollDirection = .vertical
     }
     

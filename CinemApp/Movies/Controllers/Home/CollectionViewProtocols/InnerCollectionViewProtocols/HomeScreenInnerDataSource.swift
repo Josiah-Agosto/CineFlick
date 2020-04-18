@@ -1,5 +1,5 @@
 //
-//  HomeScreenInnerDataSource.swift
+//  MovieCollectionViewCell Extension
 //  CinemApp
 //
 //  Created by Josiah Agosto on 2/21/20.
@@ -10,12 +10,6 @@ import Foundation
 import UIKit
 
 extension MovieCollectionViewCell: UICollectionViewDataSource {
-//    private var parent: MovieCollectionViewCell!
-//
-//    init(parentCell: MovieCollectionViewCell) {
-//        self.parent = parentCell
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if movieEnum == .popular {
             return mainController.apiManager.popularTitles.count
@@ -82,4 +76,5 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             return topRated
         }
     }
+    
 }

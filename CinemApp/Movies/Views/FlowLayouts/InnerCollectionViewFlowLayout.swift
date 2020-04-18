@@ -12,7 +12,8 @@ class InnerCollectionViewFlowLayout: UICollectionViewFlowLayout {
     override init() {
         super.init()
         self.minimumLineSpacing = 20
-        self.minimumInteritemSpacing = 0
+        self.minimumInteritemSpacing = 8
+        self.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 10)
         self.scrollDirection = .horizontal
         self.itemSize = CGSize(width: 150, height: 300)
     }

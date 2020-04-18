@@ -15,12 +15,12 @@ enum MovieSection {
     case topRated
 }
 
-// Creates the url with above cases
+// Piecing URL
 extension MovieSection: Endpoint {
     var base: String {
         return "https://api.themoviedb.org"
     }
-    // Chooses which request to get
+    
     var path: String {
         switch self {
         case .popular:

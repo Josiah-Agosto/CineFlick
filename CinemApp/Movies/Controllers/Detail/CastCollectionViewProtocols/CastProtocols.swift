@@ -15,8 +15,3 @@ protocol CastDataSourceProtocol: class {
     var charName: [String] { get set }
     var profileImage: [UIImage] { get set }
 }
-
-
-protocol CastMovieIdProtocol: class {
-    var castMovieId: String { get set }
-}

@@ -10,39 +10,45 @@ import Foundation
 import UIKit
 import Network
 
-// TODO: Change UIAlertController to Custom View
+// TODO: Fix where it comes back when internet is back online
+// TODO: Also All Tests
 
 class InternetNetwork {
-    private let monitor = NWPathMonitor()
-    private var parentViewController: UIViewController!
-    
-    init(parent: UIViewController) {
-        self.parentViewController = parent
-    }
+    static let shared = InternetNetwork()
+    private var monitor: NWPathMonitor?
+    var isMonitoring = false
     
     public func checkForInternetConnectivity() {
-        let queue = DispatchQueue.global(qos: .background)
-        monitor.start(queue: queue)
-        monitor.pathUpdateHandler = { path in
-            if path.status != .satisfied {
-                DispatchQueue.main.async {
-                    self.displayErrorAlertController(title: "No Internet Connection", message: "Please Connect to the Internet in order to continue.",  preferredStyle: .alert) { (errorController) in
-                        DispatchQueue.main.async {
-                            self.parentViewController.present(errorController, animated: true)
-                        }
-                    }
-                } // Main Queue
-            }
-        } // Monitor End
+        startMonitoring()
     }
-           
-    // No Internet Alert
-    private func displayErrorAlertController(title titleParam: String?, message messageParam: String?, preferredStyle preferredStyleParam: UIAlertController.Style, completion: @escaping((UIAlertController) -> Void)) {
-        let errorAlertController = UIAlertController(title: titleParam, message: messageParam, preferredStyle: preferredStyleParam)
-        errorAlertController.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: { (action) in
-            self.checkForInternetConnectivity()
-        }))
-        completion(errorAlertController)
+    
+    
+    private func startMonitoring() {
+        monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "Network_Monitoring")
+        monitor?.start(queue: queue)
+        monitor?.pathUpdateHandler = { path in
+            if path.status == .unsatisfied {
+                print("Error!")
+                DispatchQueue.main.async {
+                    NotificationController.displayError(message: APIError.noInternetConnection.localizedDescription)
+                }
+            }
+        }
+        isMonitoring = true
+    }
+    
+    
+    private func stopMonitoring() {
+        guard let monitor = monitor else { return }
+        monitor.cancel()
+        self.monitor = nil
+        isMonitoring = false
+    }
+    
+    
+    deinit {
+        stopMonitoring()
     }
     
 }

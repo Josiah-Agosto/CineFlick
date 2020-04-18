@@ -41,7 +41,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
     private func setup() {
         // Collection View
         mainController = HomeScreenController()
-//        self.selectedCellDelegate = mainController
+        // Assigning Delegates
+        self.selectedCellDelegate = mainController
         self.movieIdDelegate = mainController.detailController
         innerCollectionView.delegate = self
         innerCollectionView.dataSource = self
@@ -57,9 +58,9 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     private func constraints() {
         // Inner Collection View
-        innerCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        innerCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -5).isActive = true
         innerCollectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        innerCollectionView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        innerCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         innerCollectionView.heightAnchor.constraint(equalToConstant: 300).isActive = true
     }
     
@@ -67,7 +68,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         // Initial Collection View Cell
-        self.frame.size.width = UIScreen.main.bounds.width
+        self.frame.size.width = UIScreen.main.bounds.width - 5
         self.frame.size.height = 300
     }
     
@@ -80,7 +81,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
 } // Class End
 
 
-// MARK: - Collection Extension
+// MARK: Collection Extension
 public extension Collection {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil

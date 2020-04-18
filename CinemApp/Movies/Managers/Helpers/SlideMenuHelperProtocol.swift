@@ -1,5 +1,5 @@
 //
-//  SlideMenuHelperProtocol.swift
+//  SlideMenuHelper.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 4/12/20.
@@ -13,7 +13,7 @@ struct SlideMenuHelper {
     // MARK: Properties
     public let appDelegate = UIApplication.shared.delegate as? AppDelegate
     public var isOpen: Bool = false
-    // Main Function
+
     /// Main function to check get slide menu's state
     public func shouldExpandSlideMenu(_ expanded: Bool, completion: ((Bool) -> Void)? = nil) {
         if expanded {
@@ -29,7 +29,7 @@ struct SlideMenuHelper {
             completion?(expanded)
         }
     }
-    // Add Slide Menu
+
     /// Adds slide menu to window and window to view
     public func addSlideMenuToWindow(_ viewController: inout SlideViewController!) {
         if viewController == nil {
@@ -41,7 +41,7 @@ struct SlideMenuHelper {
             newWindow.addSubview(viewController?.view ?? UIView())
         }
     }
-    // Remove Slide Menu
+
     /// Removes slide menu and window
     public func removeSlideMenuToWindow(_ viewController: inout SlideViewController!) {
         if viewController != nil {
@@ -51,4 +51,5 @@ struct SlideMenuHelper {
             viewController = nil
         }
     }
+    
 }

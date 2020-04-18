@@ -11,64 +11,42 @@ import Foundation
 
 class HomeScreenController: UIViewController {
     // MARK: References / Properties
-    public var mainView: MainScreenView!
-    public var apiManager = APINetworkManager.shared
+    public lazy var mainView = MainScreenView()
     public lazy var detailController = DetailViewController()
-    public var launchScreenController = LaunchScreenController()
-    public lazy var internetNetwork = InternetNetwork(parent: self)
+    public lazy var launchScreenController = LaunchScreenController()
+    public lazy var apiManager = APINetworkManager.shared
+    public lazy var internetNetwork = InternetNetwork()
     private var blurEffectView = UIVisualEffectView()
     private var slideController: SlideViewController!
-    private var aboutController: AboutViewController!
     private lazy var slideMenuHelper = SlideMenuHelper()
     private var blurIsHidden: Bool = true
-    // Delegates
-    public weak var launchScreenDelegate: LaunchScreenProtocol?
-    public weak var castMovieIdDelegate: CastMovieIdProtocol?
-    public weak var handleSlideMenuDelegate: HandleSlideMenuProtocol?
     // Delegate Properties
     var isCellSelected: Bool = false
     
     override func loadView() {
-        mainView = MainScreenView()
         view = mainView
     }
     
     // MARK: Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        internetNetwork.checkForInternetConnectivity()
+        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
+            displayLaunchScreen()
+            initialSetup()
+        }
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         internetNetwork.checkForInternetConnectivity()
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
-            initialSetup()
-            setupLaunchScreen()
-            makeRequestToServer()
-        } else {
+        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == true {
             initialSetup()
             leftBarButtonView()
-            makeRequestToServer()
         }
     }
-    
-    
-    private func setupLaunchScreen() {
-        launchScreenDelegate = launchScreenController
-        navigationController?.pushViewController(launchScreenController, animated: false)
-    }
-    
-    // MARK: Api Function
-    private func makeRequestToServer() {
-        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
-            firstTimeOpeningApplicationRequest()
-            launchScreenLoaded.set(true, forKey: "LaunchScreenLoaded")
-        } else {
-            applicationHasAlreadyLoadedLaunchScreenRequest()
-        }
-    }
-    
+
     // MARK: Setup
     private func initialSetup() {
         // Navigation Controller Setup
@@ -79,12 +57,12 @@ class HomeScreenController: UIViewController {
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
     }
     
-    // MARK: Refresh Control
+    // MARK: Actions
     @objc private func refreshView() {
         makeRequestToServer()
     }
-
-    // MARK: Actions
+    
+    
     @objc private func blurEffectTap() {
         homeSlideMenuLogic()
         blurEffectTransition()
@@ -110,47 +88,47 @@ class HomeScreenController: UIViewController {
         }
     }
     
-    // First time loading application request
-    private func firstTimeOpeningApplicationRequest() {
-        apiManager.makeApiRequest {
-            self.leftBarButtonView()
-            self.mainView.refreshControl.endRefreshing()
-            self.launchScreenDelegate?.isLoadingFinished(true)
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                for cell in self.mainView.collectionView.visibleCells {
-                    if let cell = cell as? MovieCollectionViewCell {
-                        cell.innerCollectionView.reloadData()
-                    }
-                }
-            }
-        } // Request End
-    }
-    
-    // Application already been open request
-    private func applicationHasAlreadyLoadedLaunchScreenRequest() {
-        apiManager.makeApiRequest {
-            self.mainView.refreshControl.endRefreshing()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                for cell in self.mainView.collectionView.visibleCells {
-                    if let cell = cell as? MovieCollectionViewCell {
-                        cell.innerCollectionView.reloadData()
-                    }
-                }
-            }
-        } // Request End
-    }
-    
     // MARK: Setup Functions
     private func navigationControllerSetup() {
-        navigationController?.isNavigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = titleAttributes
+        self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
         title = "Movies"
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.hidesBarsOnSwipe = false
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
+    }
+    
+    
+    private func makeRequestToServer() {
+        apiManager.makeApiRequest { (result) in
+            switch result {
+            case .success():
+                self.requestForRefreshControl()
+            case .failure(let error):
+                NotificationController.displayError(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    
+    private func requestForRefreshControl() {
+        self.mainView.refreshControl.endRefreshing()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            for cell in self.mainView.collectionView.visibleCells {
+                if let cell = cell as? MovieCollectionViewCell {
+                    cell.innerCollectionView.reloadData()
+                }
+            }
+        }
+    }
+    
+    
+    private func displayLaunchScreen() {
+        navigationController?.pushViewController(launchScreenController, animated: false)
+        navigationController?.setViewControllers([launchScreenController], animated: false)
     }
     
     
@@ -172,7 +150,26 @@ class HomeScreenController: UIViewController {
         blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
         view.insertSubview(blurEffectView, at: 1)
     }
+    
 } // Class end
+
+
+// MARK: API Setup
+extension HomeScreenController: LaunchScreenProtocol {
+    func isLoadingFinished(_ dataLoaded: Bool) {
+        if dataLoaded == true {
+            self.mainView.refreshControl.endRefreshing()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                for cell in self.mainView.collectionView.visibleCells {
+                    if let cell = cell as? MovieCollectionViewCell {
+                        cell.innerCollectionView.reloadData()
+                    }
+                }
+            }
+        } // dataLoaded End
+    } // Func End
+}
 
 
 // MARK: Cell Selection Delegate Function

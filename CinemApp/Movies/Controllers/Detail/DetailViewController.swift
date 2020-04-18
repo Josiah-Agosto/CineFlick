@@ -13,23 +13,22 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     // References
     public lazy var detailView = DetailView()
     public var detailManager = DetailNetworkManager.shared
+    public lazy var internetNetwork = InternetNetwork()
     // Movie Id Delegate Property
     var movieId: String = ""
+    var movieName: String = ""
     
     override func loadView() {
         view = detailView
-    }
-
-    
-    override func viewDidLoad() {
-        setup()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        internetNetwork.checkForInternetConnectivity()
         detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 185)
         fetchRequest()
+        addMovieTitleToNavigationTitle()
     }
     
     
@@ -39,16 +38,10 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     }
 
     
-    private func setup() {
-        // TODO: Put button in ImageView
-//        let exitButton = UIBarButtonItem(image: UIImage(named: "ExitButton"), style: .done, target: self, action: #selector(exitButtonAction))
-//        navigationItem.leftBarButtonItem = exitButton
-        navigationController?.navigationBar.topItem?.title = ""
-    }
-    
-    // MARK: Actions
-    @objc private func exitButtonAction() {
-        navigationController?.popToRootViewController(animated: true)
+    private func addMovieTitleToNavigationTitle() {
+        title = movieName
+        // Title Color
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
     }
     
     
@@ -58,10 +51,14 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     
     private func fetchRequest() {
-        detailManager.detailCast(movieId) {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.detailView.castCollectionView.reloadData()
+        detailManager.detailCast(movieId) { (result) in
+            switch result {
+            case .success():
+                DispatchQueue.main.async {
+                    self.detailView.castCollectionView.reloadData()
+                }
+            case .failure(let error):
+                NotificationController.displayError(message: error.localizedDescription)
             }
         }
     }

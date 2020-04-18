@@ -23,7 +23,7 @@ class MovieClient: APIClient {
         let endpoint = movieSectionType
         let result = endpoint.request
         fetch(with: result, decode: { (json) -> MovieModelWithDates? in
-            guard let movieModel = json as? MovieModelWithDates else { print("Error here!"); return nil }
+            guard let movieModel = json as? MovieModelWithDates else { return nil }
             return movieModel
         }, completion: completion)
     }

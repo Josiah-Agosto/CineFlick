@@ -1,5 +1,5 @@
 //
-//  Movie.swift
+//  MovieModel.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 6/10/19.

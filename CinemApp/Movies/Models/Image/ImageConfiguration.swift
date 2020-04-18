@@ -8,17 +8,17 @@
 
 import Foundation
 
-enum ImageConfiguaration {
+enum ImageConfiguration {
     case configure
 }
 
 
-// Creates url For Image
-extension ImageConfiguaration: ImageEndpoint {
+// Piecing URL
+extension ImageConfiguration: ImageEndpoint {
     var base: String {
         return "https://api.themoviedb.org"
     }
-    // Path needed for Configuring Image URL's
+    
     var path: String {
         return "/3/configuration"
     }

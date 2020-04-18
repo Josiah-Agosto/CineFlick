@@ -14,7 +14,7 @@ struct MovieModelWithDates: Decodable {
     let total_pages: Int?
     let results: [Results]?
     let dates: Dates?
-    // Result Array
+    
     struct Results: Decodable {
         let vote_count: Int?
         let id: Int?
@@ -48,7 +48,7 @@ struct MovieModelWithDates: Decodable {
             release_date = json["release_data"] as? String ?? ""
         }
     }
-    // Data Object
+    
     struct Dates: Decodable {
         let minimum: String
         let maximum: String

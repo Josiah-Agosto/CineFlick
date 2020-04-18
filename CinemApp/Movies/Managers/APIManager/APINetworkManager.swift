@@ -20,55 +20,55 @@ class APINetworkManager {
 // MARK: - Variables
     // Popular
     var popularTitles: [String] = [] { didSet { updater?() } }
-    private var popularFilePaths: [String] = [] { didSet { updater?() } } //
+    private var popularFilePaths: [String] = [] { didSet { updater?() } }
     var popularRatings: [String] = [] { didSet { updater?() } }
     var popularIds: [String] = [] { didSet { updater?() } }
     var popularOverview: [String] = [] { didSet { updater?() } }
     var popularRuntime: [String] = [] { didSet { updater?() } }
     var popularRelease: [String] = [] { didSet { updater?() } }
-    private var popularBackdropPaths: [String] = [] { didSet { updater?() } } //
-    private var popularBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var popularBackdropPaths: [String] = [] { didSet { updater?() } }
+    private var popularBackdropURLs: [String] = [] { didSet { updater?() } }
     var popularBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var popularImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var popularImagesURLs: [String] = [] { didSet { updater?() } }
     var popularImages: [UIImage] = [] { didSet { updater?() } }
     // Now Playing
     var nowPlayingTitles: [String] = [] { didSet { updater?() } }
-    private var nowPlayingFilePaths: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingFilePaths: [String] = [] { didSet { updater?() } }
     var nowPlayingReleases: [String] = [] { didSet { updater?() } }
     var nowPlayingRatings: [String] = [] { didSet { updater?() } }
     var nowPlayingIds: [String] = [] { didSet { updater?() } }
     var nowPlayingOverview: [String] = [] { didSet { updater?() } }
     var nowPlayingRuntime: [String] = [] { didSet { updater?() } }
-    private var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } } //
-    private var nowPlayingBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } }
+    private var nowPlayingBackdropURLs: [String] = [] { didSet { updater?() } }
     var nowPlayingBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var nowPlayingImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var nowPlayingImagesURLs: [String] = [] { didSet { updater?() } }
     var nowPlayingImages: [UIImage] = [] { didSet { updater?() } }
     // Upcoming
     var upcomingTitles: [String] = [] { didSet { updater?() } }
-    private var upcomingFilePaths: [String] = [] { didSet { updater?() } } //
+    private var upcomingFilePaths: [String] = [] { didSet { updater?() } }
     var upcomingReleases: [String] = [] { didSet { updater?() } }
     var upcomingRatings: [String] = [] { didSet { updater?() } }
     var upcomingIds: [String] = [] { didSet { updater?() } }
     var upcomingOverview: [String] = [] { didSet { updater?() } }
     var upcomingRuntime: [String] = [] { didSet { updater?() } }
-    private var upcomingBackdropPaths: [String] = [] { didSet { updater?() } } //
-    private var upcomingBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var upcomingBackdropPaths: [String] = [] { didSet { updater?() } }
+    private var upcomingBackdropURLs: [String] = [] { didSet { updater?() } }
     var upcomingBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var upcomingImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var upcomingImagesURLs: [String] = [] { didSet { updater?() } }
     var upcomingImages: [UIImage] = [] { didSet { updater?() } }
     // Top Rated
     var topRatedTitles: [String] = [] { didSet { updater?() } }
-    private var topRatedFilePaths: [String] = [] { didSet { updater?() } } //
+    private var topRatedFilePaths: [String] = [] { didSet { updater?() } }
     var topRatedReleases: [String] = [] { didSet { updater?() } }
     var topRatedRatings: [String] = [] { didSet { updater?() } }
     var topRatedIds: [String] = [] { didSet { updater?() } }
     var topRatedOverview: [String] = [] { didSet { updater?() } }
     var topRatedRuntime: [String] = [] { didSet { updater?() } }
-    private var topRatedBackdropPaths: [String] = [] { didSet { updater?() } } //
-    private var topRatedBackdropURLs: [String] = [] { didSet { updater?() } } //
+    private var topRatedBackdropPaths: [String] = [] { didSet { updater?() } }
+    private var topRatedBackdropURLs: [String] = [] { didSet { updater?() } }
     var topRatedBackdropImages: [UIImage] = [] { didSet { updater?() } }
-    private var topRatedImagesURLs: [String] = [] { didSet { updater?() } } //
+    private var topRatedImagesURLs: [String] = [] { didSet { updater?() } }
     var topRatedImages: [UIImage] = [] { didSet { updater?() } }
     // Image Variables
     private var secureBaseUrl: String = ""
@@ -79,7 +79,7 @@ class APINetworkManager {
     // Group
     private let group = DispatchGroup()
     // MARK: - Requests
-    public func makeApiRequest(completion: @escaping() -> Void) -> Void {
+    public func makeApiRequest(completion: @escaping(Result<Void, APIError>) -> Void) {
         let operation = OperationQueue()
         let imageCreationQueue = OperationQueue()
         // Popular
@@ -115,8 +115,8 @@ class APINetworkManager {
                         guard let releases = release.release_date else { return }
                         self.popularRelease.append(self.dateReference.convertStringToDate(dateString: releases))
                     }
-                case .failure(let error):
-                    print("Popular: \(error)")
+                case .failure(_):
+                    completion(.failure(.requestFailed))
                 }
             }
             // Now Playing
@@ -150,8 +150,8 @@ class APINetworkManager {
                         guard let releasedDate = dates.release_date else { return }
                         self.nowPlayingReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
                     }
-                case .failure(let error):
-                    print("Now Playing: \(error)")
+                case .failure(_):
+                    completion(.failure(.requestFailed))
                 }
             }
             // Upcoming
@@ -185,8 +185,8 @@ class APINetworkManager {
                         guard let releasedDate = dates.release_date else { return }
                         self.upcomingReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
                     }
-                case .failure(let error):
-                    print("Upcoming: \(error)")
+                case .failure(_):
+                    completion(.failure(.requestFailed))
                 }
             }
             // Top Rated
@@ -220,8 +220,8 @@ class APINetworkManager {
                         guard let releasedDate = dates.release_date else { return }
                         self.topRatedReleases.append(self.dateReference.convertStringToDate(dateString: releasedDate))
                     }
-                case .failure(let error):
-                    print("Top Rated: \(error)")
+                case .failure(_):
+                    completion(.failure(.requestFailed))
                 }
             }
             // Create Image Model
@@ -238,16 +238,16 @@ class APINetworkManager {
                     self.secureBaseUrl = secure
                     self.imageSize = posterSize
                     self.backdropSize = backdropSize
-                case .failure(let error):
-                    print("Image Creation: \(error)")
+                case .failure(_):
+                    completion(.failure(.requestFailed))
                 }
             })
         }
-        // Worked on 09/21/2019 9:44PM
+        
         imageCreationQueue.addOperation {
             self.group.wait()
-    // MARK: - Creating the URL's
-        // MARK: - Poster
+    // MARK: Creating the URL's
+        // MARK: Poster
             // Popular Image URL's
             self.popularFilePaths.forEach({ (paths) in
                 self.popularImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
@@ -264,8 +264,8 @@ class APINetworkManager {
             self.topRatedFilePaths.forEach({ (paths) in
                 self.topRatedImagesURLs.append("\(self.secureBaseUrl)\(self.imageSize)\(paths)")
             })
-        // MARK: - For Detail View
-            // Backdrops
+        // MARK: For Detail View
+            // MARK: Backdrops
             // Popular
             self.popularBackdropPaths.forEach({ (backdrops) in
                 self.popularBackdropURLs.append("\(self.secureBaseUrl)\(self.backdropSize)\(backdrops)")
@@ -282,7 +282,7 @@ class APINetworkManager {
             self.topRatedBackdropPaths.forEach({ (backdrops) in
                 self.topRatedBackdropURLs.append("\(self.secureBaseUrl)\(self.backdropSize)\(backdrops)")
             })
-            // Runtime
+            // MARK: Runtime
             // Popular
             self.popularIds.forEach({ (ids) in
                 self.detailClient = DetailClient()
@@ -292,8 +292,8 @@ class APINetworkManager {
                         guard let popularRuntime = detailResult?.runtime else { return }
                         let runtime = "\(popularRuntime)m"
                         self.popularRuntime.append(runtime)
-                    case .failure(let error):
-                        print("Popular Id's: \(error)")
+                    case .failure(_):
+                        completion(.failure(.requestFailed))
                     }
                 })
             })
@@ -306,8 +306,8 @@ class APINetworkManager {
                         guard let nowPlayingRuntime = detailResult?.runtime else { return }
                         let runtime = "\(nowPlayingRuntime)m"
                         self.nowPlayingRuntime.append(runtime)
-                    case .failure(let error):
-                        print("Now Playing id's: \(error)")
+                    case .failure(_):
+                        completion(.failure(.requestFailed))
                     }
                 })
             })
@@ -320,8 +320,8 @@ class APINetworkManager {
                         guard let upcomingRuntime = detailResult?.runtime else { return }
                         let runtime = "\(upcomingRuntime)m"
                         self.upcomingRuntime.append(runtime)
-                    case .failure(let error):
-                        print("Upcoming Id's: \(error)")
+                    case .failure(_):
+                        completion(.failure(.requestFailed))
                     }
                 })
             })
@@ -334,13 +334,13 @@ class APINetworkManager {
                         guard let topRatedRuntime = detailResult?.runtime else { return }
                         let runtime = "\(topRatedRuntime)m"
                         self.topRatedRuntime.append(runtime)
-                    case .failure(let error):
-                        print("Top Rated Id's: \(error)")
+                    case .failure(_):
+                        completion(.failure(.requestFailed))
                     }
                 })
             })
-    // MARK: - Creating the UIImage
-        // MARK: - Poster
+    // MARK: Creating the UIImage
+        // MARK: Poster
             // Popular
             self.popularImagesURLs.forEach({ (urls) in
                 self.popularImages.append(self.imageReference.convertUrlToImage(with: urls))
@@ -357,7 +357,7 @@ class APINetworkManager {
             self.topRatedImagesURLs.forEach({ (urls) in
                 self.topRatedImages.append(self.imageReference.convertUrlToImage(with: urls))
             })
-        // MARK: - Backdrop
+        // MARK: Backdrop
             // Popular
             self.popularBackdropURLs.forEach({ (backUrls) in
                 self.popularBackdropImages.append(self.imageReference.convertUrlToImage(with: backUrls))
@@ -375,7 +375,7 @@ class APINetworkManager {
                 self.topRatedBackdropImages.append(self.imageReference.convertUrlToImage(with: backUrls))
             })
             self.group.notify(queue: DispatchQueue.main) {
-                completion()
+                completion(.success(()))
                 self.updater?()
             }
         }
@@ -389,7 +389,7 @@ class APINetworkManager {
 } // Class End
 
 
-// MARK: - String to Date Extension
+// MARK: String to Date Extension
 extension Date {
     func convertStringToDate(dateString: String) -> String {
         let formatter = DateFormatter()
@@ -401,20 +401,19 @@ extension Date {
     }
 }
 
-// MARK: - String to Image Extension
-// Is used for both Home and Detail Colleciton Views
+
+// MARK: String to Image Extension
 extension UIImageView {
     func convertUrlToImage(with url: String) -> UIImage {
         DispatchQueue.main.async {
             self.image = nil
         }
-        guard let url = URL(string: url) else { print("Not Valid URL"); return UIImage() }
+        guard let url = URL(string: url) else { return UIImage() }
         do {
             let data = try Data(contentsOf: url)
             let image: UIImage = UIImage(data: data)!
             return image
         } catch let error { print(error) }
-        // If it doesn't work then this will return
         return UIImage(named: "ImageNotFound")!
     }
 }

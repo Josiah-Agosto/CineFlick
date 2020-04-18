@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class DetailView: UIView {
-    // MARK: - UI Components
+    // MARK: UI Components
     public lazy var castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
@@ -27,12 +27,13 @@ class DetailView: UIView {
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.backgroundColor = UIColor.black
         scroll.showsVerticalScrollIndicator = false
+        scroll.backgroundColor = UIColor(named: "BackgroundColors")
         return scroll
     }()
     public lazy var contentHolder: UIView = {
         let view = UIView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor(named: "BackgroundColors")
         return view
     }()
     // Backdrop Image
@@ -69,7 +70,7 @@ class DetailView: UIView {
         let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Title:"
-        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.textColor = UIColor(named: "LabelColors")
         placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
@@ -81,7 +82,7 @@ class DetailView: UIView {
         let title = UILabel(frame: .zero)
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = "Title"
-        title.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        title.textColor = UIColor(named: "LabelColors")
         title.backgroundColor = UIColor.clear
         title.textAlignment = NSTextAlignment.left
         title.font = UIFont(name: "AvenirNext-Medium", size: 25)
@@ -93,7 +94,7 @@ class DetailView: UIView {
         let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Release Date:"
-        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.textColor = UIColor(named: "LabelColors")
         placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
@@ -105,7 +106,7 @@ class DetailView: UIView {
         let releaseTitle = UILabel(frame: .zero)
         releaseTitle.translatesAutoresizingMaskIntoConstraints = false
         releaseTitle.text = "Release"
-        releaseTitle.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        releaseTitle.textColor = UIColor(named: "LabelColors")
         releaseTitle.backgroundColor = UIColor.clear
         releaseTitle.textAlignment = NSTextAlignment.left
         releaseTitle.font = UIFont(name: "AvenirNext-Medium", size: 23)
@@ -117,7 +118,7 @@ class DetailView: UIView {
         let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Overview:"
-        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.textColor = UIColor(named: "LabelColors")
         placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
@@ -129,10 +130,9 @@ class DetailView: UIView {
         let overviewTitle = UILabel(frame: .zero)
         overviewTitle.translatesAutoresizingMaskIntoConstraints = false
         overviewTitle.text = "Overview"
-        overviewTitle.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        overviewTitle.textColor = UIColor(named: "LabelColors")
         overviewTitle.backgroundColor = UIColor.clear
         overviewTitle.textAlignment = NSTextAlignment.left
-        overviewTitle.textColor = UIColor.white
         overviewTitle.font = UIFont(name: "AvenirNext-Medium", size: 23)
         overviewTitle.numberOfLines = 0
         overviewTitle.clipsToBounds = true
@@ -143,7 +143,7 @@ class DetailView: UIView {
         let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Runtime:"
-        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.textColor = UIColor(named: "LabelColors")
         placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
@@ -155,7 +155,7 @@ class DetailView: UIView {
         let runtimeTitle = UILabel(frame: .zero)
         runtimeTitle.translatesAutoresizingMaskIntoConstraints = false
         runtimeTitle.text = "Runtime"
-        runtimeTitle.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        runtimeTitle.textColor = UIColor(named: "LabelColors")
         runtimeTitle.backgroundColor = UIColor.clear
         runtimeTitle.textAlignment = NSTextAlignment.left
         runtimeTitle.font = UIFont(name: "AvenirNext-Medium", size: 20)
@@ -167,7 +167,7 @@ class DetailView: UIView {
         let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Cast:"
-        placeholder.textColor = UIColor(red: 247 / 255, green: 247 / 255, blue: 247 / 255, alpha: 1.0)
+        placeholder.textColor = UIColor(named: "LabelColors")
         placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left
         placeholder.numberOfLines = 1
@@ -184,7 +184,7 @@ class DetailView: UIView {
         setup()
     }
     
-    // MARK: - Setup
+    // MARK: Setup
     private func setup() {
         // Cast Collection View
         castDelegate = CastCollectionViewDelegate()

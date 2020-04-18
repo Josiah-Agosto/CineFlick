@@ -1,5 +1,5 @@
 //
-//  HomeScreenMainDelegate.swift
+//  MainScreenView Extension
 //  CinemApp
 //
 //  Created by Josiah Agosto on 3/10/20.

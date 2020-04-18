@@ -1,83 +1,75 @@
 //
-//  PopularMovieCellsCell.swift
+//  PopularMovieCellsView.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 9/1/19.
 //  Copyright © 2019 Josiah Agosto. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-// Inner Cell
 class PopularMovieCellsView: UICollectionViewCell {
+    static let reuseIdentifier = "PopularCellsCell"
     // Movie Title
-    public var movieTitle: UILabel = {
-        let label = UILabel(frame: CGRect(x: 0, y: 225, width: 150, height: 50))
-        // Label Text
+    public lazy var movieTitle: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Popular"
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.left
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "LabelColors")
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
         return label
     }()
-    // Rating Image
-    public var movieRatingImage: UIImageView = {
-        let ratingImage = UIImageView(frame: CGRect(x: 0, y: 275, width: 15, height: 15))
-        ratingImage.layer.cornerRadius = 5
-        ratingImage.backgroundColor = UIColor.white
-        return ratingImage
-    }()
     // Poster Image
-    public var moviePosterImage: UIImageView = {
-        let posterImage = UIImageView(frame: CGRect(x: 0, y: 0, width: 150, height: 225))
+    public lazy var moviePosterImage: UIImageView = {
+        let posterImage = UIImageView(frame: .zero)
+        posterImage.translatesAutoresizingMaskIntoConstraints = false
         posterImage.layer.cornerRadius = 10
         posterImage.clipsToBounds = true
         posterImage.contentMode = .scaleAspectFill
         return posterImage
     }()
     // Movie Rating
-    public var movieRating: UILabel = {
-        let rating = UILabel(frame: CGRect(x: 28, y: 275, width: 100, height: 15))
-        // Rating Text
-        rating.text = "/10"
+    public lazy var movieRating: UILabel = {
+        let rating = UILabel(frame: .zero)
+        rating.translatesAutoresizingMaskIntoConstraints = false
+        rating.text = "0%"
         rating.numberOfLines = 1
         rating.textAlignment = NSTextAlignment.left
-        rating.textColor = UIColor.white
+        rating.textColor = UIColor(named: "LabelColors")
         rating.font = UIFont(name: "Avenir-Light", size: 18)
         return rating
     }()
     
-    // MARK: - For Detail View
-    public var backdropImage: UIImageView = {
+    // MARK: Used as a Reference
+    public lazy var backdropImage: UIImageView = {
         let backdrop = UIImageView()
         backdrop.layer.cornerRadius = 5
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill
         return backdrop
     }()
-    public var id: UILabel = {
+    public lazy var id: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    public var overview: UILabel = {
+    public lazy var overview: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    public var runtime: UILabel = {
+    public lazy var runtime: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    public var releaseDate: UILabel = {
+    public lazy var releaseDate: UILabel = {
         let backdrop = UILabel()
         backdrop.text = ""
         return backdrop
     }()
-    static let reuseIdentifier = "PopularCellsCell"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -87,10 +79,29 @@ class PopularMovieCellsView: UICollectionViewCell {
     
     private func setup() {
         backgroundColor = UIColor.clear
-        addSubview(movieRatingImage)
         addSubview(movieRating)
         addSubview(movieTitle)
         addSubview(moviePosterImage)
+        constraints()
+    }
+    
+    
+    private func constraints() {
+        // Movie Title
+        movieTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        movieTitle.topAnchor.constraint(equalTo: topAnchor, constant: 225).isActive = true
+        movieTitle.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        movieTitle.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        // Movie Poster Image
+        moviePosterImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        moviePosterImage.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        moviePosterImage.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        moviePosterImage.heightAnchor.constraint(equalToConstant: 225).isActive = true
+        // Movie Rating
+        movieRating.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        movieRating.topAnchor.constraint(equalTo: topAnchor, constant: 275).isActive = true
+        movieRating.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        movieRating.heightAnchor.constraint(equalToConstant: 15).isActive = true
     }
     
     

@@ -9,44 +9,61 @@
 import UIKit
 import Foundation
 
-class LaunchScreenController: UIViewController, LaunchScreenProtocol {
+class LaunchScreenController: UIViewController {
     // Properties
-    public var launchView: LaunchScreenView!
+    public lazy var launchView = LaunchScreenView()
+    private lazy var homeController = HomeScreenController()
+    private lazy var internetNetwork = InternetNetwork()
+    private var apiManager = APINetworkManager.shared
+    // Delegates
+    public weak var launchScreenDelegate: LaunchScreenProtocol?
         
     override func loadView() {
-        launchView = LaunchScreenView()
         view = launchView
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        internetNetwork.checkForInternetConnectivity()
     }
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        apiLoader()
     }
     
-    
+    // MARK: Private Functions
     private func setup() {
+        // Delegate
+        self.launchScreenDelegate = homeController
+        // View
         navigationItem.hidesBackButton = true
         launchView.dataActivityIndicator.startAnimating()
     }
 
-    // MARK: Delegate Function
-    func isLoadingFinished(_ dataLoaded: Bool) {
-        if dataLoaded == true {
-            DispatchQueue.main.async {
-                self.launchView.dataActivityIndicator.stopAnimating()
-                self.navigationController?.popToRootViewController(animated: false)
+    // MARK: API Loading
+    private func apiLoader() {
+        apiManager.makeApiRequest { (result) in
+            switch result {
+            case .success():
+                self.launchScreenDelegate?.isLoadingFinished(true)
+                self.moveBackToHomeController()
+                launchScreenLoaded.set(true, forKey: "LaunchScreenLoaded")
+            case .failure(let error):
+                NotificationController.displayError(message: error.localizedDescription)
             }
-        } else {
-            errorAlertController()
+        } // Request End
+    }
+    
+    
+    private func moveBackToHomeController() {
+        DispatchQueue.main.async {
+            self.navigationController?.pushViewController(self.homeController, animated: false)
+            self.navigationController?.setViewControllers([self.homeController], animated: false)
         }
     }
     
-    
-    private func errorAlertController() {
-        let alertController = UIAlertController(title: "Error accessing API!", message: "Please, try again.", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Done", style: .default, handler: { (action) in
-            print("I don't know")
-        }))
-    }
 }

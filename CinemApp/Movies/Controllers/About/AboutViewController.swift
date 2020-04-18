@@ -34,6 +34,7 @@ class AboutViewController: UIViewController {
         title = "About the Developer"
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
         // Category Button
         leftBarButtonItemSetup()
         // Blur Effect View
@@ -59,7 +60,6 @@ class AboutViewController: UIViewController {
     
     private func blurEffectTransition() {
         blurEffectView.isHidden = blurIsHidden
-        print(blurIsHidden)
     }
     
     // MARK: Private Functions

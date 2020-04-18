@@ -11,7 +11,7 @@ import Foundation
 struct MovieDetail: Decodable {
     let adult: Bool?
     let backdrop_path: String?
-    let belongs_to_collection: object? // Error here
+    let belongs_to_collection: object?
     let budget: Int?
     let genres: [Genres]?
     let homepage: String?

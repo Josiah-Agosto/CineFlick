@@ -1,5 +1,5 @@
 //
-//  AboutController.swift
+//  AboutView.swift
 //  CinemApp
 //
 //  Created by Josiah Agosto on 10/2/19.
@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 
-// TODO: Add Credits for MovieDatabase Label
 class AboutView: UIView {
     // Creator Label
     public lazy var creatorLabel: UILabel = {
@@ -18,7 +17,7 @@ class AboutView: UIView {
         label.text = "Creator:"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext-Bold", size: 20)
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "LabelColors")
         return label
     }()
     // Creator
@@ -28,7 +27,7 @@ class AboutView: UIView {
         label.text = "Josiah Agosto"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext", size: 16)
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "LabelColors")
         return label
     }()
     // GitHub Label
@@ -38,7 +37,7 @@ class AboutView: UIView {
         label.text = "Github:"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext-Bold", size: 20)
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "LabelColors")
         return label
     }()
     // Github Name
@@ -48,7 +47,7 @@ class AboutView: UIView {
         label.text = "UnknownEncrypter"
         label.textAlignment = NSTextAlignment.left
         label.font = UIFont(name: "AvenirNext", size: 16)
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "LabelColors")
         return label
     }()
     // Credits Logo
@@ -67,7 +66,7 @@ class AboutView: UIView {
         label.text = "This product uses the TMDb API but is not endorsed or certified by TMDb.\n To learn more go to https://www.themoviedb.org/."
         label.font = UIFont(name: "Avenir-Medium", size: 13)
         label.numberOfLines = 0
-        label.textColor = UIColor.white
+        label.textColor = UIColor(named: "LabelColors")
         label.textAlignment = .center
         return label
     }()
@@ -80,7 +79,7 @@ class AboutView: UIView {
     
     private func setup() {
         // View
-        backgroundColor = UIColor(red: 41 / 255, green: 42 / 255, blue: 47 / 255, alpha: 1.0)
+        backgroundColor = UIColor(named: "BackgroundColors")
         // Subviews
         addSubview(creatorLabel)
         addSubview(creator)
