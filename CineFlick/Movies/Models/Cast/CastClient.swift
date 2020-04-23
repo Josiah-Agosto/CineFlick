@@ -16,7 +16,7 @@ class CastClient: CastApi {
     }
     
     convenience init() {
-        self.init(configuration: .default)
+        self.init(configuration: .ephemeral)
     }
     
     func castRequest(with id: String, completion: @escaping (Result<MovieCastModel?, APIError>) -> Void) {

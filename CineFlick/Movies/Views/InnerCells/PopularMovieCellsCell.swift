@@ -22,8 +22,8 @@ class PopularMovieCellsView: UICollectionViewCell {
         return label
     }()
     // Poster Image
-    public lazy var moviePosterImage: UIImageView = {
-        let posterImage = UIImageView(frame: .zero)
+    public lazy var moviePosterImage: CustomImageView = {
+        let posterImage = CustomImageView(frame: .zero)
         posterImage.translatesAutoresizingMaskIntoConstraints = false
         posterImage.layer.cornerRadius = 10
         posterImage.clipsToBounds = true
@@ -43,8 +43,8 @@ class PopularMovieCellsView: UICollectionViewCell {
     }()
     
     // MARK: Used as a Reference
-    public lazy var backdropImage: UIImageView = {
-        let backdrop = UIImageView()
+    public lazy var backdropImage: CustomImageView = {
+        let backdrop = CustomImageView()
         backdrop.layer.cornerRadius = 5
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill

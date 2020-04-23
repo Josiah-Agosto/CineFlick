@@ -22,8 +22,8 @@ class UpcomingCellsView: UICollectionViewCell {
         return label
     }()
     // Image
-    public lazy var movieImage: UIImageView = {
-        let image = UIImageView(frame: .zero)
+    public lazy var movieImage: CustomImageView = {
+        let image = CustomImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.layer.cornerRadius = 10
         image.clipsToBounds = true
@@ -42,8 +42,8 @@ class UpcomingCellsView: UICollectionViewCell {
     }()
     
     // MARK: Used as a Reference
-    public lazy var backdropImage: UIImageView = {
-        let backdrop = UIImageView()
+    public lazy var backdropImage: CustomImageView = {
+        let backdrop = CustomImageView()
         backdrop.layer.cornerRadius = 5
         backdrop.clipsToBounds = true
         backdrop.contentMode = .scaleAspectFill

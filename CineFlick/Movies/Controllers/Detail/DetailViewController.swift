@@ -12,14 +12,21 @@ import UIKit
 class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     // References
     public lazy var detailView = DetailView()
-    public var detailManager = DetailNetworkManager.shared
+    public lazy var detailManager = DetailNetworkManager.shared
     public lazy var internetNetwork = InternetNetwork()
     // Movie Id Delegate Property
     var movieId: String = ""
     var movieName: String = ""
+    var selectedBackdropUrl: String = ""
     
     override func loadView() {
         view = detailView
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        fetchRequest()
     }
     
     
@@ -27,7 +34,6 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         super.viewDidAppear(animated)
         internetNetwork.checkForInternetConnectivity()
         detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 185)
-        fetchRequest()
         addMovieTitleToNavigationTitle()
     }
     
@@ -54,6 +60,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         detailManager.detailCast(movieId) { (result) in
             switch result {
             case .success():
+                self.setAsynchronousImage()
                 DispatchQueue.main.async {
                     self.detailView.castCollectionView.reloadData()
                 }
@@ -61,6 +68,11 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
                 NotificationController.displayError(message: error.localizedDescription)
             }
         }
+    }
+    
+    
+    private func setAsynchronousImage() {
+        detailView.backdropImage.asynchronouslyLoadImage(with: selectedBackdropUrl)
     }
 
 }

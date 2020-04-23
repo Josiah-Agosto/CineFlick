@@ -55,7 +55,7 @@ class LaunchScreenController: UIViewController {
             case .failure(let error):
                 NotificationController.displayError(message: error.localizedDescription)
             }
-        } // Request End
+        }
     }
     
     

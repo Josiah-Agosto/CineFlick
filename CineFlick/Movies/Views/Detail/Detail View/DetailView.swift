@@ -37,8 +37,8 @@ class DetailView: UIView {
         return view
     }()
     // Backdrop Image
-    public lazy var backdropImage: UIImageView = {
-        let backdrop = UIImageView(frame: .zero)
+    public lazy var backdropImage: CustomImageView = {
+        let backdrop = CustomImageView(frame: .zero)
         backdrop.translatesAutoresizingMaskIntoConstraints = false
         backdrop.contentMode = .scaleAspectFill
         backdrop.backgroundColor = UIColor.clear
@@ -166,7 +166,7 @@ class DetailView: UIView {
     public lazy var castPlaceholder: UILabel = {
         let placeholder = UILabel(frame: .zero)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
-        placeholder.text = "Cast:"
+        placeholder.text = "Top Billed Cast:"
         placeholder.textColor = UIColor(named: "LabelColors")
         placeholder.backgroundColor = UIColor.clear
         placeholder.textAlignment = NSTextAlignment.left

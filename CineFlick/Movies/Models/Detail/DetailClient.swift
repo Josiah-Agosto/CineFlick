@@ -16,7 +16,7 @@ class DetailClient: DetailApi {
     }
     
     convenience init() {
-        self.init(configuration: .default)
+        self.init(configuration: .ephemeral)
     }
     
     func detailRequest(with id: String, completion: @escaping (Result<MovieDetail?, APIError>) -> Void) {

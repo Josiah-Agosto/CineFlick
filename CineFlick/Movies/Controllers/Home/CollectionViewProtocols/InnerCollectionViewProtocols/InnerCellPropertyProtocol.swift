@@ -17,4 +17,5 @@ protocol InnerSelectedCellProtocol: class {
 protocol InnerSelectedIdProtocol: class {
     var movieId: String { get set }
     var movieName: String { get set }
+    var selectedBackdropUrl: String { get set }
 }

@@ -36,7 +36,8 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CastCollectionViewCell
         cell.name.text = name[safe: indexPath.row] ?? "Not Found"
         cell.characterName.text = charName[safe: indexPath.row] ?? "Not Found"
-        cell.person.image = profileImage[safe: indexPath.row] ?? UIImage(named: "ImageNotFound")
+        let personImages = detailController.detailManager.fullPath[indexPath.row]
+        cell.person.asynchronouslyLoadImage(with: personImages)
         return cell
     }
 

@@ -1,4 +1,4 @@
-# CinemApp
+# CineFlick
 ### View Popular, Now Playing, Upcoming and Top Rated Movies in the U.S with a clean and simple interface.*
 
 # Home

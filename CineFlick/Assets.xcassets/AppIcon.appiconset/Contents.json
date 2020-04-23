@@ -11,7 +11,6 @@
       "size" : "20x20"
     },
     {
-      "filename" : "Closed Clapboard-3.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
@@ -22,7 +21,6 @@
       "size" : "29x29"
     },
     {
-      "filename" : "Closed Clapboard-2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
@@ -33,7 +31,6 @@
       "size" : "40x40"
     },
     {
-      "filename" : "Closed Clapboard-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
@@ -44,7 +41,6 @@
       "size" : "60x60"
     },
     {
-      "filename" : "Closed Clapboard Resized.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

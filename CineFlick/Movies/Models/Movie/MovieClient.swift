@@ -16,14 +16,14 @@ class MovieClient: APIClient {
     }
     
     convenience init() {
-        self.init(configuration: .default)
+        self.init(configuration: .ephemeral)
     }
     
     func getFeed(from movieSectionType: MovieSection, completion: @escaping (Result<MovieModelWithDates?, APIError>) -> Void) {
         let endpoint = movieSectionType
         let result = endpoint.request
         fetch(with: result, decode: { (json) -> MovieModelWithDates? in
-            guard let movieModel = json as? MovieModelWithDates else { return nil }
+            guard let movieModel = json as? MovieModelWithDates else { print("Error here!"); return nil }
             return movieModel
         }, completion: completion)
     }

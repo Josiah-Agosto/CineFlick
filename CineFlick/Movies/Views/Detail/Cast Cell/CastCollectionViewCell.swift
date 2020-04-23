@@ -11,8 +11,8 @@ import UIKit
 class CastCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "cell"
     // MARK: Properties
-    public lazy var person: UIImageView = {
-        let image = UIImageView(frame: .zero)
+    public lazy var person: CustomImageView = {
+        let image = CustomImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true

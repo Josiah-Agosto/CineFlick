@@ -15,7 +15,7 @@ class ImageClient: ImageAPIClient {
     }
     
     convenience init() {
-        self.init(configuration: .default)
+        self.init(configuration: .ephemeral)
     }
     
     

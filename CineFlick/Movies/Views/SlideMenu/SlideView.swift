@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CategoryView: UIView {
+class SlideView: UIView {
     // Properties
     // Title
     public lazy var categoryTitle: UILabel = {

@@ -10,7 +10,7 @@ import UIKit
 
 class SlideViewController: UIViewController {
     // Properties
-    public lazy var slideView = CategoryView()
+    public lazy var slideView = SlideView()
     private lazy var homeController = HomeScreenController()
     private lazy var aboutController = AboutViewController()
     private lazy var slideMenuHelper = SlideMenuHelper()
