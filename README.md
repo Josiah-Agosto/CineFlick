@@ -5,18 +5,18 @@
 ### Entirely Programmatically Made, No CocoaPods, Light / Dark Mode Accessibility, Loading Splash Screen, Image Caching, Custom Slide Menu, Movie Database API, Multi-Threading, Unit Testing.
 
 # Home
-### Light Mode
-![HomeLightMode](https://user-images.githubusercontent.com/22554016/80065124-9d630900-8507-11ea-9f35-5e9812134c33.png)
-### Dark Mode
-![HomeDarkMode](https://user-images.githubusercontent.com/22554016/80065139-a3f18080-8507-11ea-9784-9f2e29259050.png)
+![Home Screen](https://user-images.githubusercontent.com/22554016/80270596-7af7f980-8687-11ea-8c40-ebf7d487d0ce.png)
+
 # Movie Info
-![DetailViewDark](https://user-images.githubusercontent.com/22554016/80065153-a8b63480-8507-11ea-9ceb-f0e50db2212e.png)
-![DetailCastDark](https://user-images.githubusercontent.com/22554016/80065158-a9e76180-8507-11ea-91be-6d03b7c191f6.png)
+![Detail View 1](https://user-images.githubusercontent.com/22554016/80270593-7a5f6300-8687-11ea-9c98-8967742fc3b6.png)
+![Detail View 2](https://user-images.githubusercontent.com/22554016/80270594-7af7f980-8687-11ea-874f-1efcf8c7b9e1.png)
+
 # Slide Menu
-![SlideMenu](https://user-images.githubusercontent.com/22554016/80065161-abb12500-8507-11ea-8180-6c28a8e65277.png)
 
-# About The Developer
-![AboutView](https://user-images.githubusercontent.com/22554016/80065165-ace25200-8507-11ea-9b83-324f2616cdf7.png)
+![Slide Menu](https://user-images.githubusercontent.com/22554016/80270597-7b909000-8687-11ea-812e-6694c6c32b43.png)
 
+# The Developer
+
+![About](https://user-images.githubusercontent.com/22554016/80270592-7a5f6300-8687-11ea-8be2-efd5126caa8f.png)
 
 * iPhone Only
