@@ -12,7 +12,7 @@ import UIKit
 class NotificationController {
     // MARK: - Properties
     static let animationDuration = 0.5
-    static let bannerAppearanceDuration: TimeInterval = 6.0
+    static let bannerAppearanceDuration: TimeInterval = 8.0
     static let slideMenuHelper = SlideMenuHelper()
     static let notificationView = NotificationView()
     
@@ -32,7 +32,7 @@ class NotificationController {
         NSLayoutConstraint.activate([bannerBottomConstraint])
         // Appearing
         UIView.animate(withDuration: animationDuration) {
-            bannerBottomConstraint.constant = -40
+            bannerBottomConstraint.constant = -35
             screenSuperView.layoutIfNeeded()
         }
         // On Disappearance

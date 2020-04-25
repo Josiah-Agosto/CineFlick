@@ -95,22 +95,22 @@ class AboutView: UIView {
     private func constraints() {
         // Creator Label
         creatorLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        creatorLabel.topAnchor.constraint(equalTo: topAnchor, constant: 95).isActive = true
+        creatorLabel.topAnchor.constraint(equalTo: topAnchor, constant: 80).isActive = true
         creatorLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         creatorLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         // Creator
         creator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        creator.topAnchor.constraint(equalTo: topAnchor, constant: 140).isActive = true
+        creator.topAnchor.constraint(equalTo: creatorLabel.bottomAnchor, constant: 10).isActive = true
         creator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         creator.heightAnchor.constraint(equalToConstant: 30).isActive = true
         // Github Label
         gitHubLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        gitHubLabel.topAnchor.constraint(equalTo: topAnchor, constant: 180).isActive = true
+        gitHubLabel.topAnchor.constraint(equalTo: creator.bottomAnchor, constant: 10).isActive = true
         gitHubLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         gitHubLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
         // Github Name
         gitHubName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        gitHubName.topAnchor.constraint(equalTo: topAnchor, constant: 220).isActive = true
+        gitHubName.topAnchor.constraint(equalTo: gitHubLabel.bottomAnchor, constant: 10).isActive = true
         gitHubName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         gitHubName.heightAnchor.constraint(equalToConstant: 30).isActive = true
         // Credit Image View
