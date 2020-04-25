@@ -154,7 +154,6 @@
 		BDC24927244EBE7C00A744C8 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		BDC2492B2451746F00A744C8 /* PrivacyPolicyWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyWebView.swift; sourceTree = "<group>"; };
 		BDC2492D245174A200A744C8 /* PrivacyPolicyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyController.swift; sourceTree = "<group>"; };
-		BDC24930245221AE00A744C8 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		BDDD9883232C9B1A00A57F49 /* InnerCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		BDE381862442D2B500BA7237 /* SlideMenuHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideMenuHelperProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -183,7 +182,6 @@
 				BD10873822AF3B6600EBA1B9 /* CineFlick */,
 				BD35E57F242929790041AAA3 /* CineFlickTests */,
 				BD10873722AF3B6600EBA1B9 /* Products */,
-				BDC2492F245221AD00A744C8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -644,14 +642,6 @@
 				BDC2492D245174A200A744C8 /* PrivacyPolicyController.swift */,
 			);
 			path = PrivacyPolicyController;
-			sourceTree = "<group>";
-		};
-		BDC2492F245221AD00A744C8 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BDC24930245221AE00A744C8 /* WebKit.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		BDE381852442D27B00BA7237 /* Helpers */ = {
