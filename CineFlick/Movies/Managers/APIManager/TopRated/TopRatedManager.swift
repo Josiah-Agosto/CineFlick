@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class TopRatedManager {
+final class TopRatedManager {
     // References / Properties
     private lazy var manager = APINetworkManager.shared
-    // MARK: Main Request
+    // MARK: - Main Request
     public func fetchTopRatedFeed(if error: @escaping(Result<Void, APIError>) -> Void) {
         manager.mainGroup.enter()
         manager.client.getFeed(from: .topRated) { (result) in
@@ -50,35 +50,33 @@ class TopRatedManager {
         }
     }
     
-    // MARK: Poster Urls
+    // MARK: - Poster Urls
     public func createTopRatedPosterUrls() {
         manager.topRatedFilePaths.forEach({ (paths) in
             self.manager.topRatedImagesURLs.append("\(self.manager.secureBaseUrl)\(self.manager.imageSize)\(paths)")
         })
     }
     
-    // MARK: Backdrop Urls
+    // MARK: - Backdrop Urls
     public func createTopRatedBackdropUrls() {
         manager.topRatedBackdropPaths.forEach({ (backdrops) in
             self.manager.topRatedBackdropURLs.append("\(self.manager.secureBaseUrl)\(self.manager.backdropSize)\(backdrops)")
         })
     }
     
-    // MARK: Runtime Request
-    public func getTopRatedRuntime(if error: @escaping(Result<Void, APIError>) -> Void) {
-        manager.topRatedIds.forEach({ (ids) in
-            self.manager.detailClient = DetailClient()
-            self.manager.detailClient.detailRequest(with: ids, completion: { (result) in
-                switch result {
-                case .success(let detailResult):
-                    guard let topRatedRuntime = detailResult?.runtime else { return }
-                    let runtime = "\(topRatedRuntime)m"
-                    self.manager.topRatedRuntime.append(runtime)
-                case .failure(_):
-                    error(.failure(.requestFailed))
-                }
-            })
-        })
+    // MARK: - Removes all Elements
+    public func removeAllTopRatedElements() {
+        manager.topRatedIds.removeAll()
+        manager.topRatedImages.removeAll()
+        manager.topRatedTitles.removeAll()
+        manager.topRatedRatings.removeAll()
+        manager.topRatedOverview.removeAll()
+        manager.topRatedReleases.removeAll()
+        manager.topRatedFilePaths.removeAll()
+        manager.topRatedImagesURLs.removeAll()
+        manager.topRatedBackdropURLs.removeAll()
+        manager.topRatedBackdropPaths.removeAll()
+        manager.topRatedBackdropImages.removeAll()
     }
     
 }

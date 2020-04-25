@@ -41,7 +41,7 @@ class UpcomingCellsView: UICollectionViewCell {
         return label
     }()
     
-    // MARK: Used as a Reference
+    // MARK: - Used as a Reference
     public lazy var backdropImage: CustomImageView = {
         let backdrop = CustomImageView()
         backdrop.layer.cornerRadius = 5

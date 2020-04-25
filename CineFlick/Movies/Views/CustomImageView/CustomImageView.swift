@@ -9,18 +9,22 @@
 import Foundation
 import UIKit
 
-class CustomImageView: UIImageView {
+final class CustomImageView: UIImageView {
     private let imageCache = NSCache<NSString, UIImage>()
     private var imageUrlString: String?
     
     public func asynchronouslyLoadImage(with url: String) {
-        imageUrlString = url
-        let nativeString = NSString(string: url)
-        self.image = UIImage(named: "ImageNotFound")!
-        if let cachedImage = imageCache.object(forKey: nativeString) {
-            self.image = cachedImage
-        }
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .default).async {
+            self.imageUrlString = url
+            let nativeString = NSString(string: url)
+            DispatchQueue.main.async {
+                self.image = UIImage(named: "ImageNotFound")!
+            }
+            if let cachedImage = self.imageCache.object(forKey: nativeString) {
+                DispatchQueue.main.async {
+                    self.image = cachedImage
+                }
+            }
             do {
                 guard let urlUrl = URL(string: url) else { return }
                 let data = try Data(contentsOf: urlUrl)

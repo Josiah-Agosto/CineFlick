@@ -26,27 +26,15 @@ extension MainScreenView: UICollectionViewDataSource {
         if indexPath.section == 0 {
             cell.movieEnum = .popular
             cell.apiManager = mainController.apiManager
-            DispatchQueue.main.async {
-                cell.innerCollectionView.reloadData()
-            }
         } else if indexPath.section == 1 {
             cell.movieEnum = .nowPlaying
             cell.apiManager = mainController.apiManager
-            DispatchQueue.main.async {
-                cell.innerCollectionView.reloadData()
-            }
         } else if indexPath.section == 2 {
             cell.movieEnum = .upcoming
             cell.apiManager = mainController.apiManager
-            DispatchQueue.main.async {
-                cell.innerCollectionView.reloadData()
-            }
         } else {
             cell.movieEnum = .topRated
             cell.apiManager = mainController.apiManager
-            DispatchQueue.main.async {
-                cell.innerCollectionView.reloadData()
-            }
         }
         return cell
     }

@@ -16,7 +16,6 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
     var castCountForSection: Int = 0
     var name: [String] = []
     var charName: [String] = []
-    var profileImage: [UIImage] = []
     
     init(detailController: DetailViewController) {
         self.detailController = detailController
@@ -33,7 +32,7 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CastCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.reuseIdentifier, for: indexPath) as! CastCollectionViewCell
         cell.name.text = name[safe: indexPath.row] ?? "Not Found"
         cell.characterName.text = charName[safe: indexPath.row] ?? "Not Found"
         let personImages = detailController.detailManager.fullPath[indexPath.row]

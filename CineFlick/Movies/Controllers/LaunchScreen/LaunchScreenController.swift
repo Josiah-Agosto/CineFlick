@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class LaunchScreenController: UIViewController {
+final class LaunchScreenController: UIViewController {
     // Properties
     public lazy var launchView = LaunchScreenView()
     private lazy var homeController = HomeScreenController()
@@ -35,7 +35,7 @@ class LaunchScreenController: UIViewController {
         apiLoader()
     }
     
-    // MARK: Private Functions
+    // MARK: - Private Functions
     private func setup() {
         // Delegate
         self.launchScreenDelegate = homeController
@@ -44,14 +44,14 @@ class LaunchScreenController: UIViewController {
         launchView.dataActivityIndicator.startAnimating()
     }
 
-    // MARK: API Loading
+    // MARK: - API Loading
     private func apiLoader() {
         apiManager.makeApiRequest { (result) in
             switch result {
             case .success():
                 self.launchScreenDelegate?.isLoadingFinished(true)
                 self.moveBackToHomeController()
-                launchScreenLoaded.set(true, forKey: "LaunchScreenLoaded")
+                Constants.launchScreenLoaded.set(true, forKey: "LaunchScreenLoaded")
             case .failure(let error):
                 NotificationController.displayError(message: error.localizedDescription)
             }

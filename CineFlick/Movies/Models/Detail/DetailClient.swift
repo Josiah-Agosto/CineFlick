@@ -20,7 +20,7 @@ class DetailClient: DetailApi {
     }
     
     func detailRequest(with id: String, completion: @escaping (Result<MovieDetail?, APIError>) -> Void) {
-        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(apiKey)&language=en-US")!
+        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)&language=en-US")!
         getDetail(with: url, of: id, decode: { (json) -> MovieDetail? in
             guard let detail = json as? MovieDetail else { return nil }
             return detail

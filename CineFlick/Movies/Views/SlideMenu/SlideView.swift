@@ -15,7 +15,7 @@ class SlideView: UIView {
         let title = UILabel(frame: .zero)
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = "Categories"
-        title.textColor = UIColor.white
+        title.textColor = UIColor(named: "LabelColors")
         title.textAlignment = NSTextAlignment.left
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 32)
         return title
@@ -25,7 +25,7 @@ class SlideView: UIView {
         let button = UIButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Movies", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(UIColor(named: "LabelColors"), for: .normal)
         button.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 18)
         button.contentHorizontalAlignment = .leading
         return button
@@ -35,7 +35,7 @@ class SlideView: UIView {
         let button = UIButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("About", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(UIColor(named: "LabelColors"), for: .normal)
         button.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 18)
         button.contentHorizontalAlignment = .leading
         return button
@@ -46,7 +46,7 @@ class SlideView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 13.0, *) {
             let movieImage = UIImage(systemName: "film")!
-            let movieImageWithColor = movieImage.withTintColor(UIColor.white, renderingMode: .alwaysOriginal)
+            let movieImageWithColor = movieImage.withTintColor(UIColor(named: "LabelColors")!, renderingMode: .alwaysOriginal)
             imageView.image = movieImageWithColor
         } else {
             imageView.image = UIImage(named: "ImageNotFound")
@@ -60,7 +60,7 @@ class SlideView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 13.0, *) {
             let movieImage = UIImage(systemName: "gear")!
-            let movieImageWithColor = movieImage.withTintColor(UIColor.white, renderingMode: .alwaysOriginal)
+            let movieImageWithColor = movieImage.withTintColor(UIColor(named: "LabelColors")!, renderingMode: .alwaysOriginal)
             imageView.image = movieImageWithColor
         } else {
             // Fallback on earlier versions
@@ -75,10 +75,10 @@ class SlideView: UIView {
         setup()
     }
     
-    // MARK: Setup
+    // MARK: - Setup
     private func setup() {
         // View
-        backgroundColor = UIColor(red: 65/255, green: 0, blue: 0, alpha: 1.0)
+        backgroundColor = UIColor(named: "BackgroundColors")
         // Adding to View
         addSubview(categoryTitle)
         addSubview(movieButton)
@@ -89,7 +89,7 @@ class SlideView: UIView {
         configureConstraints()
     }
     
-    // MARK: Constraints
+    // MARK: - Constraints
     private func configureConstraints() {
         // Category
         categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true

@@ -10,9 +10,6 @@ import Foundation
 import UIKit
 import Network
 
-// TODO: Fix where it comes back when internet is back online
-// TODO: Also All Tests
-
 class InternetNetwork {
     static let shared = InternetNetwork()
     private var monitor: NWPathMonitor?
@@ -29,7 +26,6 @@ class InternetNetwork {
         monitor?.start(queue: queue)
         monitor?.pathUpdateHandler = { path in
             if path.status == .unsatisfied {
-                print("Error!")
                 DispatchQueue.main.async {
                     NotificationController.displayError(message: APIError.noInternetConnection.localizedDescription)
                 }

@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         // Assigning Launch Screen Loaded Already Default
-        launchScreenLoaded.set(false, forKey: "LaunchScreenLoaded")
+        Constants.launchScreenLoaded.set(false, forKey: "LaunchScreenLoaded")
         return true
     }
 

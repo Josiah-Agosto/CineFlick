@@ -10,7 +10,7 @@ import UIKit
 
 class CastCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "cell"
-    // MARK: Properties
+    // MARK: - Properties
     public lazy var person: CustomImageView = {
         let image = CustomImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false

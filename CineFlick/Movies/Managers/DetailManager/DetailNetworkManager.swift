@@ -9,37 +9,35 @@
 import Foundation
 import UIKit
 
-class DetailNetworkManager {
+final class DetailNetworkManager {
     // Properties
     static let shared = DetailNetworkManager()
     // Variables
-    private var path: [String] = []
+    private var path: [String] = [] { didSet { updater?() } }
     var fullPath: [String] = [] { didSet { updater?() } }
     // Image Variables
     private var secureUrl: String = ""
     private var sizeUrl: String = ""
-    private var imageHolder: [UIImage] = []
     // Reference
     private let imageReference = CustomImageView()
     private let castClient = CastClient()
     private let imageClient = ImageClient()
     private let group = DispatchGroup()
     private var updater: (() -> ())? = nil
-    private let operation = OperationQueue()
+    private let mainRequestOperation = DispatchQueue.global(qos: .default)
     private let finishingOperation = OperationQueue()
     // Delegate
     public weak var castPropertiesDelegate: CastDataSourceProtocol?
-    // MARK: Requests
+    // MARK: - Requests
     public func detailCast(_ id: String, completion: @escaping (Result<Void, APIError>) -> Void) -> Void {
-        mainRequest(with: id, completion: completion)
-        requestImageInfo()
+        mainRequestOperation.async {
+            self.mainRequest(with: id, completion: completion)
+            self.requestImageInfo()
+        }
         finishingOperation.addOperation {
             self.group.wait()
             for path in self.path {
                 self.fullPath.append("\(self.secureUrl)\(self.sizeUrl)\(path)")
-            }
-            for image in self.imageHolder {
-                self.castPropertiesDelegate?.profileImage.append(image)
             }
             // Notify Queue
             self.group.notify(queue: .main) {
@@ -49,11 +47,10 @@ class DetailNetworkManager {
         }
     } // Func End
     
-    // MARK: Main Request
+    // MARK: - Main Request
     private func mainRequest(with id: String, completion: @escaping(Result<Void, APIError>) -> Void) {
         group.enter()
-        print(id)
-        self.castClient.castRequest(with: id) { (result) in
+        castClient.castRequest(with: id) { (result) in
             switch result {
             case .success(let castFromResult):
                 defer { self.group.leave() }
@@ -70,7 +67,7 @@ class DetailNetworkManager {
         } // Request End
     }
     
-    // MARK: Image Request
+    // MARK: - Image Request
     private func requestImageInfo() {
         group.enter()
         self.imageClient.createImage(from: .configure, completion: { (result) in
@@ -94,11 +91,9 @@ class DetailNetworkManager {
         fullPath = []
         secureUrl = ""
         sizeUrl = ""
-        imageHolder = []
         castPropertiesDelegate?.castCountForSection = 0
         castPropertiesDelegate?.charName = []
         castPropertiesDelegate?.name = []
-        castPropertiesDelegate?.profileImage = []
     }
     
 } // Class End

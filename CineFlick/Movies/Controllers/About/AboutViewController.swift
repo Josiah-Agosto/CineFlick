@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-class AboutViewController: UIViewController {
-    // MARK: Properties / References
-    private var aboutView: AboutView!
+final class AboutViewController: UIViewController {
+    // MARK: - Properties / References
+    private lazy var aboutView = AboutView()
     private var mainViewBarItem: MainScreenView!
-    private lazy var blurEffectView = UIVisualEffectView()
     private var slideController: SlideViewController!
     private lazy var slideMenuHelper = SlideMenuHelper()
+    private lazy var privacyPolicyController = PrivacyPolicyController()
     private var blurIsHidden: Bool = true
     
     override func loadView() {
@@ -31,38 +31,41 @@ class AboutViewController: UIViewController {
     
     
     private func setup() {
-        title = "About the Developer"
+        title = "The Developer"
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
         // Category Button
-        leftBarButtonItemSetup()
+        barItemsSetup()
         // Blur Effect View
         blurEffectSetup()
     }
     
-    // MARK: Private Functions
-    private func leftBarButtonItemSetup() {
+    // MARK: - Private Functions
+    private func barItemsSetup() {
         mainViewBarItem = MainScreenView()
+        self.navigationController?.navigationBar.barTintColor = UIColor(named: "BackgroundColors")
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: mainViewBarItem.categoryImageView.image, style: .plain, target: self, action: #selector(categoryAction))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Privacy Policy", style: .plain, target: self, action: #selector(privacyPolicyAction))
+        navigationItem.rightBarButtonItem?.tintColor = UIColor.systemBlue
     }
     
     
     private func blurEffectSetup() {
-        blurEffectView.effect = aboutView.blurEffect
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        blurEffectView.isHidden = true
-        blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
-        view.insertSubview(blurEffectView, aboveSubview: view)
+        aboutView.blurEffectView.effect = aboutView.blurEffect
+        aboutView.blurEffectView.frame = view.bounds
+        aboutView.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        aboutView.blurEffectView.isHidden = true
+        aboutView.blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
+        view.insertSubview(aboutView.blurEffectView, aboveSubview: view)
     }
     
     
     private func blurEffectTransition() {
-        blurEffectView.isHidden = blurIsHidden
+        aboutView.blurEffectView.isHidden = blurIsHidden
     }
-    
-    // MARK: Private Functions
+
+    // MARK: - Private Functions
     private func homeSlideMenuLogic() {
         slideMenuHelper.isOpen.toggle()
         slideMenuHelper.shouldExpandSlideMenu(slideMenuHelper.isOpen) { (expanded) in
@@ -76,7 +79,7 @@ class AboutViewController: UIViewController {
         }
     }
     
-    // MARK: Actions
+    // MARK: - Actions
     @objc private func categoryAction() {
         homeSlideMenuLogic()
         blurEffectTransition()
@@ -88,10 +91,15 @@ class AboutViewController: UIViewController {
         blurEffectTransition()
     }
     
+    
+    @objc private func privacyPolicyAction() {
+        navigationController?.pushViewController(privacyPolicyController, animated: true)
+    }
+    
 }
 
 
-// MARK: Movie Delegate Function
+// MARK: - Movie Delegate Function
 extension AboutViewController: ChangeToMovieControllerProtocol {
     func pushMovieToController() {
         slideController = SlideViewController()

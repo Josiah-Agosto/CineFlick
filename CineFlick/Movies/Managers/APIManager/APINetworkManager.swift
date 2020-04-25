@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class APINetworkManager {
+final class APINetworkManager {
     // References / Properties
     static var shared = APINetworkManager()
     public lazy var client = MovieClient()
@@ -27,7 +27,6 @@ class APINetworkManager {
     var popularRatings: [String] = [] { didSet { updater?() } }
     var popularIds: [String] = [] { didSet { updater?() } }
     var popularOverview: [String] = [] { didSet { updater?() } }
-    var popularRuntime: [String] = [] { didSet { updater?() } }
     var popularRelease: [String] = [] { didSet { updater?() } }
     var popularBackdropImages: [UIImage] = [] { didSet { updater?() } }
     var popularImages: [UIImage] = [] { didSet { updater?() } }
@@ -41,7 +40,6 @@ class APINetworkManager {
     var nowPlayingRatings: [String] = [] { didSet { updater?() } }
     var nowPlayingIds: [String] = [] { didSet { updater?() } }
     var nowPlayingOverview: [String] = [] { didSet { updater?() } }
-    var nowPlayingRuntime: [String] = [] { didSet { updater?() } }
     var nowPlayingBackdropImages: [UIImage] = [] { didSet { updater?() } }
     var nowPlayingImages: [UIImage] = [] { didSet { updater?() } }
     var nowPlayingBackdropPaths: [String] = [] { didSet { updater?() } }
@@ -54,7 +52,6 @@ class APINetworkManager {
     var upcomingRatings: [String] = [] { didSet { updater?() } }
     var upcomingIds: [String] = [] { didSet { updater?() } }
     var upcomingOverview: [String] = [] { didSet { updater?() } }
-    var upcomingRuntime: [String] = [] { didSet { updater?() } }
     var upcomingBackdropImages: [UIImage] = [] { didSet { updater?() } }
     var upcomingImages: [UIImage] = [] { didSet { updater?() } }
     var upcomingBackdropPaths: [String] = [] { didSet { updater?() } }
@@ -67,7 +64,6 @@ class APINetworkManager {
     var topRatedRatings: [String] = [] { didSet { updater?() } }
     var topRatedIds: [String] = [] { didSet { updater?() } }
     var topRatedOverview: [String] = [] { didSet { updater?() } }
-    var topRatedRuntime: [String] = [] { didSet { updater?() } }
     var topRatedImages: [UIImage] = [] { didSet { updater?() } }
     var topRatedBackdropImages: [UIImage] = [] { didSet { updater?() } }
     var topRatedBackdropPaths: [String] = [] { didSet { updater?() } }
@@ -82,32 +78,29 @@ class APINetworkManager {
     private var updater: (()->())? = nil
     // Multi-Threading
     public let mainGroup = DispatchGroup()
-    private let mainOperation = OperationQueue()
-    private let finishingOperation = OperationQueue()
-    private let queue = DispatchQueue(label: "mainRequests")
+    private let mainOperation = DispatchQueue.global(qos: .default)
+    private let urlOperation = OperationQueue()
 
     public func makeApiRequest(completion: @escaping(Result<Void, APIError>) -> Void) {
         // Main Requests
         mainRequests(completion: completion)
-        finishingOperation.addOperation {
+        urlOperation.addOperation {
             self.mainGroup.wait()
             // Poster Urls
             self.createPosterUrls()
             // Backdrop Urls
             self.createBackdropUrls()
-            // Runtime Requests
-            self.createRuntimeRequest(completion: completion)
-            // Notify Queue
-            self.mainGroup.notify(queue: DispatchQueue.main) {
+            // Notifier
+            self.mainGroup.notify(queue: .main) {
                 completion(.success(()))
                 self.updater?()
             }
         }
     }
     
-    // MARK: Main Requests
+    // MARK: - Main Requests
     private func mainRequests(completion: @escaping(Result<Void, APIError>) -> Void) {
-        queue.async {
+        mainOperation.async {
             // Popular
             self.popularManager.fetchPopularFeed(if: completion)
             // Now Playing
@@ -121,7 +114,7 @@ class APINetworkManager {
         }
     }
     
-    // MARK: Generate Image
+    // MARK: - Generate Image
     private func generateImages(if error: @escaping(Result<Void, APIError>) -> Void) {
         mainGroup.enter()
         imageClient.createImage(from: .configure) { (result) in
@@ -141,7 +134,7 @@ class APINetworkManager {
         }
     }
     
-    // MARK: Poster Urls
+    // MARK: - Poster Urls
     private func createPosterUrls() {
         // Popular
         popularManager.createPopularPosterUrls()
@@ -153,7 +146,7 @@ class APINetworkManager {
         topRatedManager.createTopRatedPosterUrls()
     }
     
-    // MARK: Backdrop Urls
+    // MARK: - Backdrop Urls
     private func createBackdropUrls() {
         // Popular
         popularManager.createPopularBackdropUrls()
@@ -165,22 +158,46 @@ class APINetworkManager {
         topRatedManager.createTopRatedBackdropUrls()
     }
     
-    // MARK: Runtime
-    private func createRuntimeRequest(completion: @escaping(Result<Void, APIError>) -> Void) {
+    // MARK: - Remove all Elements
+    public func resetAllElements() {
         // Popular
-        popularManager.getPopularRuntime(if: completion)
+        popularManager.removeAllPopularElements()
         // Now Playing
-        nowPlayingManager.getNowPlayingRuntime(if: completion)
+        nowPlayingManager.removeAllNowPlayingElements()
         // Upcoming
-        upcomingManager.getUpcomingRuntime(if: completion)
+        upcomingManager.removeAllUpcomingElements()
         // Top Rated
-        topRatedManager.getTopRatedRuntime(if: completion)
+        topRatedManager.removeAllTopRatedElements()
+    }
+    
+    // MARK: - Runtime Request
+    public func getRuntime(with id: String, completion: @escaping((String) -> Void)) {
+        detailClient = DetailClient()
+        detailClient.detailRequest(with: id, completion: { (result) in
+            switch result {
+            case .success(let detailResult):
+                guard let popularRuntime = detailResult?.runtime else { return }
+                let convertedRuntime = self.convertMinutesToHours(with: popularRuntime)
+                completion(convertedRuntime)
+            case .failure(let error):
+                print(error)
+            }
+        })
+    }
+    
+    
+    // MARK: - Minutes to Hours Conversion
+    public func convertMinutesToHours(with minutes: Int) -> String {
+        let hours = minutes / 60
+        let convertedMinutes = minutes % 60
+        let fullTimeInString = "\(hours)h \(convertedMinutes)m"
+        return fullTimeInString
     }
     
 } // Class End
 
 
-// MARK: String to Date Extension
+// MARK: - String to Date Extension
 extension Date {
     func convertStringToDate(dateString: String) -> String {
         let formatter = DateFormatter()

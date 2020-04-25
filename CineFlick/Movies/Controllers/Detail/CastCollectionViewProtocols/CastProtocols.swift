@@ -13,5 +13,4 @@ protocol CastDataSourceProtocol: class {
     var castCountForSection: Int { get set }
     var name: [String] { get set }
     var charName: [String] { get set }
-    var profileImage: [UIImage] { get set }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SlideViewController: UIViewController {
+final class SlideViewController: UIViewController {
     // Properties
     public lazy var slideView = SlideView()
     private lazy var homeController = HomeScreenController()
@@ -39,7 +39,7 @@ class SlideViewController: UIViewController {
         self.changeToMovieControllerDelegate = aboutController
     }
     
-    // MARK: Button Actions
+    // MARK: - Button Actions
     @objc private func movieButtonAction() {
         changeToMovieControllerDelegate?.pushMovieToController()
         if slideMenuHelper.appDelegate?.navigationController?.viewControllers.first != homeController {

@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class NowPlayingManager {
+final class NowPlayingManager {
     // References / Properties
     private lazy var manager = APINetworkManager.shared
-    // MARK: Main Request
+    // MARK: - Main Request
     public func fetchNowPlayingFeed(if error: @escaping(Result<Void, APIError>) -> Void) {
         manager.mainGroup.enter()
         manager.client.getFeed(from: .nowPlaying) { (result) in
@@ -50,36 +50,33 @@ class NowPlayingManager {
         }
     }
     
-    // MARK: Poster Urls
+    // MARK: - Poster Urls
     public func createNowPlayingPosterUrls() {
         manager.nowPlayingFilePaths.forEach({ (paths) in
-            print("Should have something here, \(self.manager.secureBaseUrl)")
             self.manager.nowPlayingImagesURLs.append("\(self.manager.secureBaseUrl)\(self.manager.imageSize)\(paths)")
         })
     }
 
-    // MARK: Backdrop Urls
+    // MARK: - Backdrop Urls
     public func createNowPlayingBackdropUrls() {
         manager.nowPlayingBackdropPaths.forEach({ (backdrops) in
             self.manager.nowPlayingBackdropURLs.append("\(self.manager.secureBaseUrl)\(self.manager.backdropSize)\(backdrops)")
         })
     }
     
-    // MARK: Runtime Request
-    public func getNowPlayingRuntime(if error: @escaping(Result<Void, APIError>) -> Void) {
-        manager.nowPlayingIds.forEach({ (ids) in
-            self.manager.detailClient = DetailClient()
-            self.manager.detailClient.detailRequest(with: ids, completion: { (result) in
-                switch result {
-                case .success(let detailResult):
-                    guard let nowPlayingRuntime = detailResult?.runtime else { return }
-                    let runtime = "\(nowPlayingRuntime)m"
-                    self.manager.nowPlayingRuntime.append(runtime)
-                case .failure(_):
-                    error(.failure(.requestFailed))
-                }
-            })
-        })
+    // MARK: - Removes all Elements
+    public func removeAllNowPlayingElements() {
+        manager.nowPlayingIds.removeAll()
+        manager.nowPlayingImages.removeAll()
+        manager.nowPlayingTitles.removeAll()
+        manager.nowPlayingRatings.removeAll()
+        manager.nowPlayingReleases.removeAll()
+        manager.nowPlayingOverview.removeAll()
+        manager.nowPlayingFilePaths.removeAll()
+        manager.nowPlayingImagesURLs.removeAll()
+        manager.nowPlayingBackdropURLs.removeAll()
+        manager.nowPlayingBackdropPaths.removeAll()
+        manager.nowPlayingBackdropImages.removeAll()
     }
     
 }

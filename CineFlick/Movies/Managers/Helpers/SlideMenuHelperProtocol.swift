@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 struct SlideMenuHelper {
-    // MARK: Properties
+    // MARK: - Properties
     public let appDelegate = UIApplication.shared.delegate as? AppDelegate
     public var isOpen: Bool = false
 

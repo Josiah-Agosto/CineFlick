@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class DetailView: UIView {
-    // MARK: UI Components
+    // MARK: - UI Components
     public lazy var castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
@@ -49,7 +49,7 @@ class DetailView: UIView {
     public lazy var movieRating: UILabel = {
         let rating = UILabel(frame: .zero)
         rating.translatesAutoresizingMaskIntoConstraints = false
-        rating.text = "99"
+        rating.text = "N/A"
         rating.numberOfLines = 1
         rating.backgroundColor = UIColor.clear
         rating.textAlignment = NSTextAlignment.center
@@ -81,7 +81,7 @@ class DetailView: UIView {
     public lazy var movieTitle: UILabel = {
         let title = UILabel(frame: .zero)
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.text = "Title"
+        title.text = "N/A"
         title.textColor = UIColor(named: "LabelColors")
         title.backgroundColor = UIColor.clear
         title.textAlignment = NSTextAlignment.left
@@ -105,7 +105,7 @@ class DetailView: UIView {
     public lazy var releaseDate: UILabel = {
         let releaseTitle = UILabel(frame: .zero)
         releaseTitle.translatesAutoresizingMaskIntoConstraints = false
-        releaseTitle.text = "Release"
+        releaseTitle.text = "N/A"
         releaseTitle.textColor = UIColor(named: "LabelColors")
         releaseTitle.backgroundColor = UIColor.clear
         releaseTitle.textAlignment = NSTextAlignment.left
@@ -129,7 +129,7 @@ class DetailView: UIView {
     public lazy var overview: UILabel = {
         let overviewTitle = UILabel(frame: .zero)
         overviewTitle.translatesAutoresizingMaskIntoConstraints = false
-        overviewTitle.text = "Overview"
+        overviewTitle.text = "N/A"
         overviewTitle.textColor = UIColor(named: "LabelColors")
         overviewTitle.backgroundColor = UIColor.clear
         overviewTitle.textAlignment = NSTextAlignment.left
@@ -154,7 +154,7 @@ class DetailView: UIView {
     public lazy var runtime: UILabel = {
         let runtimeTitle = UILabel(frame: .zero)
         runtimeTitle.translatesAutoresizingMaskIntoConstraints = false
-        runtimeTitle.text = "Runtime"
+        runtimeTitle.text = "N/A"
         runtimeTitle.textColor = UIColor(named: "LabelColors")
         runtimeTitle.backgroundColor = UIColor.clear
         runtimeTitle.textAlignment = NSTextAlignment.left
@@ -184,7 +184,7 @@ class DetailView: UIView {
         setup()
     }
     
-    // MARK: Setup
+    // MARK: - Setup
     private func setup() {
         // Cast Collection View
         castDelegate = CastCollectionViewDelegate()
@@ -212,7 +212,7 @@ class DetailView: UIView {
         constraints()
     }
     
-    // MARK: Constraints
+    // MARK: - Constraints
     private func constraints() {
         let screenWidth = UIScreen.main.bounds.width
         // Scroll View
@@ -278,7 +278,7 @@ class DetailView: UIView {
         castPlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
         castPlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
         // Cast Collection View
-        castCollectionView.leadingAnchor.constraint(equalTo: contentHolder.leadingAnchor, constant: 4).isActive = true
+        castCollectionView.leadingAnchor.constraint(equalTo: contentHolder.leadingAnchor).isActive = true
         castCollectionView.topAnchor.constraint(equalTo: castPlaceholder.bottomAnchor, constant: 6).isActive = true
         castCollectionView.widthAnchor.constraint(equalToConstant: screenWidth).isActive = true
         castCollectionView.heightAnchor.constraint(equalToConstant: 185).isActive = true

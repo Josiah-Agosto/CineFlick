@@ -71,6 +71,7 @@ class AboutView: UIView {
         return label
     }()
     public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+    public lazy var blurEffectView = UIVisualEffectView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

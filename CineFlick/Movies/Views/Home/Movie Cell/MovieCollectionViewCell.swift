@@ -27,6 +27,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }()
     public var selectedCellDelegate: InnerSelectedCellProtocol?
     public var movieIdDelegate: InnerSelectedIdProtocol?
+    // Runtime Delegate Properties
+    var runtimeForSelectedMovie: String = ""
     // References
     public var movieEnum: MovieSectionEnum = .popular
     public var mainController: HomeScreenController!
@@ -81,7 +83,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
 } // Class End
 
 
-// MARK: Collection Extension
+// MARK: - Collection Extension
 public extension Collection {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil

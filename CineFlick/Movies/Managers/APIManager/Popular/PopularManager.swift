@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class PopularManager {
+final class PopularManager {
     // References / Properties
     private lazy var manager = APINetworkManager.shared
-    // MARK: Main Request
+    // MARK: - Main Request
     public func fetchPopularFeed(if error: @escaping(Result<Void, APIError>) -> Void) {
         manager.mainGroup.enter()
         manager.client.getFeed(from: .popular) { (result) in
@@ -50,36 +50,33 @@ class PopularManager {
         }
     }
     
-    // MARK: Poster Urls
+    // MARK: - Poster Urls
     public func createPopularPosterUrls() {
         manager.popularFilePaths.forEach({ (paths) in
-            print(paths)
             self.manager.popularImagesURLs.append("\(self.manager.secureBaseUrl)\(self.manager.imageSize)\(paths)")
         })
     }
     
-    // MARK: Backdrop Urls
+    // MARK: - Backdrop Urls
     public func createPopularBackdropUrls() {
         manager.popularBackdropPaths.forEach({ (backdrops) in
             self.manager.popularBackdropURLs.append("\(self.manager.secureBaseUrl)\(self.manager.backdropSize)\(backdrops)")
         })
     }
     
-    // MARK: Runtime Request
-    public func getPopularRuntime(if error: @escaping(Result<Void, APIError>) -> Void) {
-        manager.popularIds.forEach({ (ids) in
-            self.manager.detailClient = DetailClient()
-            self.manager.detailClient.detailRequest(with: ids, completion: { (result) in
-                switch result {
-                case .success(let detailResult):
-                    guard let popularRuntime = detailResult?.runtime else { return }
-                    let runtime = "\(popularRuntime)m"
-                    self.manager.popularRuntime.append(runtime)
-                case .failure(_):
-                    error(.failure(.requestFailed))
-                }
-            })
-        })
+    // MARK: - Removes all Elements
+    public func removeAllPopularElements() {
+        manager.popularIds.removeAll()
+        manager.popularImages.removeAll()
+        manager.popularTitles.removeAll()
+        manager.popularRatings.removeAll()
+        manager.popularRelease.removeAll()
+        manager.popularOverview.removeAll()
+        manager.popularFilePaths.removeAll()
+        manager.popularImagesURLs.removeAll()
+        manager.popularBackdropURLs.removeAll()
+        manager.popularBackdropPaths.removeAll()
+        manager.popularBackdropImages.removeAll()
     }
     
 }

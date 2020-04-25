@@ -20,7 +20,7 @@ class CastClient: CastApi {
     }
     
     func castRequest(with id: String, completion: @escaping (Result<MovieCastModel?, APIError>) -> Void) {
-        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)/credits?api_key=\(apiKey)")!
+        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)/credits?api_key=\(Constants.apiKey)")!
         getCast(with: url, of: id, decode: { (json) -> MovieCastModel? in
             guard let cast = json as? MovieCastModel else { return nil }
             return cast

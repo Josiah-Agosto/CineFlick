@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class NotificationController {
-    // MARK: Properties
+    // MARK: - Properties
     static let animationDuration = 0.5
     static let bannerAppearanceDuration: TimeInterval = 6.0
     static let slideMenuHelper = SlideMenuHelper()

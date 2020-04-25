@@ -39,7 +39,9 @@ class MainScreenView: UIView {
         return controller
     }()
     public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+    public lazy var blurEffectView = UIVisualEffectView()
     public lazy var mainController = HomeScreenController()
+    public lazy var movieCollectionViewCell = MovieCollectionViewCell()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

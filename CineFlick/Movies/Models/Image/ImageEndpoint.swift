@@ -17,7 +17,7 @@ protocol ImageEndpoint {
 // Piecing URL
 extension ImageEndpoint {
     var secretKey: String {
-        return apiKey
+        return Constants.apiKey
     }
     var urlComponents: URLComponents {
         var components = URLComponents(string: base)!

@@ -19,7 +19,7 @@ extension Endpoint {
         var components = URLComponents(string: base)!
         components.path = path
         components.queryItems = [
-            URLQueryItem(name: "api_key", value: "\(apiKey)"),
+            URLQueryItem(name: "api_key", value: "\(Constants.apiKey)"),
             URLQueryItem(name: "language", value: "en-US"),
             URLQueryItem(name: "page", value: "1"),
             URLQueryItem(name: "region", value: "US")

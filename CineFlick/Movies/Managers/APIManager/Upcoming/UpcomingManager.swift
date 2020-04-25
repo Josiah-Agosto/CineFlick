@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-class UpcomingManager {
+final class UpcomingManager {
     // References / Properties
     private lazy var manager = APINetworkManager.shared
-    // MARK: Main Request
+    // MARK: - Main Request
     public func fetchUpcomingFeed(if error: @escaping(Result<Void, APIError>) -> Void) {
         manager.mainGroup.enter()
         manager.client.getFeed(from: .upcoming) { (result) in
@@ -50,35 +50,33 @@ class UpcomingManager {
         }
     }
     
-    // MARK: Poster Urls
+    // MARK: - Poster Urls
     public func createUpcomingPosterUrls() {
         manager.upcomingFilePaths.forEach({ (paths) in
             self.manager.upcomingImagesURLs.append("\(self.manager.secureBaseUrl)\(self.manager.imageSize)\(paths)")
         })
     }
     
-    // MARK: Backdrop Urls
+    // MARK: - Backdrop Urls
     public func createUpcomingBackdropUrls() {
         manager.upcomingBackdropPaths.forEach({ (backdrops) in
             self.manager.upcomingBackdropURLs.append("\(self.manager.secureBaseUrl)\(self.manager.backdropSize)\(backdrops)")
         })
     }
     
-    // MARK: Runtime Request
-    public func getUpcomingRuntime(if error: @escaping(Result<Void, APIError>) -> Void) {
-        manager.upcomingIds.forEach({ (ids) in
-            self.manager.detailClient = DetailClient()
-            self.manager.detailClient.detailRequest(with: ids, completion: { (result) in
-                switch result {
-                case .success(let detailResult):
-                    guard let upcomingRuntime = detailResult?.runtime else { return }
-                    let runtime = "\(upcomingRuntime)m"
-                    self.manager.upcomingRuntime.append(runtime)
-                case .failure(_):
-                    error(.failure(.requestFailed))
-                }
-            })
-        })
+    // MARK: - Removes all Elements
+    public func removeAllUpcomingElements() {
+        manager.upcomingIds.removeAll()
+        manager.upcomingImages.removeAll()
+        manager.upcomingTitles.removeAll()
+        manager.upcomingRatings.removeAll()
+        manager.upcomingOverview.removeAll()
+        manager.upcomingReleases.removeAll()
+        manager.upcomingFilePaths.removeAll()
+        manager.upcomingImagesURLs.removeAll()
+        manager.upcomingBackdropURLs.removeAll()
+        manager.upcomingBackdropPaths.removeAll()
+        manager.upcomingBackdropImages.removeAll()
     }
 
 }

@@ -9,14 +9,13 @@
 import UIKit
 import Foundation
 
-class HomeScreenController: UIViewController {
-    // MARK: References / Properties
+final class HomeScreenController: UIViewController {
+    // MARK: - References / Properties
     public lazy var mainView = MainScreenView()
     public lazy var detailController = DetailViewController()
     public lazy var launchScreenController = LaunchScreenController()
     public lazy var apiManager = APINetworkManager.shared
     public lazy var internetNetwork = InternetNetwork()
-    private var blurEffectView = UIVisualEffectView()
     private var slideController: SlideViewController!
     private lazy var slideMenuHelper = SlideMenuHelper()
     private var blurIsHidden: Bool = true
@@ -27,11 +26,11 @@ class HomeScreenController: UIViewController {
         view = mainView
     }
     
-    // MARK: Lifecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         internetNetwork.checkForInternetConnectivity()
-        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
+        if Constants.launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == false {
             displayLaunchScreen()
             initialSetup()
         }
@@ -41,13 +40,13 @@ class HomeScreenController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         internetNetwork.checkForInternetConnectivity()
-        if launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == true {
+        if Constants.launchScreenLoaded.bool(forKey: "LaunchScreenLoaded") == true {
             initialSetup()
             leftBarButtonView()
         }
     }
 
-    // MARK: Setup
+    // MARK: - Setup
     private func initialSetup() {
         // Navigation Controller Setup
         navigationControllerSetup()
@@ -57,7 +56,7 @@ class HomeScreenController: UIViewController {
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
     }
     
-    // MARK: Actions
+    // MARK: - Actions
     @objc private func refreshView() {
         makeRequestToServer()
     }
@@ -74,7 +73,7 @@ class HomeScreenController: UIViewController {
         blurEffectTransition()
     }
     
-    // MARK: Private Functions
+    // MARK: - Private Functions
     private func homeSlideMenuLogic() {
         slideMenuHelper.isOpen.toggle()
         slideMenuHelper.shouldExpandSlideMenu(slideMenuHelper.isOpen) { (expanded) in
@@ -88,20 +87,20 @@ class HomeScreenController: UIViewController {
         }
     }
     
-    // MARK: Setup Functions
+    // MARK: - Setup Functions
     private func navigationControllerSetup() {
-        self.navigationController?.isNavigationBarHidden = false
-        let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.isNavigationBarHidden = false
+        let titleAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "LabelColors")!]
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
         title = "Movies"
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationController?.hidesBarsOnSwipe = false
-        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 50)!, NSAttributedString.Key.foregroundColor: UIColor(red: 225/255, green: 225/255, blue: 225/255, alpha: 1.0)]
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.hidesBarsOnSwipe = false
     }
     
     
     private func makeRequestToServer() {
+        apiManager.resetAllElements()
         apiManager.makeApiRequest { (result) in
             switch result {
             case .success():
@@ -114,15 +113,14 @@ class HomeScreenController: UIViewController {
     
     
     private func requestForRefreshControl() {
-        self.mainView.refreshControl.endRefreshing()
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            for cell in self.mainView.collectionView.visibleCells {
-                if let cell = cell as? MovieCollectionViewCell {
+        for cell in self.mainView.collectionView.visibleCells {
+            if let cell = cell as? MovieCollectionViewCell {
+                DispatchQueue.main.async {
                     cell.innerCollectionView.reloadData()
                 }
             }
         }
+        self.mainView.refreshControl.endRefreshing()
     }
     
     
@@ -138,23 +136,23 @@ class HomeScreenController: UIViewController {
     
     // Assigning Blur Effect View
     private func blurEffectTransition() {
-        blurEffectView.isHidden = blurIsHidden
+        mainView.blurEffectView.isHidden = blurIsHidden
     }
     
     
     private func blurEffectSetup() {
-        blurEffectView.effect = mainView.blurEffect
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        blurEffectView.isHidden = true
-        blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
-        view.insertSubview(blurEffectView, at: 1)
+        mainView.blurEffectView.effect = mainView.blurEffect
+        mainView.blurEffectView.frame = view.bounds
+        mainView.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mainView.blurEffectView.isHidden = true
+        mainView.blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
+        view.insertSubview(mainView.blurEffectView, at: 1)
     }
     
 } // Class end
 
 
-// MARK: API Setup
+// MARK: - API Setup
 extension HomeScreenController: LaunchScreenProtocol {
     func isLoadingFinished(_ dataLoaded: Bool) {
         if dataLoaded == true {
@@ -172,19 +170,17 @@ extension HomeScreenController: LaunchScreenProtocol {
 }
 
 
-// MARK: Cell Selection Delegate Function
+// MARK: - Cell Selection Delegate Function
 extension HomeScreenController: InnerSelectedCellProtocol {
     func isCellSelectedHandler() {
         if isCellSelected == true {
-            DispatchQueue.main.async {
-                self.slideMenuHelper.appDelegate?.navigationController?.pushViewController(self.detailController, animated: true)
-            }
+            slideMenuHelper.appDelegate?.navigationController?.pushViewController(detailController, animated: true)
         }
     }
 }
 
 
-// MARK: About Delegate Function
+// MARK: - About Delegate Function
 extension HomeScreenController: ChangeToAboutControllerProtocol {
     func pushAboutToController() {
         slideController = SlideViewController()

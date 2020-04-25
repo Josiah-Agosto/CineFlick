@@ -35,7 +35,6 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             popular.backdropImage.image = mainController.apiManager.popularBackdropImages[safe: indexPath.row]
             popular.id.text = mainController.apiManager.popularIds[safe: indexPath.row]
             popular.overview.text = mainController.apiManager.popularOverview[safe: indexPath.row]
-            popular.runtime.text = mainController.apiManager.popularRuntime[safe: indexPath.row]
             popular.releaseDate.text = mainController.apiManager.popularRelease[safe: indexPath.row]
             return popular
         case .nowPlaying:
@@ -48,7 +47,6 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             nowPlaying.backdropImage.image = mainController.apiManager.nowPlayingBackdropImages[safe: indexPath.row]
             nowPlaying.id.text = mainController.apiManager.nowPlayingIds[safe: indexPath.row]
             nowPlaying.overview.text = mainController.apiManager.nowPlayingOverview[safe: indexPath.row]
-            nowPlaying.runtime.text = mainController.apiManager.nowPlayingRuntime[safe: indexPath.row]
             nowPlaying.rating.text = "\(mainController.apiManager.nowPlayingRatings[safe: indexPath.row] ?? "nil")%"
             return nowPlaying
         case .upcoming:
@@ -61,7 +59,6 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             upcoming.backdropImage.image = mainController.apiManager.upcomingBackdropImages[safe: indexPath.row]
             upcoming.id.text = mainController.apiManager.upcomingIds[safe: indexPath.row]
             upcoming.overview.text = mainController.apiManager.upcomingOverview[safe: indexPath.row]
-            upcoming.runtime.text = mainController.apiManager.upcomingRuntime[safe: indexPath.row]
             upcoming.rating.text = "\(mainController.apiManager.upcomingRatings[safe: indexPath.row] ?? "nil")%"
             return upcoming
         case .topRated:
@@ -74,7 +71,6 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
             topRated.backdropImage.image = mainController.apiManager.topRatedBackdropImages[safe: indexPath.row]
             topRated.id.text = mainController.apiManager.topRatedIds[safe: indexPath.row]
             topRated.overview.text = mainController.apiManager.topRatedOverview[safe: indexPath.row]
-            topRated.runtime.text = mainController.apiManager.topRatedRuntime[safe: indexPath.row]
             topRated.rating.text = "\(mainController.apiManager.topRatedRatings[safe: indexPath.row] ?? "nil")%"
             topRated.releaseDate.text = mainController.apiManager.topRatedReleases[safe: indexPath.row]
             return topRated
