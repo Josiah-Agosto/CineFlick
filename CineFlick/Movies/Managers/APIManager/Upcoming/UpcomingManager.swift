@@ -53,14 +53,14 @@ final class UpcomingManager {
     // MARK: - Poster Urls
     public func createUpcomingPosterUrls() {
         manager.upcomingFilePaths.forEach({ (paths) in
-            self.manager.upcomingImagesURLs.append("\(self.manager.secureBaseUrl)\(self.manager.imageSize)\(paths)")
+            self.manager.upcomingImagesURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.imageSize)\(paths)")
         })
     }
     
     // MARK: - Backdrop Urls
     public func createUpcomingBackdropUrls() {
         manager.upcomingBackdropPaths.forEach({ (backdrops) in
-            self.manager.upcomingBackdropURLs.append("\(self.manager.secureBaseUrl)\(self.manager.backdropSize)\(backdrops)")
+            self.manager.upcomingBackdropURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.backdropSize)\(backdrops)")
         })
     }
     

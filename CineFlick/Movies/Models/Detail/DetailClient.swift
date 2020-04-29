@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DetailClient: DetailApi {
+class DetailClient: DetailApiProtocol {
     var session: URLSession
     
     init(configuration: URLSessionConfiguration) {
@@ -19,10 +19,10 @@ class DetailClient: DetailApi {
         self.init(configuration: .ephemeral)
     }
     
-    func detailRequest(with id: String, completion: @escaping (Result<MovieDetail?, APIError>) -> Void) {
+    func detailRequest(with id: String, completion: @escaping (Result<MovieDetailJson?, APIError>) -> Void) {
         let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)&language=en-US")!
-        getDetail(with: url, of: id, decode: { (json) -> MovieDetail? in
-            guard let detail = json as? MovieDetail else { return nil }
+        getDetail(with: url, of: id, decode: { (json) -> MovieDetailJson? in
+            guard let detail = json as? MovieDetailJson else { return nil }
             return detail
         }, completionHandler: completion)
     }

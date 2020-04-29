@@ -30,7 +30,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // Runtime Delegate Properties
     var runtimeForSelectedMovie: String = ""
     // References
-    public var movieEnum: MovieSectionEnum = .popular
+    public var movieEnum: MovieSection = .popular
     public var mainController: HomeScreenController!
     public let group = DispatchGroup()
     
@@ -70,8 +70,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         // Initial Collection View Cell
-        self.frame.size.width = UIScreen.main.bounds.width - 5
-        self.frame.size.height = 300
+        frame.size.width = UIScreen.main.bounds.width - 5
+        frame.size.height = 300
     }
     
     

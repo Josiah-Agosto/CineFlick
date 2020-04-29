@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieCastModel: Decodable {
+struct MovieCastJson: Decodable {
     let id: Int?
     let cast: [Cast]?
     let crew: [Crew]?

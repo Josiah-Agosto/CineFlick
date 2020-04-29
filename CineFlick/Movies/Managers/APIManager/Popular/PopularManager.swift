@@ -53,14 +53,14 @@ final class PopularManager {
     // MARK: - Poster Urls
     public func createPopularPosterUrls() {
         manager.popularFilePaths.forEach({ (paths) in
-            self.manager.popularImagesURLs.append("\(self.manager.secureBaseUrl)\(self.manager.imageSize)\(paths)")
+            self.manager.popularImagesURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.imageSize)\(paths)")
         })
     }
     
     // MARK: - Backdrop Urls
     public func createPopularBackdropUrls() {
         manager.popularBackdropPaths.forEach({ (backdrops) in
-            self.manager.popularBackdropURLs.append("\(self.manager.secureBaseUrl)\(self.manager.backdropSize)\(backdrops)")
+            self.manager.popularBackdropURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.backdropSize)\(backdrops)")
         })
     }
     

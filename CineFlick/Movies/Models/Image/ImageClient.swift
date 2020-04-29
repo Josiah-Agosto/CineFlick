@@ -19,11 +19,11 @@ class ImageClient: ImageAPIClient {
     }
     
     
-    func createImage(from imageConfig: ImageConfiguration, completion: @escaping (Result<MovieImageModel?, APIError>) -> Void) {
+    func createImage(from imageConfig: ImageConfiguration, completion: @escaping (Result<MovieImageJson?, APIError>) -> Void) {
         let endpoint = imageConfig
         let result = endpoint.request
-        fetchImage(with: result, decode: { (json) -> MovieImageModel? in
-            guard let imageModel = json as? MovieImageModel else { return nil }
+        fetchImage(with: result, decode: { (json) -> MovieImageJson? in
+            guard let imageModel = json as? MovieImageJson else { return nil }
             return imageModel
         }, completion: completion)
     }

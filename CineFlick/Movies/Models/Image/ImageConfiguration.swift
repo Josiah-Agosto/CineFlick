@@ -14,7 +14,7 @@ enum ImageConfiguration {
 
 
 // Piecing URL
-extension ImageConfiguration: ImageEndpoint {
+extension ImageConfiguration: ImageEndpointProtocol {
     var base: String {
         return "https://api.themoviedb.org"
     }

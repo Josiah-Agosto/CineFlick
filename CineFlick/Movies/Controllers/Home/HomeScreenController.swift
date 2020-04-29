@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 
+// TODO: Move all UIBarButtonViews out of here and into Views
 final class HomeScreenController: UIViewController {
     // MARK: - References / Properties
     public lazy var mainView = MainScreenView()
@@ -18,7 +19,7 @@ final class HomeScreenController: UIViewController {
     public lazy var internetNetwork = InternetNetwork()
     private var slideController: SlideViewController!
     private lazy var slideMenuHelper = SlideMenuHelper()
-    private var blurIsHidden: Bool = true
+    private lazy var searchController = SearchController()
     // Delegate Properties
     var isCellSelected: Bool = false
     
@@ -50,8 +51,6 @@ final class HomeScreenController: UIViewController {
     private func initialSetup() {
         // Navigation Controller Setup
         navigationControllerSetup()
-        // Blur Effect
-        blurEffectSetup()
         // Refresh Control Target
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
     }
@@ -64,13 +63,17 @@ final class HomeScreenController: UIViewController {
     
     @objc private func blurEffectTap() {
         homeSlideMenuLogic()
-        blurEffectTransition()
+        removeBlurEffect()
     }
 
     
     @objc private func categoryAction() {
         homeSlideMenuLogic()
-        blurEffectTransition()
+    }
+    
+    
+    @objc private func openSearchField() {
+        pushSearchBarController()
     }
     
     // MARK: - Private Functions
@@ -78,13 +81,18 @@ final class HomeScreenController: UIViewController {
         slideMenuHelper.isOpen.toggle()
         slideMenuHelper.shouldExpandSlideMenu(slideMenuHelper.isOpen) { (expanded) in
             if expanded {
-                self.blurIsHidden = !expanded
+                self.blurEffectSetup()
                 self.slideMenuHelper.addSlideMenuToWindow(&self.slideController)
             } else {
-                self.blurIsHidden = !expanded
+                self.removeBlurEffect()
                 self.slideMenuHelper.removeSlideMenuToWindow(&self.slideController)
             }
         }
+    }
+    
+    
+    private func pushSearchBarController() {
+        navigationController?.pushViewController(searchController, animated: false)
     }
     
     // MARK: - Setup Functions
@@ -96,6 +104,14 @@ final class HomeScreenController: UIViewController {
         title = "Movies"
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.hidesBarsOnSwipe = false
+        setupRightBarButton()
+    }
+    
+    
+    private func setupRightBarButton() {
+        mainView.searchBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(openSearchField))
+        mainView.searchBarButtonItem.tintColor = UIColor(named: "LabelColors")
+        navigationItem.rightBarButtonItem = mainView.searchBarButtonItem
     }
     
     
@@ -113,9 +129,9 @@ final class HomeScreenController: UIViewController {
     
     
     private func requestForRefreshControl() {
-        for cell in self.mainView.collectionView.visibleCells {
-            if let cell = cell as? MovieCollectionViewCell {
-                DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            for cell in self.mainView.collectionView.visibleCells {
+                if let cell = cell as? MovieCollectionViewCell {
                     cell.innerCollectionView.reloadData()
                 }
             }
@@ -134,19 +150,19 @@ final class HomeScreenController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: mainView.categoryImageView.image, style: .plain, target: self, action: #selector(categoryAction))
     }
     
-    // Assigning Blur Effect View
-    private func blurEffectTransition() {
-        mainView.blurEffectView.isHidden = blurIsHidden
+    
+    private func blurEffectSetup() {
+        mainView.blurEffectView?.effect = mainView.blurEffect
+        mainView.blurEffectView?.frame = view.bounds
+        mainView.blurEffectView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mainView.blurEffectView?.isHidden = false
+        mainView.blurEffectView?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
+        view.insertSubview(mainView.blurEffectView ?? UIView(), at: 1)
     }
     
     
-    private func blurEffectSetup() {
-        mainView.blurEffectView.effect = mainView.blurEffect
-        mainView.blurEffectView.frame = view.bounds
-        mainView.blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mainView.blurEffectView.isHidden = true
-        mainView.blurEffectView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(blurEffectTap)))
-        view.insertSubview(mainView.blurEffectView, at: 1)
+    private func removeBlurEffect() {
+        mainView.blurEffectView?.isHidden = true
     }
     
 } // Class end
@@ -156,9 +172,9 @@ final class HomeScreenController: UIViewController {
 extension HomeScreenController: LaunchScreenProtocol {
     func isLoadingFinished(_ dataLoaded: Bool) {
         if dataLoaded == true {
-            self.mainView.refreshControl.endRefreshing()
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                self.mainView.refreshControl.endRefreshing()
                 for cell in self.mainView.collectionView.visibleCells {
                     if let cell = cell as? MovieCollectionViewCell {
                         cell.innerCollectionView.reloadData()

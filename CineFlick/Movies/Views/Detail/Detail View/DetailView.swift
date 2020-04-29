@@ -57,10 +57,6 @@ class DetailView: UIView {
         rating.layer.borderWidth = 3
         rating.layer.borderColor = UIColor.green.cgColor
         rating.layer.masksToBounds = false
-        rating.shadowColor = UIColor.black
-        rating.layer.shadowOpacity = 0.5
-        rating.layer.shadowOffset = CGSize(width: rating.frame.width, height: 3)
-        rating.layer.shadowRadius = 3.0
         rating.font = UIFont(name: "AvenirNext-Medium", size: 18)
         rating.textColor = UIColor.green
         return rating

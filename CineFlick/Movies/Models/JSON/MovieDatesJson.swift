@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieModelWithDates: Decodable {
+struct MovieDatesJson: Decodable {
     let page: Int?
     let total_results: Int?
     let total_pages: Int?

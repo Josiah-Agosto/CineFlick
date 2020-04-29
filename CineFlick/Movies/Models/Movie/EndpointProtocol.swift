@@ -8,13 +8,13 @@
 
 import Foundation
 
-protocol Endpoint {
+protocol EndpointProtocol {
     var base: String { get }
     var path: String { get }
 }
 
 // Creates the URL
-extension Endpoint {
+extension EndpointProtocol {
     var urlComponents: URLComponents {
         var components = URLComponents(string: base)!
         components.path = path

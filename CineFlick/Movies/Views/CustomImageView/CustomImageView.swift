@@ -18,7 +18,7 @@ final class CustomImageView: UIImageView {
             self.imageUrlString = url
             let nativeString = NSString(string: url)
             DispatchQueue.main.async {
-                self.image = UIImage(named: "ImageNotFound")!
+                self.image = nil
             }
             if let cachedImage = self.imageCache.object(forKey: nativeString) {
                 DispatchQueue.main.async {

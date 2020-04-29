@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-struct MovieModel: Decodable {
+struct MovieJson: Decodable {
     let page: Int?
     let total_results: Int?
     let total_pages: Int?

@@ -13,7 +13,7 @@ final class APINetworkManager {
     // References / Properties
     static var shared = APINetworkManager()
     public lazy var client = MovieClient()
-    public lazy var imageClient = ImageClient()
+    public lazy var imageManager = ImageManager()
     public lazy var detailClient = DetailClient()
     public let dateReference = Date()
     public lazy var imageReference = CustomImageView()
@@ -91,7 +91,7 @@ final class APINetworkManager {
             // Backdrop Urls
             self.createBackdropUrls()
             // Notifier
-            self.mainGroup.notify(queue: .main) {
+            self.mainGroup.notify(queue: .global()) {
                 completion(.success(()))
                 self.updater?()
             }
@@ -110,27 +110,7 @@ final class APINetworkManager {
             // Top Rated
             self.topRatedManager.fetchTopRatedFeed(if: completion)
             // Generate Images
-            self.generateImages(if: completion)
-        }
-    }
-    
-    // MARK: - Generate Image
-    private func generateImages(if error: @escaping(Result<Void, APIError>) -> Void) {
-        mainGroup.enter()
-        imageClient.createImage(from: .configure) { (result) in
-            switch result {
-            case .success(let imageFeedResult):
-                defer { self.mainGroup.leave() }
-                guard let imageCreation = imageFeedResult?.images else { return }
-                guard let secure = imageCreation.secure_base_url else { return }
-                guard let posterSize = imageCreation.poster_sizes?[4] else { return }
-                guard let backdropSize = imageCreation.backdrop_sizes?[2] else { return }
-                self.secureBaseUrl = secure
-                self.imageSize = posterSize
-                self.backdropSize = backdropSize
-            case .failure(_):
-                error(.failure(.requestFailed))
-            }
+            self.imageManager.generateImages()
         }
     }
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieImageModel: Decodable {
+struct MovieImageJson: Decodable {
     let change_keys: [String]?
     let images: Images?
     

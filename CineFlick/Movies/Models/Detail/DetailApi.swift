@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol DetailApi {
+protocol DetailApiProtocol {
     var session: URLSession { get }
     func getDetail<D: Decodable>(with url: URL, of id: String, decode: @escaping (Decodable) -> D?, completionHandler completion: @escaping (Result<D, APIError>) -> Void)
 }
 
 
 
-extension DetailApi {
+extension DetailApiProtocol {
     typealias jsonCompletion = (Decodable?, APIError?) -> Void
     
     private func jsonTask<D: Decodable>(with url: URL, of id: String, with decoder: D.Type, with completion: @escaping jsonCompletion) -> URLSessionDataTask {

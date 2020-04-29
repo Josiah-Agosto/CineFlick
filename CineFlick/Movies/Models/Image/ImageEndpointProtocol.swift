@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol ImageEndpoint {
+protocol ImageEndpointProtocol {
     var base: String { get }
     var path: String { get }
 }
 
 
 // Piecing URL
-extension ImageEndpoint {
+extension ImageEndpointProtocol {
     var secretKey: String {
         return Constants.apiKey
     }

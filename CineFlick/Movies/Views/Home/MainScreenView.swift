@@ -12,7 +12,7 @@ import UIKit
 class MainScreenView: UIView {
     // Properties
     public lazy var categoryImageView: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 10, y: 0, width: 30, height: 30))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         if #available(iOS 13.0, *) {
             let systemImage = UIImage(systemName: "text.justify", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))!
             let systemImageWithColor = systemImage.withTintColor(UIColor(named: "LabelColors")!, renderingMode: .alwaysOriginal)
@@ -24,6 +24,7 @@ class MainScreenView: UIView {
         }
         return imageView
     }()
+    // Main Collection View
     public lazy var collectionView: UICollectionView = {
         let layout = MainCollectionViewFlowLayout()
         let collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
@@ -32,14 +33,20 @@ class MainScreenView: UIView {
         collection.backgroundColor = UIColor.clear
         return collection
     }()
+    // Refresh Control
     public lazy var refreshControl: UIRefreshControl = {
         let controller = UIRefreshControl()
         controller.tintColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1.0)
         controller.attributedTitle = NSAttributedString(string: "Fetching Movie Data ...")
         return controller
     }()
+    // Search Button
+    public lazy var searchBarButtonItem: UIBarButtonItem = {
+        let searchButton = UIBarButtonItem()
+        return searchButton
+    }()
     public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-    public lazy var blurEffectView = UIVisualEffectView()
+    public lazy var blurEffectView: UIVisualEffectView? = UIVisualEffectView()
     public lazy var mainController = HomeScreenController()
     public lazy var movieCollectionViewCell = MovieCollectionViewCell()
     

@@ -16,7 +16,7 @@ enum MovieSection {
 }
 
 // Piecing URL
-extension MovieSection: Endpoint {
+extension MovieSection: EndpointProtocol {
     var base: String {
         return "https://api.themoviedb.org"
     }

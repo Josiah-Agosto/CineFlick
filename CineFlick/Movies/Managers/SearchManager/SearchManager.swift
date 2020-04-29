@@ -1,0 +1,67 @@
+//
+//  SearchManager.swift
+//  CineFlick
+//
+//  Created by Josiah Agosto on 4/27/20.
+//  Copyright © 2020 Josiah Agosto. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+final class SearchManager {
+    // References / Properties
+    public var movieTitles: [String] = [] { didSet { updater?() } }
+    public var movieImageUrls: [String] = [] { didSet { updater?() } }
+    private var updater: (() -> ())? = nil
+    private let session = URLSession(configuration: .default)
+    private let imageManager = ImageManager()
+    private let group = DispatchGroup()
+    static let shared = SearchManager()
+    
+    public func searchForMoviesWith(query: String, completion: @escaping(Result<Void, APIError>) -> Void) {
+        imageManager.generateImages()
+        searchRequest(from: query, with: completion)
+    }
+
+    
+    private func searchRequest(from query: String?, with completion: @escaping(Result<Void, APIError>) -> Void) {
+        let queriedUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(Constants.apiKey)&language=en-US&\(replaceUrlWhitespaceFrom(query: query))&page=1&include_adult=false"
+        let request = URLRequest(url: URL(string: queriedUrl)!)
+        group.enter()
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error { NotificationController.displayError(message: error.localizedDescription) }
+            guard let response = response as? HTTPURLResponse else { completion(.failure(.requestFailed)); completion(.failure(.requestFailed)); return }
+            if response.statusCode == 200 {
+                if let data = data {
+                    do {
+                        let searchModel = try! JSONDecoder().decode(SearchJson.self, from: data)
+                        let results = searchModel.results
+                        for itemInResult in results {
+                            self.movieTitles.append(itemInResult.title ?? "N/A")
+                            self.updater?()
+                        }
+                        for imageUrl in results {
+                            self.movieImageUrls.append("\(self.imageManager.secureBaseUrl)\(self.imageManager.imageSize)\(imageUrl.poster_path ?? "")")
+                            self.updater?()
+                        }
+                        completion(.success(()))
+                        self.group.leave()
+                    }
+                }
+            } else { completion(.failure(.requestFailed)) }
+        }
+        task.resume()
+    }
+    
+    
+    private func replaceUrlWhitespaceFrom(query from: String?) -> String {
+        guard let nonNilString = from else { return "" }
+        let urlStringWithWhitespacesRemoved = nonNilString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        print(urlStringWithWhitespacesRemoved)
+        let returningString = "query=\(urlStringWithWhitespacesRemoved)"
+        print(returningString)
+        return returningString
+    }
+
+}

@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol CastApi {
+protocol CastApiProtocol {
     var session: URLSession { get }
     func getCast<C: Decodable>(with url: URL, of id: String, decode: @escaping (Decodable) -> C?, completionHandler completion: @escaping (Result<C, APIError>) -> Void)
 }
 
 
 
-extension CastApi {
+extension CastApiProtocol {
     typealias completion = (Decodable?, APIError?) -> Void
     
     private func jsonTask<C: Decodable>(with url: URL, of id: String, with decoder: C.Type, with completion: @escaping completion) -> URLSessionDataTask {

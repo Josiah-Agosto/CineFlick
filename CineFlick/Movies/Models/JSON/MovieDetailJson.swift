@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieDetail: Decodable {
+struct MovieDetailJson: Decodable {
     let adult: Bool?
     let backdrop_path: String?
     let belongs_to_collection: object?
