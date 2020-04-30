@@ -47,7 +47,6 @@ class SearchController: UIViewController {
         searchView.searchBar.becomeFirstResponder()
     }
     
-    
     // MARK: - Functions
     public func goBackToRootController() {
         searchView.searchBar.resignFirstResponder()

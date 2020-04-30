@@ -40,10 +40,9 @@ extension ImageAPIClient {
         return task
     }
     
-    // Adds what is going to be inside fetchImage() when called.
+
     func fetchImage<I: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> I?, completion: @escaping (Result<I, APIError>) -> Void) {
         let task = imageDecodingTask(with: request, decoderType: I.self) { (json, error) in
-            // Changing to Main Queue
             DispatchQueue.main.async {
                 guard let json = json else {
                     if let error = error {

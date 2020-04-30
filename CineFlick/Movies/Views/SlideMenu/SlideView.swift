@@ -1,5 +1,5 @@
 //
-//  CategoryView.swift
+//  SlideView.swift
 //  CineFlick
 //
 //  Created by Josiah Agosto on 6/11/19.
@@ -69,6 +69,13 @@ class SlideView: UIView {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    // Language View
+    public lazy var languageContainer: LanguageContainer = {
+        let view = LanguageContainer(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
+        return view
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -85,12 +92,14 @@ class SlideView: UIView {
         addSubview(movieImageView)
         addSubview(aboutButton)
         addSubview(aboutImageView)
+        addSubview(languageContainer)
         // Configuring the Constraints
         configureConstraints()
     }
     
     // MARK: - Constraints
     private func configureConstraints() {
+        let screenSize = UIScreen.main.bounds
         // Category
         categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         categoryTitle.topAnchor.constraint(equalTo: topAnchor, constant: 50).isActive = true
@@ -116,6 +125,11 @@ class SlideView: UIView {
         aboutButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50).isActive = true
         aboutButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
         aboutButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        // Language View
+        languageContainer.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        languageContainer.topAnchor.constraint(equalTo: topAnchor, constant: screenSize.height - 150).isActive = true
+        languageContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        languageContainer.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     

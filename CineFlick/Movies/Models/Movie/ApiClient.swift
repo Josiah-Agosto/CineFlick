@@ -28,7 +28,7 @@ extension APIClient {
                         let genericModel = try JSONDecoder().decode(decodingType, from: data)
                         completion(genericModel, nil)
                     } catch {
-                        completion(nil, nil)
+                        completion(nil, .invalidData)
                     }
                 } else {
                     completion(nil, .invalidData)

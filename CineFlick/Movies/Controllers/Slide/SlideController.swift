@@ -14,9 +14,11 @@ final class SlideViewController: UIViewController {
     private lazy var homeController = HomeScreenController()
     private lazy var aboutController = AboutViewController()
     private lazy var slideMenuHelper = SlideMenuHelper()
+    private lazy var languageController = LanguageController()
     // Delegate
     public weak var changeToAboutControllerDelegate: ChangeToAboutControllerProtocol?
     public weak var changeToMovieControllerDelegate: ChangeToMovieControllerProtocol?
+    public weak var changeToLanguageControllerDelegate: ChangeToLanguageControllerProtocol?
     
     override func loadView() {
         view = slideView
@@ -32,11 +34,14 @@ final class SlideViewController: UIViewController {
     private func setup() {
         slideView.movieButton.addTarget(self, action: #selector(movieButtonAction), for: .touchUpInside)
         slideView.aboutButton.addTarget(self, action: #selector(aboutButtonAction), for: .touchUpInside)
+        slideView.languageContainer.moviesLanguageButton.addTarget(self, action: #selector(goToLanguageController), for: .touchUpInside)
         // Delegates
-        // Home Controller Assigning
+        // Home
         self.changeToAboutControllerDelegate = homeController
-        // About Controller Assigning
+        // About
         self.changeToMovieControllerDelegate = aboutController
+        // Language
+        self.changeToLanguageControllerDelegate = languageController
     }
     
     // MARK: - Button Actions
@@ -55,6 +60,13 @@ final class SlideViewController: UIViewController {
             slideMenuHelper.appDelegate?.navigationController?.pushViewController(aboutController, animated: false)
             slideMenuHelper.appDelegate?.navigationController?.setViewControllers([aboutController], animated: false)
         }
+    }
+    
+    
+    @objc private func goToLanguageController() {
+        changeToLanguageControllerDelegate?.pushLanguagesToController()
+        // TODO: Add Navigation Controller for View
+        slideMenuHelper.appDelegate?.navigationController?.present(languageController, animated: true, completion: nil)
     }
 
 }
