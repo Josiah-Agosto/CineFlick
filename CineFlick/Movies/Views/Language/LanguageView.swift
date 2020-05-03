@@ -11,8 +11,13 @@ import UIKit
 class LanguageView: UIView {
     // Properties / References
     public lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero)
+        let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(LanguageCell.self, forCellReuseIdentifier: LanguageCell.reuseIdentifier)
+        tableView.allowsMultipleSelection = false
+        tableView.estimatedRowHeight = 70
+        tableView.allowsSelection = true
+        tableView.backgroundColor = UIColor.clear
         return tableView
     }()
     
@@ -25,13 +30,17 @@ class LanguageView: UIView {
     private func setup() {
         // View
         backgroundColor = UIColor(named: "BackgroundColors")
+        // Subviews
+        addSubview(tableView)
+        // Constraints
+        constraints()
     }
     
     
     private func constraints() {
         // Table View
         tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }

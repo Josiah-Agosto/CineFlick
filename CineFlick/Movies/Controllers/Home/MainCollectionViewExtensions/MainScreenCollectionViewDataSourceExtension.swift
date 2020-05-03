@@ -24,16 +24,16 @@ extension MainScreenView: UICollectionViewDataSource {
         cell.layer.cornerRadius = 5
         cell.backgroundColor = UIColor.clear
         if indexPath.section == 0 {
-            cell.movieEnum = .popular
+            cell.cellSelection = .popular
             cell.apiManager = mainController.apiManager
         } else if indexPath.section == 1 {
-            cell.movieEnum = .nowPlaying
+            cell.cellSelection = .nowPlaying
             cell.apiManager = mainController.apiManager
         } else if indexPath.section == 2 {
-            cell.movieEnum = .upcoming
+            cell.cellSelection = .upcoming
             cell.apiManager = mainController.apiManager
         } else {
-            cell.movieEnum = .topRated
+            cell.cellSelection = .topRated
             cell.apiManager = mainController.apiManager
         }
         return cell

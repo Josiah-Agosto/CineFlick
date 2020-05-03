@@ -21,7 +21,7 @@ extension MovieCollectionViewCell: UICollectionViewDelegate {
 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch movieEnum {
+        switch cellSelection {
         case .popular:
             if let popularRow = collectionView.cellForItem(at: indexPath) as? PopularMovieCellsView {
                 // Delegate Properties

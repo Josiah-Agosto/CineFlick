@@ -53,14 +53,14 @@ final class TopRatedManager {
     // MARK: - Poster Urls
     public func createTopRatedPosterUrls() {
         manager.topRatedFilePaths.forEach({ (paths) in
-            self.manager.topRatedImagesURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.imageSize)\(paths)")
+            self.manager.topRatedImagesURLs.append("\(self.manager.configurationManager.secureBaseUrl)\(self.manager.configurationManager.imageSize)\(paths)")
         })
     }
     
     // MARK: - Backdrop Urls
     public func createTopRatedBackdropUrls() {
         manager.topRatedBackdropPaths.forEach({ (backdrops) in
-            self.manager.topRatedBackdropURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.backdropSize)\(backdrops)")
+            self.manager.topRatedBackdropURLs.append("\(self.manager.configurationManager.secureBaseUrl)\(self.manager.configurationManager.backdropSize)\(backdrops)")
         })
     }
     

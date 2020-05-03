@@ -23,7 +23,7 @@ class LanguageContainer: UIView {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
-        label.text = "EN"
+        label.text = Constants.selectedRegion.rawValue
         return label
     }()
     
@@ -34,17 +34,13 @@ class LanguageContainer: UIView {
     
     
     private func setup() {
+        // Subviews
         addSubview(moviesLanguageButton)
         addSubview(currentLanguage)
+        // Constraints
         constraints()
     }
-    
-    
-    private func neumorphismDesign() {
-        // Language Button; Use shadow Paths
-        // Current Label
-    }
-    
+
     
     private func constraints() {
         // Language Button

@@ -127,7 +127,7 @@ class SlideView: UIView {
         aboutButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         // Language View
         languageContainer.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        languageContainer.topAnchor.constraint(equalTo: topAnchor, constant: screenSize.height - 150).isActive = true
+        languageContainer.topAnchor.constraint(equalTo: topAnchor, constant: screenSize.height - 100).isActive = true
         languageContainer.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         languageContainer.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }

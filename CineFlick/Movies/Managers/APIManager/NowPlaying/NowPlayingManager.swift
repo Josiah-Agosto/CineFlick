@@ -53,14 +53,14 @@ final class NowPlayingManager {
     // MARK: - Poster Urls
     public func createNowPlayingPosterUrls() {
         manager.nowPlayingFilePaths.forEach({ (paths) in
-            self.manager.nowPlayingImagesURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.imageSize)\(paths)")
+            self.manager.nowPlayingImagesURLs.append("\(self.manager.configurationManager.secureBaseUrl)\(self.manager.configurationManager.imageSize)\(paths)")
         })
     }
 
     // MARK: - Backdrop Urls
     public func createNowPlayingBackdropUrls() {
         manager.nowPlayingBackdropPaths.forEach({ (backdrops) in
-            self.manager.nowPlayingBackdropURLs.append("\(self.manager.imageManager.secureBaseUrl)\(self.manager.imageManager.backdropSize)\(backdrops)")
+            self.manager.nowPlayingBackdropURLs.append("\(self.manager.configurationManager.secureBaseUrl)\(self.manager.configurationManager.backdropSize)\(backdrops)")
         })
     }
     

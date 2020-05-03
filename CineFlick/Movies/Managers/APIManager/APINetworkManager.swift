@@ -13,7 +13,7 @@ final class APINetworkManager {
     // References / Properties
     static var shared = APINetworkManager()
     public lazy var client = MovieClient()
-    public lazy var imageManager = ImageManager()
+    public lazy var configurationManager = ConfigurationManager.shared
     public lazy var detailClient = DetailClient()
     public let dateReference = Date()
     public lazy var imageReference = CustomImageView()
@@ -110,7 +110,7 @@ final class APINetworkManager {
             // Top Rated
             self.topRatedManager.fetchTopRatedFeed(if: completion)
             // Generate Images
-            self.imageManager.generateImages()
+            self.configurationManager.fetchImages()
         }
     }
     
@@ -153,7 +153,7 @@ final class APINetworkManager {
     // MARK: - Runtime Request
     public func getRuntime(with id: String, completion: @escaping((String) -> Void)) {
         detailClient = DetailClient()
-        detailClient.detailRequest(with: id, completion: { (result) in
+        detailClient.detailRequest(with: .detail, with: id) { (result) in
             switch result {
             case .success(let detailResult):
                 guard let popularRuntime = detailResult?.runtime else { return }
@@ -162,9 +162,8 @@ final class APINetworkManager {
             case .failure(let error):
                 print(error)
             }
-        })
+        }
     }
-    
     
     // MARK: - Minutes to Hours Conversion
     public func convertMinutesToHours(with minutes: Int) -> String {

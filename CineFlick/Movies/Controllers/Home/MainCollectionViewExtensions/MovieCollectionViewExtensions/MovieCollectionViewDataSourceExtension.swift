@@ -11,11 +11,11 @@ import UIKit
 
 extension MovieCollectionViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if movieEnum == .popular {
+        if cellSelection == .popular {
             return mainController.apiManager.popularTitles.count
-        } else if movieEnum == .nowPlaying {
+        } else if cellSelection == .nowPlaying {
             return mainController.apiManager.nowPlayingTitles.count
-        } else if movieEnum == .upcoming {
+        } else if cellSelection == .upcoming {
             return mainController.apiManager.upcomingTitles.count
         } else {
             return mainController.apiManager.topRatedTitles.count
@@ -24,7 +24,7 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch movieEnum {
+        switch cellSelection {
         case .popular:
             let popular = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCellsView.reuseIdentifier, for: indexPath) as! PopularMovieCellsView
             popular.movieTitle.text = mainController.apiManager.popularTitles[safe: indexPath.row]

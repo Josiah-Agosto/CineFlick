@@ -30,7 +30,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // Runtime Delegate Properties
     var runtimeForSelectedMovie: String = ""
     // References
-    public var movieEnum: MovieSection = .popular
+    public var cellSelection: CellSelectionEnum = .popular
     public var mainController: HomeScreenController!
     public let group = DispatchGroup()
     

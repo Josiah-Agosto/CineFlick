@@ -115,7 +115,7 @@ final class HomeScreenController: UIViewController {
     }
     
     
-    private func makeRequestToServer() {
+    public func makeRequestToServer() {
         apiManager.resetAllElements()
         apiManager.makeApiRequest { (result) in
             switch result {
@@ -136,7 +136,9 @@ final class HomeScreenController: UIViewController {
                 }
             }
         }
-        self.mainView.refreshControl.endRefreshing()
+        DispatchQueue.main.async {
+            self.mainView.refreshControl.endRefreshing()
+        }
     }
     
     

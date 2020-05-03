@@ -32,4 +32,8 @@ extension ConfigurationEnum: ConfigurationEndpointProtocol {
         }
     }
     
+    var request: URLRequest {
+        let url = URL(string: base + path)!
+        return URLRequest(url: url)
+    }
 }

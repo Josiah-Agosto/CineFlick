@@ -21,7 +21,7 @@ final class DetailNetworkManager {
     // Reference
     private let imageReference = CustomImageView()
     private let castClient = CastClient()
-    private let imageClient = ImageClient()
+    private let configurationManager = ConfigurationManager.shared
     private let group = DispatchGroup()
     private var updater: (() -> ())? = nil
     private let mainRequestOperation = DispatchQueue.global(qos: .default)
@@ -50,7 +50,7 @@ final class DetailNetworkManager {
     // MARK: - Main Request
     private func mainRequest(with id: String, completion: @escaping(Result<Void, APIError>) -> Void) {
         group.enter()
-        castClient.castRequest(with: id) { (result) in
+        castClient.castRequest(with: .detail, with: id) { (result) in
             switch result {
             case .success(let castFromResult):
                 defer { self.group.leave() }
@@ -64,25 +64,14 @@ final class DetailNetworkManager {
             case .failure(_):
                 completion(.failure(.requestFailed))
             }
-        } // Request End
+        }
     }
     
     // MARK: - Image Request
     private func requestImageInfo() {
-        group.enter()
-        self.imageClient.createImage(from: .configure, completion: { (result) in
-            switch result {
-            case .success(let imageFromCast):
-                defer { self.group.leave() }
-                guard let imageCreation = imageFromCast?.images else { return }
-                guard let secure = imageCreation.secure_base_url else { return }
-                guard let size = imageCreation.poster_sizes?[3] else { return }
-                self.secureUrl = secure
-                self.sizeUrl = size
-            case .failure(let error):
-                print(error)
-            }
-        })
+        configurationManager.fetchImages()
+        configurationManager.secureBaseUrl = secureUrl
+        configurationManager.imageSize = sizeUrl
     }
     
     /// Actually resets all saved Data

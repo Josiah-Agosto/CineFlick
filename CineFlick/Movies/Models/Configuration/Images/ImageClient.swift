@@ -8,8 +8,9 @@
 
 import Foundation
 
-class ImageClient: ImageAPIClient {
+class ImageClient: APIClientProtocol {
     let session: URLSession
+    
     init(configuration: URLSessionConfiguration) {
         self.session = URLSession(configuration: configuration)
     }
@@ -18,12 +19,11 @@ class ImageClient: ImageAPIClient {
         self.init(configuration: .ephemeral)
     }
     
-    
-    func createImage(from imageConfig: ImageConfiguration, completion: @escaping (Result<MovieImageJson?, APIError>) -> Void) {
+    func createImage(from imageConfig: ConfigurationEnum, completion: @escaping (Result<MovieImageJson?, APIError>) -> Void) {
         let endpoint = imageConfig
         let result = endpoint.request
-        fetchImage(with: result, decode: { (json) -> MovieImageJson? in
-            guard let imageModel = json as? MovieImageJson else { return nil }
+        fetchData(with: result, decode: { (json) -> MovieImageJson? in
+            guard let imageModel = json as? MovieImageJson else { completion(.failure(.invalidData)); return nil }
             return imageModel
         }, completion: completion)
     }

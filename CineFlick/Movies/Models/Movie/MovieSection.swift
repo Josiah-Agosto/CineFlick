@@ -1,5 +1,5 @@
 //
-//  MovieSection.swift
+//  MovieEnum.swift
 //  CineFlick
 //
 //  Created by Josiah Agosto on 9/19/19.
@@ -8,17 +8,29 @@
 
 import Foundation
 
-enum MovieSection {
+enum MovieEnum {
     case popular
     case nowPlaying
     case upcoming
     case topRated
+    case detail
+    case credits
 }
 
-// Piecing URL
-extension MovieSection: EndpointProtocol {
+
+
+extension MovieEnum: MovieEndpointProtocol {
     var base: String {
         return "https://api.themoviedb.org"
+    }
+    
+    var id: String {
+        get {
+            return ""
+        }
+        set {
+            print(newValue)
+        }
     }
     
     var path: String {
@@ -31,6 +43,11 @@ extension MovieSection: EndpointProtocol {
             return "/3/movie/upcoming"
         case .topRated:
             return "/3/movie/top_rated"
+        case .detail:
+            return "/3/movie/\(id)"
+        case .credits:
+            return "/3/movie/\(id)"
         }
     }
+    
 }

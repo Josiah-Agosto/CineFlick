@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MovieClient: APIClient {
+class MovieClient: APIClientProtocol {
     let session: URLSession
     
     init(configuration: URLSessionConfiguration) {
@@ -19,11 +19,11 @@ class MovieClient: APIClient {
         self.init(configuration: .ephemeral)
     }
     
-    func getFeed(from movieSectionType: MovieSection, completion: @escaping (Result<MovieDatesJson?, APIError>) -> Void) {
+    func getFeed(from movieSectionType: MovieEnum, completion: @escaping (Result<MovieDatesJson?, APIError>) -> Void) {
         let endpoint = movieSectionType
         let result = endpoint.request
-        fetch(with: result, decode: { (json) -> MovieDatesJson? in
-            guard let movieModel = json as? MovieDatesJson else { print("Error here!"); return nil }
+        fetchData(with: result, decode: { (json) -> MovieDatesJson? in
+            guard let movieModel = json as? MovieDatesJson else { completion(.failure(.invalidData)); return nil }
             return movieModel
         }, completion: completion)
     }

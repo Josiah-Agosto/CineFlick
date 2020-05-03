@@ -1,5 +1,5 @@
 //
-//  APIClient.swift
+//  APIClientProtocol.swift
 //  CineFlick
 //
 //  Created by Josiah Agosto on 9/19/19.
@@ -8,17 +8,17 @@
 
 import Foundation
 
-protocol APIClient {
+protocol APIClientProtocol {
     var session: URLSession { get }
-    func fetch<A: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> A?, completion: @escaping (Result<A, APIError>) -> Void)
+    func fetchData<Z: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> Z?, completion: @escaping (Result<Z, APIError>) -> Void)
 }
 
 
 
-extension APIClient {
+extension APIClientProtocol {
     typealias jsonCompletion = (Decodable?, APIError?) -> Void
     
-    private func jsonDecodingTask<A: Decodable>(with request: URLRequest, decodingType: A.Type, completionHandler completion: @escaping jsonCompletion) -> URLSessionDataTask {
+    private func jsonDecodingTask<Z: Decodable>(with request: URLRequest, decodingType: Z.Type, completionHandler completion: @escaping jsonCompletion) -> URLSessionDataTask {
         let task = session.dataTask(with: request) {
             (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse else { completion(nil, .requestFailed); return }
@@ -41,8 +41,8 @@ extension APIClient {
     }
     
     
-    func fetch<A: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> A?, completion: @escaping (Result<A, APIError>) -> Void) {
-        let task = jsonDecodingTask(with: request, decodingType: A.self) { (json , error) in
+    func fetchData<Z: Decodable>(with request: URLRequest, decode: @escaping (Decodable) -> Z?, completion: @escaping (Result<Z, APIError>) -> Void) {
+        let task = jsonDecodingTask(with: request, decodingType: Z.self) { (json , error) in
             DispatchQueue.main.async {
                 guard let json = json else {
                     if let error = error {

@@ -15,18 +15,19 @@ final class SearchManager {
     public var movieImageUrls: [String] = [] { didSet { updater?() } }
     private var updater: (() -> ())? = nil
     private let session = URLSession(configuration: .default)
-    private let imageManager = ImageManager()
+    private let configurationManager = ConfigurationManager.shared
     private let group = DispatchGroup()
     static let shared = SearchManager()
     
     public func searchForMoviesWith(query: String, completion: @escaping(Result<Void, APIError>) -> Void) {
-        imageManager.generateImages()
+        configurationManager.fetchImages()
         searchRequest(from: query, with: completion)
     }
 
     
     private func searchRequest(from query: String?, with completion: @escaping(Result<Void, APIError>) -> Void) {
-        let queriedUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(Constants.apiKey)&language=en-US&\(replaceUrlWhitespaceFrom(query: query))&page=1&include_adult=false"
+        let queriedUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(Constants.apiKey)&language=\(Constants.selectedLanguage.rawValue)&\(replaceUrlWhitespaceFrom(query: query))&page=1&include_adult=false&region=\(Constants.selectedRegion.rawValue)"
+        print(queriedUrl)
         let request = URLRequest(url: URL(string: queriedUrl)!)
         group.enter()
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -42,7 +43,7 @@ final class SearchManager {
                             self.updater?()
                         }
                         for imageUrl in results {
-                            self.movieImageUrls.append("\(self.imageManager.secureBaseUrl)\(self.imageManager.imageSize)\(imageUrl.poster_path ?? "")")
+                            self.movieImageUrls.append("\(self.configurationManager.secureBaseUrl)\(self.configurationManager.imageSize)\(imageUrl.poster_path ?? "")")
                             self.updater?()
                         }
                         completion(.success(()))

@@ -1,5 +1,5 @@
 //
-//  Endpoint.swift
+//  MovieEndpointProtocol.swift
 //  CineFlick
 //
 //  Created by Josiah Agosto on 9/19/19.
@@ -8,21 +8,23 @@
 
 import Foundation
 
-protocol EndpointProtocol {
+protocol MovieEndpointProtocol {
     var base: String { get }
+    var id: String { get set }
     var path: String { get }
 }
 
-// Creates the URL
-extension EndpointProtocol {
+
+
+extension MovieEndpointProtocol {
     var urlComponents: URLComponents {
         var components = URLComponents(string: base)!
-        components.path = path
+        components.path = path + id
         components.queryItems = [
             URLQueryItem(name: "api_key", value: "\(Constants.apiKey)"),
-            URLQueryItem(name: "language", value: "en-US"),
+            URLQueryItem(name: "language", value: Constants.selectedLanguage.rawValue),
             URLQueryItem(name: "page", value: "1"),
-            URLQueryItem(name: "region", value: "US")
+            URLQueryItem(name: "region", value: Constants.selectedRegion.rawValue)
         ]
         return components
     }
