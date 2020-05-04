@@ -108,6 +108,10 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
 extension DetailViewController: PersonSelectionProtocol {
     func hasSelectedCell() {
         let personNavigationController = UINavigationController(rootViewController: personController)
+        if #available(iOS 13.0, *) {
+            personNavigationController.isModalInPresentation = true
+        } else {
+        }
         slideMenu.appDelegate?.navigationController?.present(personNavigationController, animated: true, completion: nil)
     }
 }
