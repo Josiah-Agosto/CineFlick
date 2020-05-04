@@ -15,7 +15,7 @@ class LanguageView: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(LanguageCell.self, forCellReuseIdentifier: LanguageCell.reuseIdentifier)
         tableView.allowsMultipleSelection = false
-        tableView.estimatedRowHeight = 70
+        tableView.estimatedRowHeight = 75
         tableView.allowsSelection = true
         tableView.backgroundColor = UIColor.clear
         return tableView

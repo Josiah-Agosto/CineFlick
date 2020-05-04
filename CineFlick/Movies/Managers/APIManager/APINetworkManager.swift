@@ -153,7 +153,7 @@ final class APINetworkManager {
     // MARK: - Runtime Request
     public func getRuntime(with id: String, completion: @escaping((String) -> Void)) {
         detailClient = DetailClient()
-        detailClient.detailRequest(with: .detail, with: id) { (result) in
+        detailClient.detailRequest(with: id) { (result) in
             switch result {
             case .success(let detailResult):
                 guard let popularRuntime = detailResult?.runtime else { return }

@@ -14,29 +14,26 @@ final class CustomImageView: UIImageView {
     private var imageUrlString: String?
     
     public func asynchronouslyLoadImage(with url: String) {
-        DispatchQueue.global(qos: .default).async {
-            self.imageUrlString = url
-            let nativeString = NSString(string: url)
+        self.imageUrlString = url
+        let nativeString = NSString(string: url)
+        guard let urlString = URL(string: url) else { return }
+        DispatchQueue.main.async {
+            self.image = UIImage(named: "ImageNotFound")
+        }
+        if let cachedImage = self.imageCache.object(forKey: nativeString) {
+            self.image = cachedImage
+        }
+        URLSession.shared.dataTask(with: urlString) { (data, response, error) in
+            if error != nil { print(error!.localizedDescription); return }
+            guard let data = data else { print(error!.localizedDescription); return }
             DispatchQueue.main.async {
-                self.image = nil
-            }
-            if let cachedImage = self.imageCache.object(forKey: nativeString) {
-                DispatchQueue.main.async {
-                    self.image = cachedImage
-                }
-            }
-            do {
-                guard let urlUrl = URL(string: url) else { return }
-                let data = try Data(contentsOf: urlUrl)
-                let imageToCache = UIImage(data: data)!
+                guard let imageToCache = UIImage(data: data) else { DispatchQueue.main.async { self.image = UIImage(named: "ImageNotFound") }; return }
                 if self.imageUrlString == url {
-                    DispatchQueue.main.async {
-                        self.image = imageToCache
-                    }
+                    self.image = imageToCache
                 }
                 self.imageCache.setObject(imageToCache, forKey: nativeString)
-            } catch let error { print(error) }
-        }
+            }
+        }.resume()
     }
     
 }

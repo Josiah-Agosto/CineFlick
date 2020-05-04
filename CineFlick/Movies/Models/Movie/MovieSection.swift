@@ -13,8 +13,6 @@ enum MovieEnum {
     case nowPlaying
     case upcoming
     case topRated
-    case detail
-    case credits
 }
 
 
@@ -22,15 +20,6 @@ enum MovieEnum {
 extension MovieEnum: MovieEndpointProtocol {
     var base: String {
         return "https://api.themoviedb.org"
-    }
-    
-    var id: String {
-        get {
-            return ""
-        }
-        set {
-            print(newValue)
-        }
     }
     
     var path: String {
@@ -43,11 +32,6 @@ extension MovieEnum: MovieEndpointProtocol {
             return "/3/movie/upcoming"
         case .topRated:
             return "/3/movie/top_rated"
-        case .detail:
-            return "/3/movie/\(id)"
-        case .credits:
-            return "/3/movie/\(id)"
         }
     }
-    
 }

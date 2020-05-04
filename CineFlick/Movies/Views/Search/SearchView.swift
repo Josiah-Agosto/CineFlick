@@ -17,6 +17,7 @@ class SearchView: UIView {
         searchBar.showsCancelButton = true
         searchBar.showsBookmarkButton = false
         searchBar.showsScopeBar = false
+        searchBar.barTintColor = UIColor(named: "TextColors")
         searchBar.sizeToFit()
         return searchBar
     }()

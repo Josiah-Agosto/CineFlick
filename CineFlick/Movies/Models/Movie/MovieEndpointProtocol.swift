@@ -10,7 +10,6 @@ import Foundation
 
 protocol MovieEndpointProtocol {
     var base: String { get }
-    var id: String { get set }
     var path: String { get }
 }
 
@@ -19,7 +18,7 @@ protocol MovieEndpointProtocol {
 extension MovieEndpointProtocol {
     var urlComponents: URLComponents {
         var components = URLComponents(string: base)!
-        components.path = path + id
+        components.path = path
         components.queryItems = [
             URLQueryItem(name: "api_key", value: "\(Constants.apiKey)"),
             URLQueryItem(name: "language", value: Constants.selectedLanguage.rawValue),

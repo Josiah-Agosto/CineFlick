@@ -9,7 +9,6 @@
 import UIKit
 import Foundation
 
-// TODO: Move all UIBarButtonViews out of here and into Views
 final class HomeScreenController: UIViewController {
     // MARK: - References / Properties
     public lazy var mainView = MainScreenView()
@@ -149,7 +148,9 @@ final class HomeScreenController: UIViewController {
     
     
     private func leftBarButtonView() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: mainView.categoryImageView.image, style: .plain, target: self, action: #selector(categoryAction))
+        mainView.slideMenuBarButtonItem = UIBarButtonItem(image: mainView.categoryImageView.image, style: .plain, target: self, action: #selector(categoryAction))
+        mainView.slideMenuBarButtonItem.tintColor = UIColor(named: "LabelColors")
+        navigationItem.leftBarButtonItem = mainView.slideMenuBarButtonItem
     }
     
     

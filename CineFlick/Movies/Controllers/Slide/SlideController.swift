@@ -83,7 +83,6 @@ extension SlideViewController: LanguageViewUpdaterProtocol {
             return ""
         }
         set {
-            // TODO: Update Label
             slideView.languageContainer.currentLanguage.text = newValue
         }
     }

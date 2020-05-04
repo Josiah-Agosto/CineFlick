@@ -19,7 +19,7 @@ class MovieClient: APIClientProtocol {
         self.init(configuration: .ephemeral)
     }
     
-    func getFeed(from movieSectionType: MovieEnum, completion: @escaping (Result<MovieDatesJson?, APIError>) -> Void) {
+    func getFeed(from movieSectionType: MovieEnum, completion: @escaping(Result<MovieDatesJson?, APIError>) -> Void) {
         let endpoint = movieSectionType
         let result = endpoint.request
         fetchData(with: result, decode: { (json) -> MovieDatesJson? in

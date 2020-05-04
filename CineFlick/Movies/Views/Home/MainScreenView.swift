@@ -45,6 +45,12 @@ class MainScreenView: UIView {
         let searchButton = UIBarButtonItem()
         return searchButton
     }()
+    // Left Bar Button
+    public lazy var slideMenuBarButtonItem: UIBarButtonItem = {
+        let slideHolder = UIBarButtonItem()
+        slideHolder.tintColor = UIColor(named: "LabelColors")
+        return slideHolder
+    }()
     public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
     public lazy var blurEffectView: UIVisualEffectView? = UIVisualEffectView()
     public lazy var mainController = HomeScreenController()

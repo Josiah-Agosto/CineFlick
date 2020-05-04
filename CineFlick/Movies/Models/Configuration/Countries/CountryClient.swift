@@ -19,7 +19,7 @@ class CountryClient: APIClientProtocol {
         self.init(configuration: .ephemeral)
     }
     
-    func countryClient(from imageConfig: ConfigurationEnum, completion: @escaping (Result<[CountryJson]?, APIError>) -> Void) {
+    func countryClient(from imageConfig: ConfigurationEnum, completion: @escaping(Result<[CountryJson]?, APIError>) -> Void) {
         let endpoint = imageConfig
         let result = endpoint.request
         fetchData(with: result, decode: { (json) -> [CountryJson]? in

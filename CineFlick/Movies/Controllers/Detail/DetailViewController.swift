@@ -9,22 +9,24 @@
 import Foundation
 import UIKit
 
-final class DetailViewController: UIViewController, InnerSelectedIdProtocol {
+class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     // References
     public lazy var detailView = DetailView()
     public lazy var detailManager = DetailNetworkManager.shared
     public lazy var apiManager = APINetworkManager.shared
     public lazy var internetNetwork = InternetNetwork()
     public lazy var mainController = HomeScreenController()
+    public lazy var personController = PersonController()
+    private lazy var slideMenu = SlideMenuHelper()
     // Movie Id Delegate Property
     var movieId: String = ""
     var movieName: String = ""
     var selectedBackdropUrl: String = ""
-    
+    // MARK: Lifecycle
     override func loadView() {
         view = detailView
     }
-
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -46,7 +48,7 @@ final class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         super.viewWillDisappear(animated)
         uponViewsRemoval()
     }
-
+    
     
     private func addMovieTitleToNavigationTitle() {
         title = movieName
@@ -89,15 +91,23 @@ final class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         detailManager.deleteAllSavedData()
     }
     
-    
-    
+
     private func setAsynchronousImage() {
         detailView.backdropImage.asynchronouslyLoadImage(with: selectedBackdropUrl)
     }
     
-    //MARK: Actions
+    // MARK: Actions
     @objc private func doneButtonAction() {
         navigationController?.popToRootViewController(animated: true)
     }
 
+}
+
+
+
+extension DetailViewController: PersonSelectionProtocol {
+    func hasSelectedCell() {
+        let personNavigationController = UINavigationController(rootViewController: personController)
+        slideMenu.appDelegate?.navigationController?.present(personNavigationController, animated: true, completion: nil)
+    }
 }

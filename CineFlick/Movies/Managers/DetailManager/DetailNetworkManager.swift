@@ -14,12 +14,9 @@ final class DetailNetworkManager {
     static let shared = DetailNetworkManager()
     // Variables
     private var path: [String] = [] { didSet { updater?() } }
-    var fullPath: [String] = [] { didSet { updater?() } }
-    // Image Variables
-    private var secureUrl: String = ""
-    private var sizeUrl: String = ""
+    public var fullPath: [String] = [] { didSet { updater?() } }
+    public var personIdArray: [String] = [] { didSet { updater?() } }
     // Reference
-    private let imageReference = CustomImageView()
     private let castClient = CastClient()
     private let configurationManager = ConfigurationManager.shared
     private let group = DispatchGroup()
@@ -32,12 +29,12 @@ final class DetailNetworkManager {
     public func detailCast(_ id: String, completion: @escaping (Result<Void, APIError>) -> Void) -> Void {
         mainRequestOperation.async {
             self.mainRequest(with: id, completion: completion)
-            self.requestImageInfo()
+            self.configurationManager.fetchImages()
         }
         finishingOperation.addOperation {
             self.group.wait()
             for path in self.path {
-                self.fullPath.append("\(self.secureUrl)\(self.sizeUrl)\(path)")
+                self.fullPath.append("\(self.configurationManager.secureBaseUrl)\(self.configurationManager.imageSize)\(path)")
             }
             // Notify Queue
             self.group.notify(queue: .main) {
@@ -50,7 +47,7 @@ final class DetailNetworkManager {
     // MARK: - Main Request
     private func mainRequest(with id: String, completion: @escaping(Result<Void, APIError>) -> Void) {
         group.enter()
-        castClient.castRequest(with: .detail, with: id) { (result) in
+        castClient.castRequest(with: id) { (result) in
             switch result {
             case .success(let castFromResult):
                 defer { self.group.leave() }
@@ -60,6 +57,8 @@ final class DetailNetworkManager {
                     self.castPropertiesDelegate?.name.append(perCell.name ?? "")
                     self.castPropertiesDelegate?.charName.append(perCell.character ?? "")
                     self.path.append(perCell.profile_path ?? "")
+                    guard let personId = perCell.id else { return }
+                    self.personIdArray.append("\(personId)")
                 }
             case .failure(_):
                 completion(.failure(.requestFailed))
@@ -67,19 +66,10 @@ final class DetailNetworkManager {
         }
     }
     
-    // MARK: - Image Request
-    private func requestImageInfo() {
-        configurationManager.fetchImages()
-        configurationManager.secureBaseUrl = secureUrl
-        configurationManager.imageSize = sizeUrl
-    }
-    
     /// Actually resets all saved Data
     public func deleteAllSavedData() {
         path = []
         fullPath = []
-        secureUrl = ""
-        sizeUrl = ""
         castPropertiesDelegate?.castCountForSection = 0
         castPropertiesDelegate?.charName = []
         castPropertiesDelegate?.name = []

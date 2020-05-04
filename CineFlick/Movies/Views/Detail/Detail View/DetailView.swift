@@ -14,10 +14,10 @@ class DetailView: UIView {
     public lazy var castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.allowsSelection = true
         collectionView.backgroundColor = UIColor.clear
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.allowsSelection = false
         collectionView.layer.cornerRadius = 5
         return collectionView
     }()
@@ -25,7 +25,7 @@ class DetailView: UIView {
     public lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView(frame: .zero)
         scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.backgroundColor = UIColor.black
+        scroll.backgroundColor = UIColor.clear
         scroll.showsVerticalScrollIndicator = false
         scroll.backgroundColor = UIColor(named: "BackgroundColors")
         return scroll
@@ -171,9 +171,11 @@ class DetailView: UIView {
         return placeholder
     }()
     public lazy var detailController = DetailViewController()
+//    public lazy var personController = PersonController()
     // Delegates
-    private var castDelegate: CastCollectionViewDelegate?
     public var castDataSource: CastCollectionViewDataSource?
+    public weak var personSelectedDelegate: PersonSelectionProtocol?
+    public weak var personIdDelegate: PersonIdProtocol?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -182,11 +184,14 @@ class DetailView: UIView {
     
     // MARK: - Setup
     private func setup() {
+        backgroundColor = UIColor(named: "BackgroundColors")
+        // Delegates
+        self.personIdDelegate = detailController.personController
+        self.personSelectedDelegate = detailController
         // Cast Collection View
-        castDelegate = CastCollectionViewDelegate()
         castDataSource = CastCollectionViewDataSource(detailController: detailController)
         detailController.detailManager.castPropertiesDelegate = castDataSource
-        castCollectionView.delegate = castDelegate
+        castCollectionView.delegate = self
         castCollectionView.dataSource = castDataSource
         castCollectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseIdentifier)
         // Subviews

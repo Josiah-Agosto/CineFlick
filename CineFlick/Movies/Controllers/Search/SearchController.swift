@@ -8,7 +8,6 @@
 
 import UIKit
 
-// TODO: Fix keyboard resigning
 class SearchController: UIViewController {
     // References / Properties
     public lazy var searchView = SearchView()
@@ -38,7 +37,6 @@ class SearchController: UIViewController {
     // MARK: - Setup
     private func setup() {
         // Navigation
-        navigationController?.setToolbarHidden(false, animated: true)
         navigationItem.setHidesBackButton(true, animated: false)
         searchView.searchBar.delegate = self
         searchView.collectionView.delegate = self

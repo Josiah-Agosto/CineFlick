@@ -19,7 +19,7 @@ class LanguageClient: APIClientProtocol {
         self.init(configuration: .ephemeral)
     }
     
-    func languageClient(from imageConfig: ConfigurationEnum, completion: @escaping (Result<[LanguageJson]?, APIError>) -> Void) {
+    func languageClient(from imageConfig: ConfigurationEnum, completion: @escaping(Result<[LanguageJson]?, APIError>) -> Void) {
         let endpoint = imageConfig
         let result = endpoint.request
         fetchData(with: result, decode: { (json) -> [LanguageJson]? in

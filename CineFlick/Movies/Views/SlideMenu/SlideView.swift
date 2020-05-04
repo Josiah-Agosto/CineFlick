@@ -49,7 +49,7 @@ class SlideView: UIView {
             let movieImageWithColor = movieImage.withTintColor(UIColor(named: "LabelColors")!, renderingMode: .alwaysOriginal)
             imageView.image = movieImageWithColor
         } else {
-            imageView.image = UIImage(named: "ImageNotFound")
+            imageView.image = UIImage(named: "Film")
         }
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -64,7 +64,7 @@ class SlideView: UIView {
             imageView.image = movieImageWithColor
         } else {
             // Fallback on earlier versions
-            imageView.image = UIImage(named: "ImageNotFound")
+            imageView.image = UIImage(named: "Gear")
         }
         imageView.contentMode = .scaleAspectFit
         return imageView
