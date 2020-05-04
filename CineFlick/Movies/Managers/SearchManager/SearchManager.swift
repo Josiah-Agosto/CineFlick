@@ -27,7 +27,6 @@ final class SearchManager {
     
     private func searchRequest(from query: String?, with completion: @escaping(Result<Void, APIError>) -> Void) {
         let queriedUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(Constants.apiKey)&language=\(Constants.selectedLanguage.rawValue)&\(replaceUrlWhitespaceFrom(query: query))&page=1&include_adult=false&region=\(Constants.selectedRegion.rawValue)"
-        print(queriedUrl)
         let request = URLRequest(url: URL(string: queriedUrl)!)
         group.enter()
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -59,9 +58,7 @@ final class SearchManager {
     private func replaceUrlWhitespaceFrom(query from: String?) -> String {
         guard let nonNilString = from else { return "" }
         let urlStringWithWhitespacesRemoved = nonNilString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        print(urlStringWithWhitespacesRemoved)
         let returningString = "query=\(urlStringWithWhitespacesRemoved)"
-        print(returningString)
         return returningString
     }
 

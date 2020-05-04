@@ -57,7 +57,6 @@ class PersonController: UIViewController, PersonIdProtocol {
     
     
     private func fetchPersonRequest() {
-        print("Id: \(personId)")
         personManager.personRequest(with: personId) { (result) in
             switch result {
             case .success():
