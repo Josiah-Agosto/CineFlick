@@ -18,6 +18,9 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     public lazy var mainController = HomeScreenController()
     public lazy var personController = PersonController()
     private lazy var slideMenu = SlideMenuHelper()
+    // Movie Detail Variables
+    var movieOverview: String = ""
+    var movieReleaseData: String = ""
     // Movie Id Delegate Property
     var movieId: String = ""
     var movieName: String = ""
@@ -86,7 +89,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         }
     }
     
-    // MARK: - Functions
+    
     private func uponViewsRemoval() {
         detailManager.deleteAllSavedData()
     }

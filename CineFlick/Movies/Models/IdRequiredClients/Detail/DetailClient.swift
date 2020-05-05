@@ -16,11 +16,11 @@ class DetailClient: IdClientProtocol {
     }
     
     convenience init() {
-        self.init(configuration: .ephemeral)
+        self.init(configuration: .default)
     }
     
     func detailRequest(with id: String, completion: @escaping(Result<MovieDetailJson?, APIError>) -> Void) {
-        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)&language=\(Constants.selectedLanguage)")!
+        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)&language=\(Constants.selectedLanguage.rawValue)")!
         fetchData(with: url, decode: { (json) -> MovieDetailJson? in
             guard let detailModel = json as? MovieDetailJson else { completion(.failure(.invalidData)); return nil }
             return detailModel

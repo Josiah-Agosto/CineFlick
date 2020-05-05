@@ -12,6 +12,8 @@ class SearchController: UIViewController {
     // References / Properties
     public lazy var searchView = SearchView()
     public lazy var searchManager = SearchManager.shared
+    private lazy var slideMenu = SlideMenuHelper()
+    public lazy var searchDetailController = SearchDetailController()
     private var errorView: EmptySearchView?
     public var hasErrorOccurred: Bool = false {
         didSet {
@@ -32,6 +34,7 @@ class SearchController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setupBackButton()
     }
     
     // MARK: - Setup
@@ -39,30 +42,41 @@ class SearchController: UIViewController {
         // Navigation
         navigationItem.setHidesBackButton(true, animated: false)
         searchView.searchBar.delegate = self
-        searchView.collectionView.delegate = self
         searchView.collectionView.dataSource = self
         navigationItem.titleView = searchView.searchBar
         searchView.searchBar.becomeFirstResponder()
     }
     
+    
+    private func setupBackButton() {
+        searchView.backBarButton.title = "Search"
+        searchView.backBarButton.tintColor = UIColor(named: "TextColors")
+        navigationItem.backBarButtonItem = searchView.backBarButton
+    }
+    
     // MARK: - Functions
     public func goBackToRootController() {
         searchView.searchBar.resignFirstResponder()
-        searchView.searchBar.endEditing(true)
         navigationController?.popToRootViewController(animated: true)
     }
     
     
     public func requestMoviesWithSearch(of type: String?) {
-        guard let queryString = type else { return }
-        searchManager.searchForMoviesWith(query: queryString) { (result) in
-            switch result {
-            case .success():
-                DispatchQueue.main.async {
-                    self.searchView.collectionView.reloadData()
+        let queue = DispatchQueue.global(qos: .background)
+        let group = DispatchGroup()
+        queue.async {
+            group.enter()
+            guard let queryString = type else { return }
+            self.searchManager.searchForMoviesWith(query: queryString) { (result) in
+                switch result {
+                case .success():
+                    defer { group.leave() }
+                    group.notify(queue: .main) {
+                        self.searchView.collectionView.reloadData()
+                    }
+                case .failure(let error):
+                    NotificationController.displayError(message: error.localizedDescription)
                 }
-            case .failure(let error):
-                print(error.localizedDescription)
             }
         }
     }
@@ -75,6 +89,7 @@ class SearchController: UIViewController {
 
     
     public func resetSearchData() {
+        searchManager.movieIds = []
         searchManager.movieImageUrls = []
         searchManager.movieTitles = []
     }
@@ -95,5 +110,14 @@ class SearchController: UIViewController {
             errorView?.removeFromSuperview()
             errorView = nil
         }
+    }
+    
+} // Class End
+
+
+
+extension SearchController: MovieSearchProtocol {
+    func didSelectMovie() {
+        slideMenu.appDelegate?.navigationController?.pushViewController(searchDetailController, animated: true)
     }
 }

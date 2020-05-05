@@ -186,4 +186,16 @@ extension Date {
         let stringDate: String = formatter.string(from: newDate)
         return stringDate
     }
+    
+    
+    func convertDateToAge(date: String) -> String {
+        let formatter = DateFormatter()
+        let today = Date()
+        formatter.dateFormat = "yyyy-MM-dd"
+        guard let birthdate = formatter.date(from: date) else { return "" }
+        let calendar = Calendar.current
+        let dateComponent = calendar.dateComponents([.year], from: birthdate, to: today)
+        guard let ageInYears = dateComponent.year else { return "" }
+        return String(ageInYears)
+    }
 }

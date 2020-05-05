@@ -8,14 +8,14 @@
 
 import UIKit
 
-class PersonController: UIViewController, PersonIdProtocol {
+class PersonController: UIViewController {
     // References / Properties
     public lazy var personView = PersonView()
+    public lazy var searchDetailView = SearchDetailView()
     private lazy var detailController = DetailViewController()
     private lazy var personManager = PersonManager.shared
     public lazy var internetNetwork = InternetNetwork()
-    // Delegate Properties
-    var personId: String = ""
+    public var personId: String = ""
     
     override func loadView() {
         super.loadView()
@@ -38,18 +38,18 @@ class PersonController: UIViewController, PersonIdProtocol {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        personView.containerScrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: personView.personBiography.frame.origin.y)
+        personView.containerScrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: personView.personBiography.frame.origin.y + personView.personBiography.frame.size.height + 5)
     }
     
     // MARK: Private Functions
     private func setup() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.setHidesBackButton(true, animated: true)
-        setSaveButton()
+        setDismissButton()
     }
     
     
-    private func setSaveButton() {
+    private func setDismissButton() {
         let saveBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissPersonController))
         saveBarButton.tintColor = UIColor(named: "TextColors")
         navigationItem.rightBarButtonItem = saveBarButton

@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 
-// Hint: Move the item size to datasource and use sizeForItemAt instead
 class SearchCollectionViewFlowLayout: UICollectionViewFlowLayout {
     override init() {
         super.init()
@@ -26,4 +25,17 @@ class SearchCollectionViewFlowLayout: UICollectionViewFlowLayout {
 
 
 extension SearchCollectionViewFlowLayout: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: UIScreen.main.bounds.width / 3 - 15, height: 170)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
 }

@@ -11,6 +11,7 @@ import UIKit
 class MovieSearchCell: UICollectionViewCell {
     // Properties / References
     static let reuseIdentifier = "searchCell"
+    var cellId: String = ""
     // Title
     public lazy var movieTitle: UILabel = {
         let label = UILabel(frame: .zero)
@@ -26,7 +27,7 @@ class MovieSearchCell: UICollectionViewCell {
     public lazy var movieImageView: CustomImageView = {
         let imageView = CustomImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = UIColor.clear
         return imageView
     }()
@@ -39,7 +40,7 @@ class MovieSearchCell: UICollectionViewCell {
     // MARK: - Setup
     private func setup() {
         // View
-        backgroundColor = UIColor(named: "ContrastColors")
+        backgroundColor = UIColor.clear
         // Subviews
         insertSubview(movieTitle, at: 0)
         insertSubview(movieImageView, at: 1)

@@ -171,11 +171,9 @@ class DetailView: UIView {
         return placeholder
     }()
     public lazy var detailController = DetailViewController()
-//    public lazy var personController = PersonController()
     // Delegates
     public var castDataSource: CastCollectionViewDataSource?
     public weak var personSelectedDelegate: PersonSelectionProtocol?
-    public weak var personIdDelegate: PersonIdProtocol?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -186,7 +184,6 @@ class DetailView: UIView {
     private func setup() {
         backgroundColor = UIColor(named: "BackgroundColors")
         // Delegates
-        self.personIdDelegate = detailController.personController
         self.personSelectedDelegate = detailController
         // Cast Collection View
         castDataSource = CastCollectionViewDataSource(detailController: detailController)
@@ -219,7 +216,7 @@ class DetailView: UIView {
         // Scroll View
         scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        scrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         // Content Holder
         contentHolder.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

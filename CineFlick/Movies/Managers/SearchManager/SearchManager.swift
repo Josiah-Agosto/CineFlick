@@ -13,6 +13,7 @@ final class SearchManager {
     // References / Properties
     public var movieTitles: [String] = [] { didSet { updater?() } }
     public var movieImageUrls: [String] = [] { didSet { updater?() } }
+    public var movieIds: [String] = [] { didSet { updater?() } }
     private var updater: (() -> ())? = nil
     private let session = URLSession(configuration: .default)
     private let configurationManager = ConfigurationManager.shared
@@ -44,6 +45,10 @@ final class SearchManager {
                         for imageUrl in results {
                             self.movieImageUrls.append("\(self.configurationManager.secureBaseUrl)\(self.configurationManager.imageSize)\(imageUrl.poster_path ?? "")")
                             self.updater?()
+                        }
+                        for id in results {
+                            guard let stringId = id.id else { return }
+                            self.movieIds.append(String(stringId))
                         }
                         completion(.success(()))
                         self.group.leave()

@@ -26,8 +26,6 @@ class PersonView: UIView {
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.backgroundColor = UIColor.clear
-        image.layer.borderWidth = 1.5
-        image.layer.borderColor = UIColor.black.cgColor
         image.layer.cornerRadius = 80
         return image
     }()
@@ -51,7 +49,7 @@ class PersonView: UIView {
         label.textColor = UIColor(named: "LabelColors")
         label.backgroundColor = UIColor.clear
         label.textAlignment = NSTextAlignment.left
-        label.font = UIFont(name: "AvenirNext-Medium", size: 25)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 23)
         label.numberOfLines = 0
         return label
     }()
@@ -76,7 +74,7 @@ class PersonView: UIView {
         label.backgroundColor = UIColor.clear
         label.textAlignment = NSTextAlignment.left
         label.numberOfLines = 1
-        label.font = UIFont(name: "AvenirNext", size: 15)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 23)
         return label
     }()
     // Place of Birth Placeholder
@@ -100,7 +98,7 @@ class PersonView: UIView {
         label.backgroundColor = UIColor.clear
         label.textAlignment = NSTextAlignment.left
         label.numberOfLines = 1
-        label.font = UIFont(name: "AvenirNext", size: 15)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 23)
         return label
     }()
     // Profession Placeholder
@@ -124,7 +122,7 @@ class PersonView: UIView {
         label.backgroundColor = UIColor.clear
         label.textAlignment = NSTextAlignment.left
         label.numberOfLines = 1
-        label.font = UIFont(name: "AvenirNext", size: 15)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 23)
         return label
     }()
     // Biography Placeholder
@@ -147,8 +145,9 @@ class PersonView: UIView {
         label.textColor = UIColor(named: "LabelColors")
         label.backgroundColor = UIColor.clear
         label.textAlignment = NSTextAlignment.left
-        label.numberOfLines = 1
-        label.font = UIFont(name: "AvenirNext", size: 15)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 23)
+        label.numberOfLines = 0
+        label.clipsToBounds = true
         return label
     }()
 
@@ -182,7 +181,7 @@ class PersonView: UIView {
         let screen = UIScreen.main.bounds
         // Container View
         containerScrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        containerScrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        containerScrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         containerScrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         containerScrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         // Inside Container View
@@ -192,7 +191,7 @@ class PersonView: UIView {
         profilePicture.centerXAnchor.constraint(equalTo: containerScrollView.centerXAnchor).isActive = true
         profilePicture.topAnchor.constraint(equalTo: containerScrollView.topAnchor, constant: 10).isActive = true
         // Person Name Placeholder
-        personNamePlaceholder.topAnchor.constraint(equalTo: profilePicture.bottomAnchor, constant: 10).isActive = true
+        personNamePlaceholder.topAnchor.constraint(equalTo: profilePicture.bottomAnchor, constant: 5).isActive = true
         personNamePlaceholder.leadingAnchor.constraint(equalTo: containerScrollView.leadingAnchor, constant: 16).isActive = true
         personNamePlaceholder.trailingAnchor.constraint(equalTo: containerScrollView.trailingAnchor, constant: -16).isActive = true
         personNamePlaceholder.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -235,7 +234,7 @@ class PersonView: UIView {
         // Biography
         personBiography.topAnchor.constraint(equalTo: personBiographyPlaceholder.bottomAnchor, constant: 4).isActive = true
         personBiography.leadingAnchor.constraint(equalTo: containerScrollView.leadingAnchor, constant: 16).isActive = true
-        personBiography.trailingAnchor.constraint(equalTo: containerScrollView.trailingAnchor, constant: -16).isActive = true
+        personBiography.widthAnchor.constraint(equalToConstant: screen.width - 32).isActive = true
     }
     
     

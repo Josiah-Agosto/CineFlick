@@ -16,8 +16,13 @@ final class DetailNetworkManager {
     private var path: [String] = [] { didSet { updater?() } }
     public var fullPath: [String] = [] { didSet { updater?() } }
     public var personIdArray: [String] = [] { didSet { updater?() } }
+    // Search Detail Properties
+    public var backdropPath: String = "" { didSet { updater?() } }
+    public var overview: String = "" { didSet { updater?() } }
+    public var releaseDate: String = "" { didSet { updater?() } }
     // Reference
     private let castClient = CastClient()
+    private let detailClient = DetailClient()
     private let configurationManager = ConfigurationManager.shared
     private let group = DispatchGroup()
     private var updater: (() -> ())? = nil
@@ -62,6 +67,29 @@ final class DetailNetworkManager {
                 }
             case .failure(_):
                 completion(.failure(.requestFailed))
+            }
+        }
+    }
+    
+    
+    public func movieDetail(with id: String, completion: @escaping(Result<Void, APIError>) -> Void) {
+        let queue = DispatchQueue.global(qos: .background)
+        queue.async {
+            self.group.enter()
+            self.configurationManager.fetchImages()
+            self.detailClient.detailRequest(with: id) { (result) in
+                switch result {
+                case .success(let detailData):
+                    defer { self.group.leave(); completion(.success(())); self.updater?() }
+                    guard let data = detailData else { return }
+                    guard let overview = data.overview else { return }
+                    guard let backdropPath = detailData?.backdrop_path else { return }
+                    self.backdropPath = backdropPath
+                    self.overview = overview
+                    self.releaseDate = data.release_date
+                case .failure(_):
+                    completion(.failure(.requestFailed))
+                }
             }
         }
     }

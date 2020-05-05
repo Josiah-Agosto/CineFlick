@@ -11,7 +11,7 @@ import UIKit
 
 extension SearchController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return searchManager.movieTitles.count
+        return searchManager.movieIds.count
     }
     
     
@@ -22,8 +22,10 @@ extension SearchController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let searchCell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieSearchCell.reuseIdentifier, for: indexPath) as! MovieSearchCell
-        searchCell.movieTitle.text = searchManager.movieTitles[indexPath.row]
-        let imageUrlForIndexPath = searchManager.movieImageUrls[indexPath.row]
+        let id = searchManager.movieIds[safe: indexPath.row] ?? ""
+        searchCell.cellId = id
+        searchCell.movieTitle.text = searchManager.movieTitles[safe: indexPath.row]
+        let imageUrlForIndexPath = searchManager.movieImageUrls[safe: indexPath.row] ?? ""
         searchCell.movieImageView.asynchronouslyLoadImage(with: imageUrlForIndexPath)
         return searchCell
     }

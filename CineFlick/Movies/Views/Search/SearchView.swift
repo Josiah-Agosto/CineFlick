@@ -28,10 +28,20 @@ class SearchView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(MovieSearchCell.self, forCellWithReuseIdentifier: MovieSearchCell.reuseIdentifier)
         collectionView.isHidden = false
+        collectionView.allowsSelection = true
         collectionView.backgroundColor = UIColor.clear
         collectionView.keyboardDismissMode = .onDrag
         return collectionView
     }()
+    // Back Bar Button
+    public lazy var backBarButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem()
+        return barButton
+    }()
+    public lazy var searchController = SearchController()
+    // Delegates
+    public weak var movieSelectedDelegate: MovieSearchProtocol?
+    public weak var searchMovieIdDelegate: searchMovieIdProtocol?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,6 +50,10 @@ class SearchView: UIView {
     
     
     private func setup() {
+        // Delegate
+        self.searchMovieIdDelegate = searchController.searchDetailController
+        self.movieSelectedDelegate = searchController
+        collectionView.delegate = self
         // View
         backgroundColor = UIColor(named: "BackgroundColors")
         // Subviews
