@@ -39,6 +39,7 @@ class PersonController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         personView.containerScrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: personView.personBiography.frame.origin.y + personView.personBiography.frame.size.height + 5)
+        personView.containerScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
     }
     
     // MARK: Private Functions

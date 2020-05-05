@@ -43,6 +43,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         super.viewDidAppear(animated)
         internetNetwork.checkForInternetConnectivity()
         detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 185)
+        detailView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         addMovieTitleToNavigationTitle()
     }
     

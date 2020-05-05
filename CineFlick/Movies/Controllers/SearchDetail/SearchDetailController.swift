@@ -30,6 +30,7 @@ final class SearchDetailController: UIViewController, searchMovieIdProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         searchDetailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: searchDetailView.overview.frame.origin.y + searchDetailView.overview.frame.size.height + 5)
+        searchDetailView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
     }
     
     
