@@ -25,6 +25,7 @@ class PopularMovieCellsView: UICollectionViewCell {
     public lazy var moviePosterImage: CustomImageView = {
         let posterImage = CustomImageView(frame: .zero)
         posterImage.translatesAutoresizingMaskIntoConstraints = false
+        posterImage.image = UIImage(named: "ImageNotFound")
         posterImage.layer.cornerRadius = 10
         posterImage.clipsToBounds = true
         posterImage.contentMode = .scaleAspectFill

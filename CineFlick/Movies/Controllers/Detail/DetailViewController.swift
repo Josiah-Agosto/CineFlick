@@ -14,10 +14,12 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     public lazy var detailView = DetailView()
     public lazy var detailManager = DetailNetworkManager.shared
     public lazy var apiManager = APINetworkManager.shared
+    public lazy var homeController = HomeScreenController()
     public lazy var internetNetwork = InternetNetwork()
-    public lazy var mainController = HomeScreenController()
     public lazy var personController = PersonController()
     private lazy var slideMenu = SlideMenuHelper()
+    private lazy var videoWebController = VideoWebController()
+    private let group = DispatchGroup()
     // Movie Detail Variables
     var movieOverview: String = ""
     var movieReleaseData: String = ""
@@ -25,32 +27,52 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     var movieId: String = ""
     var movieName: String = ""
     var selectedBackdropUrl: String = ""
-    // MARK: Lifecycle
+    // Video Thumbnail Properties
+    private var videoKeys: [String] = []
+    // Delegate
+    public weak var videoPropertyViewDelegate: VideoPropertyViewProtocol?
+    public weak var videoWebUrlDelegate: VideoWebDataProtocol?
+    // MARK: - Lifecycle
     override func loadView() {
         view = detailView
     }
     
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("ViewDidLoad")
+        internetNetwork.checkForInternetConnectivity()
+        setup()
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchCastRequest()
-        setAsynchronousImage()
-        getRuntimeRequest()
+        print("ViewWillAppear")
+        detailView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        viewAppearedSetup()
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        internetNetwork.checkForInternetConnectivity()
-        detailView.scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 185)
-        detailView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
-        addMovieTitleToNavigationTitle()
+        print("ViewDidAppear")
+        setAsynchronousImage()
+        detailView.scrollView.contentSize = videoPropertyViewDelegate!.movieHasVideo ? CGSize(width: UIScreen.main.bounds.width, height: detailView.videoCollectionView.frame.origin.y + 220) : CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 175)
     }
     
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        uponViewsRemoval()
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("ViewWillDisappear")
+        resetManagerData()
+        resetLocalData()
+    }
+    
+    
+    private func setup() {
+        self.videoPropertyViewDelegate = detailView
+        addMovieTitleToNavigationTitle()
     }
     
     
@@ -63,22 +85,77 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         navigationItem.backBarButtonItem = doneButtonItem
     }
     
+    
+    private func viewAppearedSetup() {
+        fetchCastRequest()
+        videoRequest()
+        getRuntimeRequest()
+    }
+    
+    
+    private func videoRequest() {
+        detailManager.getVideos(with: movieId) { (result) in
+            switch result {
+            case .success():
+                for key in self.detailManager.videoKey {
+                    self.videoKeys.append(key)
+                    print(key)
+                }
+                self.videoLogic()
+                DispatchQueue.main.async {
+                    self.detailView.videoCollectionView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    
+    private func videoLogic() {
+        if detailManager.videos != 0 {
+            getVideoThumbnails()
+            addVideoProperties()
+            videoPropertyViewDelegate?.movieHasVideo = true
+        } else {
+            removeVideoProperties()
+            videoPropertyViewDelegate?.movieHasVideo = false
+        }
+    }
+    
+    
+    private func addVideoProperties() {
+        DispatchQueue.main.async {
+            self.detailView.videoPlaceholder.isHidden = false
+            self.detailView.videoCollectionView.isHidden = false
+        }
+    }
+    
+    
+    private func removeVideoProperties() {
+        DispatchQueue.main.async {
+            self.detailView.videoPlaceholder.isHidden = true
+            self.detailView.videoCollectionView.isHidden = true
+        }
+    }
+    
+    
+    private func getVideoThumbnails() {
+        for key in videoKeys {
+            detailManager.requestThumbnailUrls(with: key)
+        }
+    }
+    
     // MARK: - Delegate Functions
     private func fetchCastRequest() {
-        let queue = DispatchQueue.global(qos: .default)
-        let group = DispatchGroup()
-        queue.async {
-            group.enter()
-            self.detailManager.detailCast(self.movieId) { (result) in
-                switch result {
-                case .success():
-                    defer { group.leave() }
-                    DispatchQueue.main.async {
-                        self.detailView.castCollectionView.reloadData()
-                    }
-                case .failure(let error):
-                    NotificationController.displayError(message: error.localizedDescription)
+        detailManager.detailCast(movieId) { (result) in
+            switch result {
+            case .success():
+                DispatchQueue.main.async {
+                    self.detailView.castCollectionView.reloadData()
                 }
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
@@ -91,7 +168,20 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     }
     
     
-    private func uponViewsRemoval() {
+    private func resetLocalData() {
+        movieName = ""
+        movieId = ""
+        movieOverview = ""
+        movieReleaseData = ""
+        selectedBackdropUrl = ""
+        videoKeys = []
+        detailManager.castPropertiesDelegate?.charName = []
+        detailManager.castPropertiesDelegate?.name = []
+        detailManager.castPropertiesDelegate?.castCountForSection = 0
+    }
+    
+    
+    private func resetManagerData() {
         detailManager.deleteAllSavedData()
     }
     
@@ -100,15 +190,15 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
         detailView.backdropImage.asynchronouslyLoadImage(with: selectedBackdropUrl)
     }
     
-    // MARK: Actions
+    // MARK: - Actions
     @objc private func doneButtonAction() {
         navigationController?.popToRootViewController(animated: true)
     }
-
+    
 }
 
 
-
+// MARK: - Person Delegate
 extension DetailViewController: PersonSelectionProtocol {
     func hasSelectedCell() {
         let personNavigationController = UINavigationController(rootViewController: personController)
@@ -117,5 +207,25 @@ extension DetailViewController: PersonSelectionProtocol {
         } else {
         }
         slideMenu.appDelegate?.navigationController?.present(personNavigationController, animated: true, completion: nil)
+    }
+}
+
+
+// MARK: - Video Delegate
+extension DetailViewController: SelectedVideoProtocol {
+    func selectedVideo(_ key: String, _ videoCell: VideoCollectionViewCell) {
+        self.videoWebUrlDelegate = videoWebController
+        var fullPath: String = ""
+        for site in detailManager.videoSite {
+            if site == "YouTube" {
+                videoCell.siteProvider = .youtube
+                fullPath = "\(videoCell.siteProvider.rawValue)\(key)"
+            } else {
+                videoCell.siteProvider = .vimeo
+                fullPath = "\(videoCell.siteProvider.rawValue)\(key)"
+            }
+        }
+        videoWebUrlDelegate?.webUrl = fullPath
+        slideMenu.appDelegate?.navigationController?.pushViewController(videoWebController, animated: true)
     }
 }

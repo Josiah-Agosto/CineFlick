@@ -58,7 +58,6 @@ final class SearchDetailController: UIViewController, searchMovieIdProtocol {
     private func requestBackdropImage(with backdropPath: String) {
         configurationManager.fetchImages()
         let imagePath = "\(configurationManager.secureBaseUrl)\(configurationManager.backdropSize)\(backdropPath)"
-        print(imagePath)
         searchDetailView.backdropImage.asynchronouslyLoadImage(with: imagePath)
     }
 

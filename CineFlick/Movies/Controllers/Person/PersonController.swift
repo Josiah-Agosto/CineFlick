@@ -42,7 +42,7 @@ class PersonController: UIViewController {
         personView.containerScrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
     }
     
-    // MARK: Private Functions
+    // MARK: - Private Functions
     private func setup() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.setHidesBackButton(true, animated: true)
@@ -73,7 +73,7 @@ class PersonController: UIViewController {
         }
     }
     
-    // MARK: Actions
+    // MARK: - Actions
     @objc private func dismissPersonController() {
         navigationController?.dismiss(animated: true, completion: nil)
     }

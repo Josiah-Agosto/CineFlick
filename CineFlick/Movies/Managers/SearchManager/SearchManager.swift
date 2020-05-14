@@ -31,6 +31,7 @@ final class SearchManager {
         let request = URLRequest(url: URL(string: queriedUrl)!)
         group.enter()
         let task = session.dataTask(with: request) { (data, response, error) in
+            defer { self.group.leave(); completion(.success(())); self.updater?() }
             if let error = error { NotificationController.displayError(message: error.localizedDescription) }
             guard let response = response as? HTTPURLResponse else { completion(.failure(.requestFailed)); completion(.failure(.requestFailed)); return }
             if response.statusCode == 200 {
@@ -40,18 +41,14 @@ final class SearchManager {
                         let results = searchModel.results
                         for itemInResult in results {
                             self.movieTitles.append(itemInResult.title ?? "N/A")
-                            self.updater?()
                         }
                         for imageUrl in results {
                             self.movieImageUrls.append("\(self.configurationManager.secureBaseUrl)\(self.configurationManager.imageSize)\(imageUrl.poster_path ?? "")")
-                            self.updater?()
                         }
                         for id in results {
                             guard let stringId = id.id else { return }
                             self.movieIds.append(String(stringId))
                         }
-                        completion(.success(()))
-                        self.group.leave()
                     }
                 }
             } else { completion(.failure(.requestFailed)) }

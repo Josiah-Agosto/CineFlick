@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ConfigurationManager {
+final class ConfigurationManager {
     // References /  Properties
     static let shared = ConfigurationManager()
     private let group = DispatchGroup()
@@ -32,9 +32,10 @@ class ConfigurationManager {
     public func fetchImages() {
         group.enter()
         imageClient.createImage(from: .Images) { (result) in
+            defer { self.group.leave() }
             switch result {
             case .success(let imageFeedResult):
-                defer { self.group.leave(); self.updater?() }
+                defer { self.updater?() }
                 guard let imageCreation = imageFeedResult?.images else { return }
                 guard let secure = imageCreation.secure_base_url else { return }
                 guard let posterSize = imageCreation.poster_sizes?[4] else { return }
@@ -48,7 +49,7 @@ class ConfigurationManager {
         }
     }
     
-    // MARK: Country
+    // MARK: - Country
     public func fetchCountries() {
         group.enter()
         countryClient.countryClient(from: .Countries) { (result) in
@@ -68,7 +69,7 @@ class ConfigurationManager {
         }
     }
     
-    // MARK: Language
+    // MARK: - Language
     public func fetchLanguages() {
         group.enter()
         languageClient.languageClient(from: .Languages) { (result) in

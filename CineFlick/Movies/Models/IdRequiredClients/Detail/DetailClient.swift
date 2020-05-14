@@ -20,7 +20,7 @@ class DetailClient: IdClientProtocol {
     }
     
     func detailRequest(with id: String, completion: @escaping(Result<MovieDetailJson?, APIError>) -> Void) {
-        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)&language=\(Constants.selectedLanguage.rawValue)")!
+        let url: URL = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\(Constants.apiKey)&language=\(Constants.selectedLanguage.rawValue)&append_to_response=videos")!
         fetchData(with: url, decode: { (json) -> MovieDetailJson? in
             guard let detailModel = json as? MovieDetailJson else { completion(.failure(.invalidData)); return nil }
             return detailModel

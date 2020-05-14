@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Network
 
-class InternetNetwork {
+final class InternetNetwork {
     static let shared = InternetNetwork()
     private var monitor: NWPathMonitor?
     var isMonitoring = false

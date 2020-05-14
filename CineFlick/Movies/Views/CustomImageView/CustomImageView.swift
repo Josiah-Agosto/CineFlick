@@ -17,22 +17,20 @@ final class CustomImageView: UIImageView {
         self.imageUrlString = url
         let nativeString = NSString(string: url)
         guard let urlString = URL(string: url) else { return }
-        DispatchQueue.main.async {
-            self.image = UIImage(named: "ImageNotFound")
-        }
+        self.image = nil
         if let cachedImage = self.imageCache.object(forKey: nativeString) {
             self.image = cachedImage
         }
         URLSession.shared.dataTask(with: urlString) { (data, response, error) in
             if error != nil { print(error!.localizedDescription); return }
             guard let data = data else { print(error!.localizedDescription); return }
-            DispatchQueue.main.async {
-                guard let imageToCache = UIImage(data: data) else { DispatchQueue.main.async { self.image = UIImage(named: "ImageNotFound") }; return }
+                guard let imageToCache = UIImage(data: data) else { return }
                 if self.imageUrlString == url {
-                    self.image = imageToCache
+                    DispatchQueue.main.async {
+                        self.image = imageToCache
+                    }
                 }
                 self.imageCache.setObject(imageToCache, forKey: nativeString)
-            }
         }.resume()
     }
     

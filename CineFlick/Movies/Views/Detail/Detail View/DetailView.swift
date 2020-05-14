@@ -9,12 +9,27 @@
 import Foundation
 import UIKit
 
-class DetailView: UIView {
-    // MARK: - UI Components
+class DetailView: UIView, VideoPropertyViewProtocol {
+    // Properties / References
+    // Delegate Property
+    var movieHasVideo: Bool = false
+    // Cast Collection View
     public lazy var castCollectionView: UICollectionView = {
         let viewLayout = CastCollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: viewLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.allowsSelection = true
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.layer.cornerRadius = 5
+        return collectionView
+    }()
+    // Video Collection View
+    public lazy var videoCollectionView: UICollectionView = {
+        let videoLayout = VideoCollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: videoLayout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.isHidden = false
         collectionView.allowsSelection = true
         collectionView.backgroundColor = UIColor.clear
         collectionView.showsHorizontalScrollIndicator = false
@@ -170,10 +185,27 @@ class DetailView: UIView {
         placeholder.font = UIFont(name: "AvenirNext", size: 15)
         return placeholder
     }()
+    // Video Placeholder
+    public lazy var videoPlaceholder: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = false
+        label.text = "Videos:"
+        label.textColor = UIColor(named: "LabelColors")
+        label.backgroundColor = UIColor.clear
+        label.textAlignment = NSTextAlignment.left
+        label.numberOfLines = 1
+        label.font = UIFont(name: "AvenirNext", size: 15)
+        return label
+    }()
+    private let screenWidth = UIScreen.main.bounds.width
     public lazy var detailController = DetailViewController()
+    public lazy var videoCollectionCell = VideoCollectionViewCell()
     // Delegates
     public var castDataSource: CastCollectionViewDataSource?
     public weak var personSelectedDelegate: PersonSelectionProtocol?
+    public var videoDelegate: VideoCollectionViewDelegate?
+    public var videoDataSource: VideoCollectionViewDataSource?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -186,11 +218,16 @@ class DetailView: UIView {
         // Delegates
         self.personSelectedDelegate = detailController
         // Cast Collection View
+        videoDelegate = VideoCollectionViewDelegate(detailController: detailController)
+        videoDataSource = VideoCollectionViewDataSource(detailController: detailController)
         castDataSource = CastCollectionViewDataSource(detailController: detailController)
         detailController.detailManager.castPropertiesDelegate = castDataSource
         castCollectionView.delegate = self
         castCollectionView.dataSource = castDataSource
+        videoCollectionView.delegate = videoDelegate
+        videoCollectionView.dataSource = videoDataSource
         castCollectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.reuseIdentifier)
+        videoCollectionView.register(VideoCollectionViewCell.self, forCellWithReuseIdentifier: VideoCollectionViewCell.reuseIdentifier)
         // Subviews
         addSubview(scrollView)
         // To Scroll View, In order
@@ -207,12 +244,13 @@ class DetailView: UIView {
         contentHolder.addSubview(overview)
         contentHolder.addSubview(castPlaceholder)
         contentHolder.addSubview(castCollectionView)
+        contentHolder.addSubview(videoPlaceholder)
+        contentHolder.addSubview(videoCollectionView)
         constraints()
     }
     
     // MARK: - Constraints
     private func constraints() {
-        let screenWidth = UIScreen.main.bounds.width
         // Scroll View
         scrollView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -277,11 +315,21 @@ class DetailView: UIView {
         castPlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
         // Cast Collection View
         castCollectionView.leadingAnchor.constraint(equalTo: contentHolder.leadingAnchor).isActive = true
-        castCollectionView.topAnchor.constraint(equalTo: castPlaceholder.bottomAnchor, constant: 6).isActive = true
+        castCollectionView.topAnchor.constraint(equalTo: castPlaceholder.bottomAnchor, constant: 4).isActive = true
         castCollectionView.widthAnchor.constraint(equalToConstant: screenWidth).isActive = true
         castCollectionView.heightAnchor.constraint(equalToConstant: 185).isActive = true
+        // Video Placeholder
+        videoPlaceholder.leadingAnchor.constraint(equalTo: contentHolder.leadingAnchor, constant: 16).isActive = true
+        videoPlaceholder.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: 4).isActive = true
+        videoPlaceholder.widthAnchor.constraint(equalToConstant: screenWidth - 32).isActive = true
+        videoPlaceholder.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        // Video Collection View
+        videoCollectionView.centerXAnchor.constraint(equalTo: contentHolder.centerXAnchor).isActive = true
+        videoCollectionView.topAnchor.constraint(equalTo: videoPlaceholder.bottomAnchor, constant: 4).isActive = true
+        videoCollectionView.widthAnchor.constraint(equalToConstant: screenWidth).isActive = true
+        videoCollectionView.heightAnchor.constraint(equalToConstant: 225).isActive = true
     }
-
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

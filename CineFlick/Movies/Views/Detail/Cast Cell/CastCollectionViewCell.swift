@@ -9,15 +9,16 @@
 import UIKit
 
 class CastCollectionViewCell: UICollectionViewCell {
+    // Properties / References
     static let reuseIdentifier = "cell"
-    // MARK: - Properties
     public lazy var person: CustomImageView = {
         let image = CustomImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "ImageNotFound")
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
-        image.backgroundColor = UIColor.white
-        image.layer.borderWidth = 1.5
+        image.backgroundColor = UIColor(named: "ContrastColors")
+        image.layer.borderWidth = 1.0
         image.layer.borderColor = UIColor.black.cgColor
         image.layer.cornerRadius = 50
         return image

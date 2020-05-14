@@ -12,7 +12,7 @@ import Foundation
 final class HomeScreenController: UIViewController {
     // MARK: - References / Properties
     public lazy var mainView = MainScreenView()
-    public lazy var detailController = DetailViewController()
+    public var detailController: DetailViewController?
     public lazy var launchScreenController = LaunchScreenController()
     public lazy var apiManager = APINetworkManager.shared
     public lazy var internetNetwork = InternetNetwork()
@@ -52,6 +52,8 @@ final class HomeScreenController: UIViewController {
         navigationControllerSetup()
         // Refresh Control Target
         mainView.refreshControl.addTarget(self, action: #selector(refreshView), for: .valueChanged)
+        // Detail
+        detailController = DetailViewController()
     }
     
     // MARK: - Actions
@@ -132,11 +134,9 @@ final class HomeScreenController: UIViewController {
             for cell in self.mainView.collectionView.visibleCells {
                 if let cell = cell as? MovieCollectionViewCell {
                     cell.innerCollectionView.reloadData()
+                    self.mainView.refreshControl.endRefreshing()
                 }
             }
-        }
-        DispatchQueue.main.async {
-            self.mainView.refreshControl.endRefreshing()
         }
     }
     
@@ -193,7 +193,7 @@ extension HomeScreenController: LaunchScreenProtocol {
 extension HomeScreenController: InnerSelectedCellProtocol {
     func isCellSelectedHandler() {
         if isCellSelected == true {
-            slideMenuHelper.appDelegate?.navigationController?.pushViewController(detailController, animated: true)
+            slideMenuHelper.appDelegate?.navigationController?.pushViewController(detailController!, animated: true)
         }
     }
 }

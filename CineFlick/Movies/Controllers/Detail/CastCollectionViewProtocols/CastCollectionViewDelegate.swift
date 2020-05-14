@@ -16,13 +16,12 @@ extension DetailView: UICollectionViewDelegate {
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let castCell = collectionView.cellForItem(at: indexPath) as? CastCollectionViewCell {
-            personSelectedDelegate?.hasSelectedCell()
-            let id = detailController.detailManager.personIdArray[safe: indexPath.row] ?? ""
-            detailController.personController.personView.personName.text = castCell.name.text
-            detailController.personController.personView.profilePicture.image = castCell.person.image
-            detailController.personController.personId = id
-        }
+        let castCell = collectionView.cellForItem(at: indexPath) as! CastCollectionViewCell
+        personSelectedDelegate?.hasSelectedCell()
+        let id = detailController.detailManager.personIdArray[safe: indexPath.row] ?? ""
+        detailController.personController.personView.personName.text = castCell.name.text
+        detailController.personController.personView.profilePicture.image = castCell.person.image
+        detailController.personController.personId = id
     }
     
 }

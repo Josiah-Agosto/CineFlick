@@ -22,6 +22,7 @@ extension IdClientProtocol {
         let task = session.dataTask(with: request) {
             (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse else { completion(nil, .requestFailed); return }
+            print(httpResponse.statusCode)
             if httpResponse.statusCode == 200 {
                 if let data = data {
                     do {
@@ -44,14 +45,7 @@ extension IdClientProtocol {
     func fetchData<Y: Decodable>(with request: URL, decode: @escaping (Decodable) -> Y?, completion: @escaping (Result<Y, APIError>) -> Void) {
         let task = jsonDecodingTask(with: URLRequest(url: request), decodingType: Y.self) { (json, error) in
             DispatchQueue.main.async {
-                guard let json = json else {
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.failure(.invalidData))
-                    }
-                    return
-                }
+                guard let json = json else { completion(.failure(.invalidData)); return }
                 if let value = decode(json) {
                     completion(.success(value))
                 } else {

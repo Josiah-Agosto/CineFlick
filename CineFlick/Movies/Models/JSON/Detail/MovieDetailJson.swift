@@ -34,6 +34,7 @@ struct MovieDetailJson: Decodable {
     let video: Bool
     let vote_average: Double
     let vote_count: Int
+    let videos: VideoJson
     
     init(json: [String: Any]) {
         adult = json["adult"] as! Bool
@@ -61,6 +62,7 @@ struct MovieDetailJson: Decodable {
         video = json["video"] as! Bool
         vote_average = json["vote_average"] as! Double
         vote_count = json["vote_count"] as! Int
+        videos = json["videos"] as! VideoJson
     }
 }
 

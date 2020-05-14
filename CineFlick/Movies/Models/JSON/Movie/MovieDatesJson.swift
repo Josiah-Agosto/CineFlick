@@ -19,9 +19,9 @@ struct MovieDatesJson: Decodable {
         let vote_count: Int?
         let id: Int?
         let video: Bool?
-        let vote_average: Float?
+        let vote_average: Double?
         let title: String?
-        let popularity: Float?
+        let popularity: Double?
         let poster_path: String?
         let original_language: String?
         let original_title: String?
@@ -35,9 +35,9 @@ struct MovieDatesJson: Decodable {
             vote_count = json["vote_count"] as? Int ?? 0
             id = json["id"] as? Int ?? 0
             video = json["video"] as? Bool ?? false
-            vote_average = json["vote_average"] as? Float ?? 0.0
+            vote_average = json["vote_average"] as? Double ?? 0
             title = json["title"] as? String ?? ""
-            popularity = json["popularity"] as? Float ?? 0.0
+            popularity = json["popularity"] as? Double ?? 0
             poster_path = json["poster_path"] as? String ?? ""
             original_language = json["original_language"] as? String ?? ""
             original_title = json["original_title"] as? String ?? ""

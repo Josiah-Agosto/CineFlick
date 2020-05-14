@@ -25,6 +25,7 @@ class TopRatedCellsView: UICollectionViewCell {
     public lazy var movieImage: CustomImageView = {
         let image = CustomImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(named: "ImageNotFound")
         image.layer.cornerRadius = 10
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFill

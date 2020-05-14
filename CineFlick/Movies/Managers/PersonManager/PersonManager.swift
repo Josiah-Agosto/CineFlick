@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PersonManager {
+final class PersonManager {
     // References / Properties
     static let shared = PersonManager()
     private lazy var personClient = PersonClient()
@@ -21,7 +21,7 @@ class PersonManager {
     public var personProfession: String = "" { didSet { updater?() } }
     public var personBiography: String = "" { didSet { updater?() } }
     
-    // MARK: Person Request
+    // MARK: - Person Request
     public func personRequest(with id: String, completion: @escaping(Result<Void, APIError>) -> Void) {
         let queue = DispatchQueue.global(qos: .background)
         queue.async {

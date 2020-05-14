@@ -44,7 +44,7 @@ class LanguageController: UIViewController {
         setSaveButton()
     }
     
-    // MARK: Private Functions
+    // MARK: - Private Functions
     private func setSaveButton() {
         let saveBarButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonAction))
         saveBarButton.tintColor = UIColor(named: "TextColors")
@@ -57,7 +57,7 @@ class LanguageController: UIViewController {
         languageView.tableView.cellForRow(at: Constants.selectedIndex)?.accessoryType = .checkmark
     }
     
-    // MARK: Actions
+    // MARK: - Actions
     @objc private func saveButtonAction() {
         dismiss(animated: true, completion: nil)
         updateViewDelegate?.currentCountryCode = Constants.selectedRegion.rawValue
@@ -66,7 +66,7 @@ class LanguageController: UIViewController {
 }
 
 
-// MARK: When View is Pushed
+// MARK: - When View is Pushed
 extension LanguageController: ChangeToLanguageControllerProtocol {
     func pushLanguagesToController() {
     }

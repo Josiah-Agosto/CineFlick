@@ -67,6 +67,8 @@ class MainScreenView: UIView {
         } else {
             backgroundColor = UIColor(red: 50 / 255, green: 50 / 255, blue: 50 / 255, alpha: 1.0)
         }
+        // Detail
+        mainController.detailController = DetailViewController()
         // Collection View
         collectionView.delegate = self
         collectionView.dataSource = self

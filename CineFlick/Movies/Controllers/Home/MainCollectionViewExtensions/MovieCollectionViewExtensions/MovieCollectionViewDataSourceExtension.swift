@@ -9,13 +9,21 @@
 import Foundation
 import UIKit
 
-extension MovieCollectionViewCell: UICollectionViewDataSource {
+class MovieCollectionViewDataSource: NSObject, UICollectionViewDataSource {
+    var parentCell: MovieCollectionViewCell
+    var mainController: HomeScreenController
+    
+    init(parentCell: MovieCollectionViewCell, mainController: HomeScreenController) {
+        self.parentCell = parentCell
+        self.mainController = mainController
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if cellSelection == .popular {
+        if parentCell.cellSelection == .popular {
             return mainController.apiManager.popularTitles.count
-        } else if cellSelection == .nowPlaying {
+        } else if parentCell.cellSelection == .nowPlaying {
             return mainController.apiManager.nowPlayingTitles.count
-        } else if cellSelection == .upcoming {
+        } else if parentCell.cellSelection == .upcoming {
             return mainController.apiManager.upcomingTitles.count
         } else {
             return mainController.apiManager.topRatedTitles.count
@@ -24,7 +32,7 @@ extension MovieCollectionViewCell: UICollectionViewDataSource {
 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch cellSelection {
+        switch parentCell.cellSelection {
         case .popular:
             let popular = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCellsView.reuseIdentifier, for: indexPath) as! PopularMovieCellsView
             popular.movieTitle.text = mainController.apiManager.popularTitles[safe: indexPath.row]

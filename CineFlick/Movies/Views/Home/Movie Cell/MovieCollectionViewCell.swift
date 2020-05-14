@@ -25,13 +25,17 @@ class MovieCollectionViewCell: UICollectionViewCell {
         innerCollectionView.backgroundColor = UIColor.clear
         return innerCollectionView
     }()
+    // Collection View Delegates
+    public var movieCollectionDelegate: MovieCollectionViewDelegate?
+    public var movieCollectionDataSource: MovieCollectionViewDataSource?
+    // Delegates
     public var selectedCellDelegate: InnerSelectedCellProtocol?
     public var movieIdDelegate: InnerSelectedIdProtocol?
     // Runtime Delegate Properties
     var runtimeForSelectedMovie: String = ""
     // References
     public var cellSelection: CellSelectionEnum = .popular
-    public var mainController: HomeScreenController!
+    public lazy var mainView = MainScreenView()
     public let group = DispatchGroup()
     
     override init(frame: CGRect) {
@@ -41,13 +45,13 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Setup
     private func setup() {
-        // Collection View
-        mainController = HomeScreenController()
         // Assigning Delegates
-        self.selectedCellDelegate = mainController
-        self.movieIdDelegate = mainController.detailController
-        innerCollectionView.delegate = self
-        innerCollectionView.dataSource = self
+        self.selectedCellDelegate = mainView.mainController
+        self.movieIdDelegate = mainView.mainController.detailController
+        self.movieCollectionDelegate = MovieCollectionViewDelegate(mainController: mainView.mainController, parentCell: self)
+        self.movieCollectionDataSource = MovieCollectionViewDataSource(parentCell: self, mainController: mainView.mainController)
+        innerCollectionView.delegate = movieCollectionDelegate
+        innerCollectionView.dataSource = movieCollectionDataSource
         innerCollectionView.register(PopularMovieCellsView.self, forCellWithReuseIdentifier: PopularMovieCellsView.reuseIdentifier)
         innerCollectionView.register(NowPlayingCellsView.self, forCellWithReuseIdentifier: NowPlayingCellsView.reuseIdentifier)
         innerCollectionView.register(UpcomingCellsView.self, forCellWithReuseIdentifier: UpcomingCellsView.reuseIdentifier)

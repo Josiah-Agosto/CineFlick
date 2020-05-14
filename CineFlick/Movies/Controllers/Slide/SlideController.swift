@@ -30,7 +30,7 @@ final class SlideViewController: UIViewController {
         setup()
     }
     
-    // MARK: Private Functions
+    // MARK: - Private Functions
     private func setup() {
         slideView.movieButton.addTarget(self, action: #selector(movieButtonAction), for: .touchUpInside)
         slideView.aboutButton.addTarget(self, action: #selector(aboutButtonAction), for: .touchUpInside)
@@ -76,7 +76,7 @@ final class SlideViewController: UIViewController {
 }
 
 
-// MARK: Region Updater
+// MARK: - Region Updater
 extension SlideViewController: LanguageViewUpdaterProtocol {
     var currentCountryCode: String {
         get {
