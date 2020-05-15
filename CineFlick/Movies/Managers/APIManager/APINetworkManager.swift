@@ -78,29 +78,22 @@ final class APINetworkManager {
     private var updater: (()->())? = nil
     // Multi-Threading
     public let mainGroup = DispatchGroup()
-    private let mainOperation = DispatchQueue.global(qos: .default)
+    private let mainOperation = DispatchQueue.global(qos: .userInitiated)
+    private let posterOperation = DispatchQueue.global(qos: .userInitiated)
     private let urlOperation = OperationQueue()
 
     public func makeApiRequest(completion: @escaping(Result<Void, APIError>) -> Void) {
         // Main Requests
         mainRequests(completion: completion)
-        urlOperation.addOperation {
-            self.mainGroup.wait()
-            // Poster Urls
-            self.createPosterUrls()
-            // Backdrop Urls
-            self.createBackdropUrls()
-            // Notifier
-            self.mainGroup.notify(queue: .global()) {
-                completion(.success(()))
-                self.updater?()
-            }
-        }
     }
     
     // MARK: - Main Requests
     private func mainRequests(completion: @escaping(Result<Void, APIError>) -> Void) {
+        mainGroup.enter()
         mainOperation.async {
+            defer { self.mainGroup.leave() }
+            // Generate Images
+            self.configurationManager.fetchImages()
             // Popular
             self.popularManager.fetchPopularFeed(if: completion)
             // Now Playing
@@ -109,8 +102,18 @@ final class APINetworkManager {
             self.upcomingManager.fetchUpcomingFeed(if: completion)
             // Top Rated
             self.topRatedManager.fetchTopRatedFeed(if: completion)
-            // Generate Images
-            self.configurationManager.fetchImages()
+        }
+        mainOperation.async {
+            self.mainGroup.wait()
+            // Poster Urls
+            self.createPosterUrls()
+            // Backdrop Urls
+            self.createBackdropUrls()
+        }
+        
+        mainGroup.notify(queue: .main) {
+            completion(.success(()))
+            self.updater?()
         }
     }
     
@@ -160,7 +163,7 @@ final class APINetworkManager {
                 let convertedRuntime = self.convertMinutesToHours(with: popularRuntime)
                 completion(convertedRuntime)
             case .failure(let error):
-                print(error)
+                print(error.localizedDescription)
             }
         }
     }

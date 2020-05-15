@@ -140,7 +140,6 @@ final class DetailNetworkManager {
                 guard let data = thumbnailData else { return }
                 for item in data.items {
                     self.thumbnailUrls.append(item.snippet.thumbnails.standard.url)
-                    print("THUMBNAIL URL: \(item.snippet.thumbnails.standard.url)")
                 }
             case .failure(let error):
                 print(error.localizedDescription)
