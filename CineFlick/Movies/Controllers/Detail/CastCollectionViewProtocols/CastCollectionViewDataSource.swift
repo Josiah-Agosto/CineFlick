@@ -32,7 +32,6 @@ class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDa
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print(indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.reuseIdentifier, for: indexPath) as! CastCollectionViewCell
         cell.name.text = name[safe: indexPath.row] ?? "Not Found"
         cell.characterName.text = charName[safe: indexPath.row] ?? "Not Found"

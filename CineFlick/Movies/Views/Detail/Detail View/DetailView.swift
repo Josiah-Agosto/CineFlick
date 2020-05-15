@@ -31,8 +31,9 @@ class DetailView: UIView, VideoPropertyViewProtocol {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isHidden = false
         collectionView.allowsSelection = true
+        collectionView.isPagingEnabled = false
         collectionView.backgroundColor = UIColor.clear
-        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = true
         collectionView.layer.cornerRadius = 5
         return collectionView
     }()

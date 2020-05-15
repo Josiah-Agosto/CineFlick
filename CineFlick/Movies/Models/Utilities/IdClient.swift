@@ -22,7 +22,6 @@ extension IdClientProtocol {
         let task = session.dataTask(with: request) {
             (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse else { completion(nil, .requestFailed); return }
-            print(httpResponse.statusCode)
             if httpResponse.statusCode == 200 {
                 if let data = data {
                     do {

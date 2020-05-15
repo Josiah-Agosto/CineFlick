@@ -40,7 +40,6 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("ViewDidLoad")
         internetNetwork.checkForInternetConnectivity()
         setup()
     }
@@ -48,7 +47,6 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("ViewWillAppear")
         detailView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         viewAppearedSetup()
     }
@@ -56,7 +54,6 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("ViewDidAppear")
         setAsynchronousImage()
         detailView.scrollView.contentSize = videoPropertyViewDelegate!.movieHasVideo ? CGSize(width: UIScreen.main.bounds.width, height: detailView.videoCollectionView.frame.origin.y + 220) : CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 175)
     }
@@ -64,7 +61,6 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        print("ViewWillDisappear")
         resetManagerData()
         resetLocalData()
     }
