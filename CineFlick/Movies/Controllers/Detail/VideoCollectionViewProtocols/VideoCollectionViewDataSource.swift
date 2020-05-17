@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class VideoCollectionViewDataSource: NSObject, UICollectionViewDataSource {
-    var detailController: DetailViewController
+    private var detailController: DetailViewController
     
     init(detailController: DetailViewController) {
         self.detailController = detailController

@@ -51,6 +51,12 @@ class MainScreenView: UIView {
         slideHolder.tintColor = UIColor(named: "LabelColors")
         return slideHolder
     }()
+    // Custom Title View
+    public lazy var customTitleView: CustomTitleView = {
+        let view = CustomTitleView(frame: .zero)
+        view.backgroundColor = UIColor.clear
+        return view
+    }()
     public lazy var blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
     public lazy var blurEffectView: UIVisualEffectView? = UIVisualEffectView()
     public lazy var mainController = HomeScreenController()

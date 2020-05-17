@@ -21,21 +21,23 @@ class VideoWebController: UIViewController, VideoWebDataProtocol {
     }
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
-    }
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         assignUrlToWebView()
     }
     
     
-    private func setup() {
-        // Navigation
-        // TODO: Make the Navigation Bars and Toolbars nicer.
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        onDisappearing()
+    }
+    
+    
+    private func onDisappearing() {
+        webUrl = ""
+        DispatchQueue.main.async {
+            self.videoWebView.webView.reload()
+        }
     }
     
     

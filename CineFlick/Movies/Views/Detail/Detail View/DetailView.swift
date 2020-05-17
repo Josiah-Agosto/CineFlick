@@ -20,7 +20,7 @@ class DetailView: UIView, VideoPropertyViewProtocol {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.allowsSelection = true
         collectionView.backgroundColor = UIColor.clear
-        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = true
         collectionView.layer.cornerRadius = 5
         return collectionView
     }()
@@ -203,8 +203,10 @@ class DetailView: UIView, VideoPropertyViewProtocol {
     public lazy var detailController = DetailViewController()
     public lazy var videoCollectionCell = VideoCollectionViewCell()
     // Delegates
+    public var castDelegate: CastCollectionViewDelegate?
     public var castDataSource: CastCollectionViewDataSource?
     public weak var personSelectedDelegate: PersonSelectionProtocol?
+    public weak var personSelectedIdDelegate: SelectedPersonIdProtocol?
     public var videoDelegate: VideoCollectionViewDelegate?
     public var videoDataSource: VideoCollectionViewDataSource?
     
@@ -218,12 +220,13 @@ class DetailView: UIView, VideoPropertyViewProtocol {
         backgroundColor = UIColor(named: "BackgroundColors")
         // Delegates
         self.personSelectedDelegate = detailController
+        self.personSelectedIdDelegate = detailController.personController
         // Cast Collection View
         videoDelegate = VideoCollectionViewDelegate(detailController: detailController)
         videoDataSource = VideoCollectionViewDataSource(detailController: detailController)
+        castDelegate = CastCollectionViewDelegate(detailController: detailController)
         castDataSource = CastCollectionViewDataSource(detailController: detailController)
-        detailController.detailManager.castPropertiesDelegate = castDataSource
-        castCollectionView.delegate = self
+        castCollectionView.delegate = castDelegate
         castCollectionView.dataSource = castDataSource
         videoCollectionView.delegate = videoDelegate
         videoCollectionView.dataSource = videoDataSource

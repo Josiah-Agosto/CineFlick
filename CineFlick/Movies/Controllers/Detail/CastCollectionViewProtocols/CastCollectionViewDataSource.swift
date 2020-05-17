@@ -11,7 +11,7 @@ import UIKit
 
 class CastCollectionViewDataSource: NSObject, UICollectionViewDataSource, CastDataSourceProtocol {
     // Properties
-    private(set) var detailController: DetailViewController
+    private var detailController: DetailViewController
     // Cast Data Source Properties
     var castCountForSection: Int = 0
     var name: [String] = []

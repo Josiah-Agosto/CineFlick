@@ -40,6 +40,7 @@ class SearchController: UIViewController {
     // MARK: - Setup
     private func setup() {
         // Navigation
+        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.setHidesBackButton(true, animated: false)
         searchView.searchBar.delegate = self
         searchView.collectionView.dataSource = self

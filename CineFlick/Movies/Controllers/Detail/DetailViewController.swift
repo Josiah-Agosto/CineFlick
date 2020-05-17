@@ -18,7 +18,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     public lazy var internetNetwork = InternetNetwork()
     public lazy var personController = PersonController()
     private lazy var slideMenu = SlideMenuHelper()
-    private lazy var videoWebController = VideoWebController()
+    private var videoWebController: VideoWebController?
     private let group = DispatchGroup()
     // Movie Detail Variables
     var movieOverview: String = ""
@@ -47,6 +47,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        detailManager.castPropertiesDelegate = detailView.castDataSource
         detailView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         viewAppearedSetup()
     }
@@ -55,7 +56,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setAsynchronousImage()
-        detailView.scrollView.contentSize = videoPropertyViewDelegate!.movieHasVideo ? CGSize(width: UIScreen.main.bounds.width, height: detailView.videoCollectionView.frame.origin.y + 220) : CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 175)
+        detailView.scrollView.contentSize = videoPropertyViewDelegate!.movieHasVideo ? CGSize(width: UIScreen.main.bounds.width, height: detailView.videoCollectionView.frame.origin.y + 220) : CGSize(width: UIScreen.main.bounds.width, height: detailView.castCollectionView.frame.origin.y + 150)
     }
     
     
@@ -67,6 +68,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     
     
     private func setup() {
+        navigationController?.navigationBar.prefersLargeTitles = false
         self.videoPropertyViewDelegate = detailView
         addMovieTitleToNavigationTitle()
     }
@@ -95,7 +97,6 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
             case .success():
                 for key in self.detailManager.videoKey {
                     self.videoKeys.append(key)
-                    print(key)
                 }
                 self.videoLogic()
                 DispatchQueue.main.async {
@@ -210,6 +211,7 @@ extension DetailViewController: PersonSelectionProtocol {
 // MARK: - Video Delegate
 extension DetailViewController: SelectedVideoProtocol {
     func selectedVideo(_ key: String, _ videoCell: VideoCollectionViewCell) {
+        videoWebController = VideoWebController()
         self.videoWebUrlDelegate = videoWebController
         var fullPath: String = ""
         for site in detailManager.videoSite {
@@ -222,6 +224,7 @@ extension DetailViewController: SelectedVideoProtocol {
             }
         }
         videoWebUrlDelegate?.webUrl = fullPath
-        slideMenu.appDelegate?.navigationController?.pushViewController(videoWebController, animated: true)
+        let videoNavigationController = UINavigationController(rootViewController: videoWebController!)
+        slideMenu.appDelegate?.navigationController?.present(videoNavigationController, animated: true, completion: nil)
     }
 }

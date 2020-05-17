@@ -103,7 +103,7 @@ final class HomeScreenController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor(named: "LabelColors")!]
         title = "Movies"
-        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.hidesBarsOnSwipe = false
         setupRightBarButton()
     }

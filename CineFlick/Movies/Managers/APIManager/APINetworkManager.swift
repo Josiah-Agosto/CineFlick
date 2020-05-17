@@ -111,7 +111,7 @@ final class APINetworkManager {
             self.createBackdropUrls()
         }
         
-        mainGroup.notify(queue: .main) {
+        mainGroup.notify(queue: .global()) {
             completion(.success(()))
             self.updater?()
         }

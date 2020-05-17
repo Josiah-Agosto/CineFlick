@@ -43,7 +43,10 @@ final class PersonManager {
                 }
             }
         }
-        
+        group.notify(queue: .main) {
+            completion(.success(()))
+            self.updater?()
+        }
     }
     
 }

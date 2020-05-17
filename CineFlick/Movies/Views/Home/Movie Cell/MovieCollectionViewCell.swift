@@ -36,7 +36,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     // References
     public var cellSelection: CellSelectionEnum = .popular
     public lazy var mainView = MainScreenView()
-    public let group = DispatchGroup()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

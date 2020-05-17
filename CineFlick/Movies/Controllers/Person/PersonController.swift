@@ -8,14 +8,12 @@
 
 import UIKit
 
-class PersonController: UIViewController {
+class PersonController: UIViewController, SelectedPersonIdProtocol {
     // References / Properties
     public lazy var personView = PersonView()
-    public lazy var searchDetailView = SearchDetailView()
-    private lazy var detailController = DetailViewController()
     private lazy var personManager = PersonManager.shared
     public lazy var internetNetwork = InternetNetwork()
-    public var personId: String = ""
+    var personId: String = ""
     
     override func loadView() {
         super.loadView()
