@@ -64,6 +64,8 @@ class PersonController: UIViewController, SelectedPersonIdProtocol {
                     self.personView.personBirthDate.text = self.personManager.personBirthdate
                     self.personView.personPlaceOfBirth.text = self.personManager.personBirthPlace
                     self.personView.personProfession.text = self.personManager.personProfession
+                    self.personView.personName.text = self.personManager.personName
+                    self.personView.profilePicture.asynchronouslyLoadImage(with: self.personManager.personImageUrl)
                 }
             case .failure(let error):
                 NotificationController.displayError(message: error.localizedDescription)

@@ -23,6 +23,7 @@ final class HomeScreenController: UIViewController {
     var isCellSelected: Bool = false
     
     override func loadView() {
+        super.loadView()
         view = mainView
     }
     

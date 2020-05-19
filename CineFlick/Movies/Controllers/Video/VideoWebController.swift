@@ -21,6 +21,12 @@ class VideoWebController: UIViewController, VideoWebDataProtocol {
     }
     
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setDismissButton()
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         assignUrlToWebView()
@@ -41,6 +47,13 @@ class VideoWebController: UIViewController, VideoWebDataProtocol {
     }
     
     
+    private func setDismissButton() {
+        let saveBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissPersonController))
+        saveBarButton.tintColor = UIColor(named: "TextColors")
+        navigationItem.rightBarButtonItem = saveBarButton
+    }
+    
+    
     private func assignUrlToWebView() {
         videoWebView.loadWebView(with: webUrl)
         DispatchQueue.main.async {
@@ -48,4 +61,8 @@ class VideoWebController: UIViewController, VideoWebDataProtocol {
         }
     }
     
+    // MARK: - Actions
+    @objc private func dismissPersonController() {
+        navigationController?.dismiss(animated: true, completion: nil)
+    }
 }

@@ -21,6 +21,7 @@ final class SlideViewController: UIViewController {
     public weak var changeToLanguageControllerDelegate: ChangeToLanguageControllerProtocol?
     
     override func loadView() {
+        super.loadView()
         view = slideView
     }
     

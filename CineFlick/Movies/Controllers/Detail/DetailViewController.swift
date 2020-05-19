@@ -34,6 +34,7 @@ class DetailViewController: UIViewController, InnerSelectedIdProtocol {
     public weak var videoWebUrlDelegate: VideoWebDataProtocol?
     // MARK: - Lifecycle
     override func loadView() {
+        super.loadView()
         view = detailView
     }
     

@@ -2,7 +2,7 @@
 ### View Popular, Now Playing, Upcoming and Top Rated Movies in the U.S with a clean and simple interface.*
 
 # Main Features
-### Entirely Programmatically Made, No CocoaPods, Light / Dark Mode, Language Accessibility for Movies, Search Content, View Actor Individually, Loading Splash Screen, Image Caching, Custom Slide Menu, Movie Database API, Multi-Threading, Unit Testing.
+### Entirely Programmatically Made, No CocoaPods, Light / Dark Mode, Language Accessibility for Movies, Search Content, View Actor Individually, Watch Movie Trailers and Videos through Youtube, Loading Splash Screen, Image Caching, Custom Slide Menu, Movie Database API, Multi-Threading, Unit Testing.
 
 # Home
 ![Home](https://user-images.githubusercontent.com/22554016/80944359-628a8c00-8db7-11ea-944b-535ff2ab9e2f.png)

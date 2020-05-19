@@ -14,6 +14,7 @@ final class PrivacyPolicyController: UIViewController {
     private lazy var privacyPolicyView = PrivacyPolicyWebView()
     
     override func loadView() {
+        super.loadView()
         view = privacyPolicyView
     }
     

@@ -19,6 +19,7 @@ final class AboutViewController: UIViewController {
     private var blurIsHidden: Bool = true
     
     override func loadView() {
+        super.loadView()
         aboutView = AboutView()
         view = aboutView
     }

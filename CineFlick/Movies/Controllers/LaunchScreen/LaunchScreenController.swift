@@ -19,6 +19,7 @@ final class LaunchScreenController: UIViewController {
     public weak var launchScreenDelegate: LaunchScreenProtocol?
         
     override func loadView() {
+        super.loadView()
         view = launchView
     }
     

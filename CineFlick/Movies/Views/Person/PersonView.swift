@@ -20,8 +20,8 @@ class PersonView: UIView {
         return scrollView
     }()
     // Profile Image
-    public lazy var profilePicture: UIImageView = {
-        let image = UIImageView(frame: .zero)
+    public lazy var profilePicture: CustomImageView = {
+        let image = CustomImageView(frame: .zero)
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
