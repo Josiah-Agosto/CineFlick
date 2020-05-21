@@ -4,6 +4,9 @@
 # Main Features
 ### Entirely Programmatically Made, No CocoaPods, Light / Dark Mode, Language Accessibility for Movies, Search Content, View Actor Individually, Watch Movie Trailers and Videos through Youtube, Loading Splash Screen, Image Caching, Custom Slide Menu, Movie Database API, Multi-Threading, Unit Testing.
 
+# Instructions to use for yourself
+### There are two Api's being used and you will need two different Api Keys. Main Api can be found here to register you key: https://developers.themoviedb.org/3/getting-started/introduction , Second: Youtube Data Api for Video and Trailer Thumbnails: https://developers.google.com/youtube/v3/getting-started. The first is mandatory to make the app work, and the second is used to get the Full experience of the App and see thumbnails of trailers. 
+
 # Home
 ![Home](https://user-images.githubusercontent.com/22554016/80944359-628a8c00-8db7-11ea-944b-535ff2ab9e2f.png)
 
